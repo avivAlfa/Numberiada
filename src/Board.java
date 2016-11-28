@@ -16,7 +16,7 @@ public class Board {
         this.size = size;
     }
 
-    public int getCellValue(int row, int col){
+    public char getCellValue(int row, int col){
         return board[row][col].getValue();
     }
 

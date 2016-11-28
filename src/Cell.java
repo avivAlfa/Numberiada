@@ -1,18 +1,18 @@
 
 public class Cell {
-    private int value;
+    private char value;
     boolean isEmpty = false;
 
     Cell(){}
-    Cell(int value) {
+    Cell(char value) {
         this.value = value;
     }
 
-    public int getValue() {
+    public char getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(char value) {
         this.value = value;
     }
 
@@ -22,6 +22,11 @@ public class Cell {
 
     public void setAsEmpty(){
         this.isEmpty = true;
-        this.setValue(0);
+        this.setValue(' ');
+    }
+
+    public void setAsCursor(){
+        this.isEmpty = true;
+        this.setValue('@');
     }
 }

@@ -1,15 +1,27 @@
+import java.util.Date;
 
 public class GameEngine {
-    Board gameBoard;
-    Player [] players;
-    int playerTurnIndex;
-    int cursor;
+    private Board gameBoard;
+    private Player [] players;
+    private int playerTurnIndex;
+    private int cursorRow;
+    private int cursorCol;
+    private int movesCnt = 0;
+    private long startingTime;
 
-    public GameEngine(Board gameBoard, Player[] players, int playerTurnIndex, int cursor) {
+    public GameEngine(Board gameBoard, Player[] players, int playerTurnIndex, int cursorRow, int cursorCol) {
         this.gameBoard = gameBoard;
         this.players = players;
         this.playerTurnIndex = playerTurnIndex;
-        this.cursor = cursor;
+        this.cursorRow = cursorRow;
+        this.cursorCol = cursorCol;
+    }
+
+    public int getMovesCnt() { return movesCnt; }
+
+    public void setStartingTime() {
+        Date time = new Date();
+        startingTime = time.getTime();
     }
 
     public Player getPlayerByIndex(int index){
@@ -28,12 +40,21 @@ public class GameEngine {
         this.playerTurnIndex = playerTurnIndex;
     }
 
-    public int getCursor() {
-        return cursor;
+    public Board getGameBoard() { return gameBoard; }
+
+    public Player[] getPlayers(){ return players; }
+
+    public int getCursorRow() {
+        return cursorRow;
     }
 
-    public void setCursor(int cursor) {
-        this.cursor = cursor;
+    public int getCursorCol(){
+        return  cursorCol;
+    }
+
+    public void setCursor(int row, int col){
+        this.cursorRow = row;
+        this.cursorCol = col;
     }
 
     public String getCurrentPlayerName()
@@ -46,42 +67,62 @@ public class GameEngine {
 
         if (playerTurnIndex % 2 == 0) { //even - row player}
            // chosenCell = gameBoard.getCell(cursor, cellNumber);
-            return gameBoard.getCell(cursor, cellNumber);
+            return gameBoard.getCell(cursorRow, cellNumber);
         }
         else {
             //chosenCell = gameBoard.getCell(cellNumber, cursor);;
-            return gameBoard.getCell(cellNumber, cursor);
+            return gameBoard.getCell(cellNumber, cursorCol);
         }
        // return  chosenCell;
     }
 
-    public boolean isValidCell(int cellNumber)
-    {
-        if(gameBoard.isIndexInBorders(cellNumber)){
-            Cell chosenCell = getChosenCell((cellNumber));
-            if(!chosenCell.isEmpty())
-                return true;
+    public void updateCursor(int cellNumber){
+        if (playerTurnIndex % 2 == 0) { //even - row player}
+            cursorCol = cellNumber;
+        }
+        else { //col player
+            cursorRow = cellNumber;
+        }
+    }
+
+    public boolean isValidCell(int cellNumber) throws Exception {
+        if(!gameBoard.isIndexInBorders(cellNumber)) {
+            throw new CellNumberOutOfBoundsException();
+        }
+        Cell chosenCell = getChosenCell((cellNumber));
+        if(chosenCell.isEmpty()){
+            throw new EmptyCellException();
         }
 
-        return false;
+        return true;
     }
 
     public void playMove(int chosenNumber){
+        Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
+        cursorCell.setAsEmpty();
+
         Cell chosenCell = getChosenCell(chosenNumber);
-        players[playerTurnIndex].addScore(chosenCell.getValue());
-        chosenCell.setAsEmpty();
-        this.cursor = chosenNumber;
+        players[playerTurnIndex].addScore(chosenCell.getValue() - '0');
+        chosenCell.setAsCursor();
+
+        updateCursor(chosenNumber);
     }
 
     public void changeTurn()
     {
         playerTurnIndex++;
+        movesCnt++;
         if(playerTurnIndex == players.length){
             playerTurnIndex = 0;
         }
     }
 
+    public String getTimeDuration() {
+        Date curr = new Date();
+        long diff = curr.getTime() - startingTime;
 
+        return ((diff / (60*1000) % 60) + " : " + (diff / 1000 % 60));
+    }
 
 
 

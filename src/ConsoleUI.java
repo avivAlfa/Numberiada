@@ -121,21 +121,23 @@ public class ConsoleUI {
         Cell[][] board = new Cell[5][5];
         for(int i = 0; i < 5; i++)
             for(int j = 0; j < 5; j++){
-                Cell c = new Cell((i+1));
+                Cell c = new Cell((char)(i+1 + '0'));
                 board[i][j] = c;
             }
+            board[2][2].setValue('@');
         Board gameBoard = new Board(board, 5);
 
         Player p1 = new Player("RowPlayer",0,true);
         Player p2 = new Player("ColumnPlayer",0,true);
         Player[] p = {p1,p2};
 
-        gameEngine = new GameEngine(gameBoard, p, 0, 0);
+        gameEngine = new GameEngine(gameBoard, p, 0, 2, 2);
     }
 
     private static void runGameMainLoop() {
         int choice;
         printBoard();
+        gameEngine.setStartingTime();
         do{
             runMenu(MenuType.MAIN_MENU);
 
@@ -147,19 +149,14 @@ public class ConsoleUI {
     }
 
     private static void printBoard(){
-        for(int i = 0; i < gameEngine.gameBoard.getSize(); i++){
-            for(int j = 0; j < gameEngine.gameBoard.getSize(); j++){
-                if(gameEngine.gameBoard.isEmptyCell(i,j)){
-                    System.out.print("  ");
-
-                }
-                else{
-                    System.out.print(gameEngine.gameBoard.getCellValue(i,j)+ " ");
-                }
+        System.out.println();
+        for(int i = 0; i < gameEngine.getGameBoard().getSize(); i++){
+            for(int j = 0; j < gameEngine.getGameBoard().getSize(); j++){
+                    System.out.print(gameEngine.getGameBoard().getCellValue(i,j)+ " ");
             }
             System.out.println();
         }
-       // System.out.println("Current Player:" + gameEngine.getCurrentPlayerName());
+        System.out.println("Current Player: " + gameEngine.getCurrentPlayerName());
     }
 
     private static void executeMainMenuChoice(int userChoice){
@@ -170,9 +167,10 @@ public class ConsoleUI {
             case 2:
                 chooseMove();
                 gameEngine.changeTurn();
+                printBoard();
                 break;
             case 3:
-                //showGameStatistics();
+                showGameStatistics();
                 break;
             case 4:
                 //resetGame();
@@ -196,17 +194,19 @@ public class ConsoleUI {
         boolean inputIsValid = false;
 
         do {
-            try{
+            try {
                 userChoice = scanner.nextInt();
-                if(gameEngine.isValidCell(userChoice)){
+                userChoice--;
+                if (gameEngine.isValidCell(userChoice)){
                     inputIsValid = true;
                 }
-                else {
-                    System.out.println("Input is out of range, Please try again.");
-                }
-
+            } catch (CellNumberOutOfBoundsException e){
+                System.out.println(e.getMessage());
+            } catch(EmptyCellException e) {
+                System.out.println(e.getMessage());
             } catch (Exception e) {
                 System.out.println("Input is invalid. Please try again.");
+            } finally {
                 scanner.nextLine();
             }
         }
@@ -215,8 +215,13 @@ public class ConsoleUI {
         return userChoice;
     }
 
+    private static void showGameStatistics() {
+        Player [] players = gameEngine.getPlayers();
 
-
-
-
+        System.out.println("Players' number of moves: " + gameEngine.getMovesCnt());
+        System.out.println("Game duration: " + gameEngine.getTimeDuration());
+        for(int i = 0 ; i < players.length ; i++) {
+            System.out.println(players[i].getName() + " score: " + players[i].getScore());
+        }
+    }
 }
