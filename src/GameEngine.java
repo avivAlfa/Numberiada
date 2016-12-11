@@ -1,4 +1,7 @@
+import generated.GameDescriptor;
+
 import java.util.Date;
+import java.util.List;
 
 public class GameEngine {
     private Board gameBoard;
@@ -8,6 +11,8 @@ public class GameEngine {
     private int cursorCol;
     private int movesCnt = 0;
     private long startingTime;
+
+    public GameEngine(){}
 
     public GameEngine(Board gameBoard, Player[] players, int playerTurnIndex, int cursorRow, int cursorCol) {
         this.gameBoard = gameBoard;
@@ -27,6 +32,8 @@ public class GameEngine {
     public Player getPlayerByIndex(int index){
         return players[index];
     }
+
+    public void setPlayers(Player[] i_players){ players = i_players;}
 
     public void setPlayerByIndex(Player player, int index){
         players[index] = player;
@@ -124,6 +131,44 @@ public class GameEngine {
         return ((diff / (60*1000) % 60) + " : " + (diff / 1000 % 60));
     }
 
+    public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
+        if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
+            buildRandomBoard(gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo());
+        } else {
+           gameBoard = buildExplicitBoard(gd);
+           GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
+           cursorRow = marker.getRow().intValue() - 1;
+           cursorCol = marker.getColumn().intValue() - 1;
+           playerTurnIndex = 0;
+        }
+
+    }
+
+    private void buildRandomBoard(int rangeFrom, int rangeTo) {
+
+    }
+
+    private Board buildExplicitBoard(GameDescriptor gd){
+        Board board;
+        int boardSize = gd.getBoard().getSize().intValue();
+        Cell[][] boardArray = new Cell[boardSize][boardSize];
+
+        for(int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                boardArray[i][j] = new Cell();
+                boardArray[i][j].setAsEmpty();
+            }
+        }
+        List<GameDescriptor.Board.Structure.Squares.Square> squareList = gd.getBoard().getStructure().getSquares().getSquare();
+        GameDescriptor.Board.Structure.Squares.Square curSquare;
+        for(int i=0; i< squareList.size(); i++) {
+            curSquare = squareList.get(i);
+            boardArray[curSquare.getRow().intValue()-1][curSquare.getColumn().intValue()-1].setValue((char)(curSquare.getValue().intValue() + '0'));
+        }
+        boardArray[gd.getBoard().getStructure().getSquares().getMarker().getRow().intValue() - 1][gd.getBoard().getStructure().getSquares().getMarker().getColumn().intValue() - 1].setAsCursor();
+
+        return new Board(boardArray, boardSize);
+    }
 
 }

@@ -14,6 +14,7 @@ public class Cell {
 
     public void setValue(char value) {
         this.value = value;
+        this.isEmpty = false;
     }
 
     public boolean isEmpty() {

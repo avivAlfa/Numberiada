@@ -1,3 +1,5 @@
+import generated.GameDescriptor;
+
 import java.awt.*;
 import java.util.Scanner;
 
@@ -72,6 +74,8 @@ public class ConsoleUI {
 
             } catch (Exception e) {
                 System.out.println("Input is invalid. Please try again.");
+                //scanner.nextLine();
+            }finally {
                 scanner.nextLine();
             }
         }
@@ -117,22 +121,37 @@ public class ConsoleUI {
         }
     }
 
-    private static void loadLevel() {
-        Cell[][] board = new Cell[5][5];
-        for(int i = 0; i < 5; i++)
-            for(int j = 0; j < 5; j++){
-                Cell c = new Cell((char)(i+1 + '0'));
-                board[i][j] = c;
-            }
-            board[2][2].setValue('@');
-        Board gameBoard = new Board(board, 5);
+//    private static void loadLevel() {
+//        Cell[][] board = new Cell[5][5];
+//        for(int i = 0; i < 5; i++)
+//            for(int j = 0; j < 5; j++){
+//                Cell c = new Cell((char)(i+1 + '0'));
+//                board[i][j] = c;
+//            }
+//            board[2][2].setValue('@');
+//        Board gameBoard = new Board(board, 5);
+//
+//        Player p1 = new Player("RowPlayer",0,true);
+//        Player p2 = new Player("ColumnPlayer",0,true);
+//        Player[] p = {p1,p2};
+//
+//        gameEngine = new GameEngine(gameBoard, p, 0, 2, 2);
+//    }
+private static void loadLevel() {
+    gameEngine = new GameEngine();
+    String xml_path;
+    System.out.println("Please enter xml path:");
+    //validate file name
+    //scanner.next();
+    xml_path = scanner.nextLine();
+    GameDescriptor gameDescriptor = XML_Handler.getGameDescriptor(xml_path);
 
-        Player p1 = new Player("RowPlayer",0,true);
-        Player p2 = new Player("ColumnPlayer",0,true);
-        Player[] p = {p1,p2};
-
-        gameEngine = new GameEngine(gameBoard, p, 0, 2, 2);
+    if(XML_Handler.validate(gameDescriptor)){
+        gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
     }
+
+    gameEngine.setPlayers(createBasicPlayer());
+}
 
     private static void runGameMainLoop() {
         int choice;
@@ -223,5 +242,12 @@ public class ConsoleUI {
         for(int i = 0 ; i < players.length ; i++) {
             System.out.println(players[i].getName() + " score: " + players[i].getScore());
         }
+    }
+
+    private static Player[] createBasicPlayer(){
+        Player p1 = new Player("RowPlayer",0,true);
+        Player p2 = new Player("ColumnPlayer",0,true);
+        Player[] players = {p1,p2};
+        return players;
     }
 }

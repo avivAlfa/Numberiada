@@ -1,7 +1,10 @@
+import generated.GameDescriptor;
 
 public class Board {
     private Cell[][] board;
     private int size;
+
+    public Board(){}
 
     public Board(Cell[][] board, int size) {
         this.board = board;
