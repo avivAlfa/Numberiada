@@ -1,7 +1,7 @@
 import generated.GameDescriptor;
 
-import java.awt.*;
-import java.util.Scanner;
+import java.util.*;
+import java.util.List;
 
 public class ConsoleUI {
 
@@ -121,22 +121,6 @@ public class ConsoleUI {
         }
     }
 
-//    private static void loadLevel() {
-//        Cell[][] board = new Cell[5][5];
-//        for(int i = 0; i < 5; i++)
-//            for(int j = 0; j < 5; j++){
-//                Cell c = new Cell((char)(i+1 + '0'));
-//                board[i][j] = c;
-//            }
-//            board[2][2].setValue('@');
-//        Board gameBoard = new Board(board, 5);
-//
-//        Player p1 = new Player("RowPlayer",0,true);
-//        Player p2 = new Player("ColumnPlayer",0,true);
-//        Player[] p = {p1,p2};
-//
-//        gameEngine = new GameEngine(gameBoard, p, 0, 2, 2);
-//    }
 private static void loadLevel() {
     gameEngine = new GameEngine();
     String xml_path;
@@ -155,17 +139,23 @@ private static void loadLevel() {
 
     private static void runGameMainLoop() {
         int choice;
+        boolean gameOver = false;
         printBoard();
         gameEngine.setStartingTime();
-        do{
+
+        gameOver = gameEngine.endGame();
+        while(!gameOver && !endCurrentGame && !exitApplication){
             System.out.println();
             runMenu(MenuType.MAIN_MENU);
 
-            //choice = getUserMainMenuChoice();
-            //executeMainMenuUserChoice
-        }//while(!gameEngine.endGame() && !endCurrentGame && !exitApplication);
-        while(!endCurrentGame && !exitApplication);
+            gameOver = gameEngine.endGame();
+        }
 
+        if(gameOver){
+            printGameWinner();
+            printGameStatistics();
+            exitApplication = true;
+        }
     }
 
     private static void printBoard(){
@@ -218,7 +208,7 @@ private static void loadLevel() {
                 printBoard();
                 break;
             case 3:
-                showGameStatistics();
+                printGameStatistics();
                 break;
             case 4:
                 //resetGame();
@@ -263,14 +253,32 @@ private static void loadLevel() {
         return userChoice;
     }
 
-    private static void showGameStatistics() {
+    private static void printGameStatistics() {
         Player [] players = gameEngine.getPlayers();
 
+        System.out.println("Game statistics:");
         System.out.println("Players' number of moves: " + gameEngine.getMovesCnt());
         System.out.println("Game duration: " + gameEngine.getTimeDuration());
         for(int i = 0 ; i < players.length ; i++) {
             System.out.println(players[i].getName() + " score: " + players[i].getScore());
         }
+        System.out.println();
+    }
+
+    private static  void printGameWinner(){
+        List<Player> gameWinners = gameEngine.getGameWinners();
+
+        System.out.println();
+        System.out.println("Game Over");
+
+        if(gameWinners.size() == 1){
+            System.out.println("The winner is " + gameWinners.get(0).getName() + " with score of " + gameWinners.get(0).getScore() + "!");
+        }
+        else {
+            System.out.println("It's a Tie!");
+            }
+
+        System.out.println();
     }
 
     private static Player[] createBasicPlayer(){

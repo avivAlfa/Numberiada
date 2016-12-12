@@ -1,5 +1,6 @@
 import generated.GameDescriptor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -108,13 +109,49 @@ public class GameEngine {
         updateCursor(chosenNumber);
     }
 
-    public void changeTurn()
-    {
+    public void changeTurn() {
         playerTurnIndex++;
         movesCnt++;
         if(playerTurnIndex == players.length){
             playerTurnIndex = 0;
         }
+    }
+
+    public boolean endGame(){
+        boolean gameEnded = true;
+        if (playerTurnIndex % 2 == 0) { //even - row player}
+            for(int j=0; j < gameBoard.getSize(); j++){
+                if(gameBoard.getCell(cursorRow, j).isEmpty() == false && j != cursorCol){
+                    gameEnded = false;
+                }
+            }
+        }
+        else { //col player
+            for (int i = 0; i < gameBoard.getSize(); i++) {
+                if (gameBoard.getCell(i, cursorCol).isEmpty() == false && i != cursorRow) {
+                    gameEnded = false;
+                }
+            }
+        }
+        return gameEnded;
+    }
+
+    public List<Player> getGameWinners(){
+        List<Player> gameWinners = new ArrayList<Player>();
+        int maxScore = 0;
+
+        for(int i = 0 ; i < players.length ; i++) {
+            if(players[i].getScore() > maxScore){
+                maxScore = players[i].getScore();
+            }
+        }
+
+        for(int i = 0 ; i < players.length ; i++) {
+            if(players[i].getScore() == maxScore){
+                gameWinners.add(players[i]);
+            }
+        }
+        return gameWinners;
     }
 
     public String getTimeDuration() {
