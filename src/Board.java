@@ -19,7 +19,7 @@ public class Board {
         this.size = size;
     }
 
-    public char getCellValue(int row, int col){
+    public int getCellValue(int row, int col){
         return board[row][col].getValue();
     }
 

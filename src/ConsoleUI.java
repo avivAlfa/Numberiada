@@ -170,18 +170,21 @@ private static void loadLevel() {
 
     private static void printBoard(){
         int boardSize = gameEngine.getGameBoard().getSize();
+        Cell currCell;
 
-        System.out.print("   ");
+        System.out.print("    ");
         for(int i = 0; i < boardSize; i++) {
-            System.out.print(" " + (i + 1) + "   ");
+            System.out.print(" " + String.format("%1$-2s",i + 1) + "  ");
         }
-
             for(int i = 0; i < boardSize; i++){
             printBoardGap(boardSize);
-            System.out.print(i+1 + " |");
+            System.out.print(String.format("%1$-3s",i+1) + "|");
             for(int j = 0; j < boardSize; j++){
-                Cell currCell = gameEngine.getGameBoard().getCell(i,j);
-                if(currCell.isEmpty()){
+                currCell = gameEngine.getGameBoard().getCell(i,j);
+                if(currCell.isCursor()){
+                    System.out.print(" " + String.format("%1$-2s",'@') + " |");
+                }
+                else if(currCell.isEmpty()){
                     System.out.print(" " + String.format("%1$-2s",' ') + " |");
                 }
                 else {
@@ -196,17 +199,12 @@ private static void loadLevel() {
     private static void printBoardGap(int cols)
     {
         System.out.println();
-        System.out.print("  ");
-        for (int i = 0; i < cols - 1; i++)
+        System.out.print("   ");
+        for (int i = 0; i < cols; i++)
         {
-            System.out.print("------");
+            System.out.print("-----");
         }
         System.out.println();
-    }
-
-
-    private static String fixedLengthString(String string, int length) {
-        return String.format("%1$"+length+ "s", string);
     }
 
     private static void executeMainMenuChoice(int userChoice){

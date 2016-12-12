@@ -92,6 +92,7 @@ public class GameEngine {
         if(chosenCell.isEmpty()){
             throw new EmptyCellException();
         }
+        //TODO: if is cursor throw cursorCellException
 
         return true;
     }
@@ -101,7 +102,7 @@ public class GameEngine {
         cursorCell.setAsEmpty();
 
         Cell chosenCell = getChosenCell(chosenNumber);
-        players[playerTurnIndex].addScore(chosenCell.getValue() - '0');
+        players[playerTurnIndex].addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
 
         updateCursor(chosenNumber);
@@ -156,7 +157,7 @@ public class GameEngine {
         GameDescriptor.Board.Structure.Squares.Square curSquare;
         for(int i=0; i< squareList.size(); i++) {
             curSquare = squareList.get(i);
-            boardArray[curSquare.getRow().intValue()-1][curSquare.getColumn().intValue()-1].setValue((char)(curSquare.getValue().intValue() + '0'));
+            boardArray[curSquare.getRow().intValue()-1][curSquare.getColumn().intValue()-1].setValue(curSquare.getValue().intValue());
         }
         boardArray[gd.getBoard().getStructure().getSquares().getMarker().getRow().intValue() - 1][gd.getBoard().getStructure().getSquares().getMarker().getColumn().intValue() - 1].setAsCursor();
 

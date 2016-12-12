@@ -1,32 +1,34 @@
 
 public class Cell {
-    private char value;
+    private int value;
     private boolean isEmpty = false;
+    private boolean isCursor = false;
 
     Cell(){}
-    Cell(char value) {
+    Cell(int value) {
         this.value = value;
     }
 
-    public char getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(char value) {
+    public void setValue(int value) {
         this.value = value;
         this.isEmpty = false;
     }
 
-    public boolean isEmpty() {
-        return this.isEmpty;
-    }
+    public boolean isEmpty() {return this.isEmpty;}
 
     public void setAsEmpty(){
         this.isEmpty = true;
+        this.isCursor = false;
     }
 
+    public boolean isCursor() {return  this.isCursor;}
+
     public void setAsCursor(){
-        this.isEmpty = true;
-        this.setValue('@');
+        this.isCursor = true;
+        this.isEmpty = false;
     }
 }
