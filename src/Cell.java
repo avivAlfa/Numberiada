@@ -1,7 +1,7 @@
 
 public class Cell {
     private char value;
-    boolean isEmpty = false;
+    private boolean isEmpty = false;
 
     Cell(){}
     Cell(char value) {
@@ -23,7 +23,6 @@ public class Cell {
 
     public void setAsEmpty(){
         this.isEmpty = true;
-        this.setValue(' ');
     }
 
     public void setAsCursor(){

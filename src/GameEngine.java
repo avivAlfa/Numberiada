@@ -14,14 +14,6 @@ public class GameEngine {
 
     public GameEngine(){}
 
-    public GameEngine(Board gameBoard, Player[] players, int playerTurnIndex, int cursorRow, int cursorCol) {
-        this.gameBoard = gameBoard;
-        this.players = players;
-        this.playerTurnIndex = playerTurnIndex;
-        this.cursorRow = cursorRow;
-        this.cursorCol = cursorCol;
-    }
-
     public int getMovesCnt() { return movesCnt; }
 
     public void setStartingTime() {

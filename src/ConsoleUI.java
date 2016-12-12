@@ -158,6 +158,7 @@ private static void loadLevel() {
         printBoard();
         gameEngine.setStartingTime();
         do{
+            System.out.println();
             runMenu(MenuType.MAIN_MENU);
 
             //choice = getUserMainMenuChoice();
@@ -168,14 +169,44 @@ private static void loadLevel() {
     }
 
     private static void printBoard(){
-        System.out.println();
-        for(int i = 0; i < gameEngine.getGameBoard().getSize(); i++){
-            for(int j = 0; j < gameEngine.getGameBoard().getSize(); j++){
-                    System.out.print(gameEngine.getGameBoard().getCellValue(i,j)+ " ");
-            }
-            System.out.println();
+        int boardSize = gameEngine.getGameBoard().getSize();
+
+        System.out.print("   ");
+        for(int i = 0; i < boardSize; i++) {
+            System.out.print(" " + (i + 1) + "   ");
         }
+
+            for(int i = 0; i < boardSize; i++){
+            printBoardGap(boardSize);
+            System.out.print(i+1 + " |");
+            for(int j = 0; j < boardSize; j++){
+                Cell currCell = gameEngine.getGameBoard().getCell(i,j);
+                if(currCell.isEmpty()){
+                    System.out.print(" " + String.format("%1$-2s",' ') + " |");
+                }
+                else {
+                    System.out.print(" " + String.format("%1$-2s", currCell.getValue()) + " |");
+                }
+            }
+        }
+        printBoardGap(boardSize);
         System.out.println("Current Player: " + gameEngine.getCurrentPlayerName());
+    }
+
+    private static void printBoardGap(int cols)
+    {
+        System.out.println();
+        System.out.print("  ");
+        for (int i = 0; i < cols - 1; i++)
+        {
+            System.out.print("------");
+        }
+        System.out.println();
+    }
+
+
+    private static String fixedLengthString(String string, int length) {
+        return String.format("%1$"+length+ "s", string);
     }
 
     private static void executeMainMenuChoice(int userChoice){
