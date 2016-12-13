@@ -1,5 +1,7 @@
 import generated.GameDescriptor;
 
+import javax.xml.bind.JAXBException;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
 
@@ -123,12 +125,38 @@ public class ConsoleUI {
 
 private static void loadLevel() {
     gameEngine = new GameEngine();
-    String xml_path;
+    String xml_path = "";
+    boolean xmlPathValid = false;
     System.out.println("Please enter xml path:");
     //validate file name
     //scanner.next();
-    xml_path = scanner.nextLine();
-    GameDescriptor gameDescriptor = XML_Handler.getGameDescriptor(xml_path);
+    GameDescriptor gameDescriptor = null;
+    xmlPathValid = false;
+    do{
+        try{
+            xml_path = scanner.nextLine();
+            gameDescriptor = XML_Handler.getGameDescriptor(xml_path);
+            xmlPathValid = true;
+
+        } catch(FileNotFoundException e) {
+            System.out.print("File not found!");
+        } catch(JAXBException e) {
+            if(!xml_path.endsWith(".xml"))
+                System.out.println("The file you asked for isn't a xml file!");
+            else
+                System.out.print("Error trying to deserialize JAXB file");
+        } catch (Exception e) {
+            System.out.print("ERROR");
+        }
+        finally {
+            if(!xmlPathValid){
+                System.out.println(" Please try again:");
+            }
+        }
+
+
+    }while(!xmlPathValid);
+
 
     if(XML_Handler.validate(gameDescriptor)){
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
@@ -164,7 +192,7 @@ private static void loadLevel() {
 
         System.out.print("    ");
         for(int i = 0; i < boardSize; i++) {
-            System.out.print(" " + String.format("%1$-2s",i + 1) + "  ");
+            System.out.print(String.format("%1$3s",i + 1) + "  ");
         }
             for(int i = 0; i < boardSize; i++){
             printBoardGap(boardSize);
@@ -172,13 +200,13 @@ private static void loadLevel() {
             for(int j = 0; j < boardSize; j++){
                 currCell = gameEngine.getGameBoard().getCell(i,j);
                 if(currCell.isCursor()){
-                    System.out.print(" " + String.format("%1$-2s",'@') + " |");
+                    System.out.print(String.format("%1$3s",'@') + " |");
                 }
                 else if(currCell.isEmpty()){
-                    System.out.print(" " + String.format("%1$-2s",' ') + " |");
+                    System.out.print(String.format("%1$3s",' ') + " |");
                 }
                 else {
-                    System.out.print(" " + String.format("%1$-2s", currCell.getValue()) + " |");
+                    System.out.print(String.format("%1$3s", currCell.getValue()) + " |");
                 }
             }
         }

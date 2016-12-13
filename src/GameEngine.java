@@ -1,8 +1,6 @@
 import generated.GameDescriptor;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class GameEngine {
     private Board gameBoard;
@@ -92,8 +90,9 @@ public class GameEngine {
         Cell chosenCell = getChosenCell((cellNumber));
         if(chosenCell.isEmpty()){
             throw new EmptyCellException();
+        } else if(chosenCell.isCursor()) {
+            throw new CursorCellException();
         }
-        //TODO: if is cursor throw cursorCellException
 
         return true;
     }
@@ -164,24 +163,70 @@ public class GameEngine {
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
-            buildRandomBoard(gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo());
+            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo());
         } else {
            gameBoard = buildExplicitBoard(gd);
            GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
            cursorRow = marker.getRow().intValue() - 1;
            cursorCol = marker.getColumn().intValue() - 1;
-           playerTurnIndex = 0;
+        }
+        playerTurnIndex = 0;
+    }
+
+    private Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
+        Cell[][] boardArray = createEmptyBoard(boardSize);
+        List<PoolEmement> poolOfImpression = createPool(boardSize, rangeFrom, rangeTo);
+        Random rand = new Random();
+        int randomNumber;
+
+        for(int i = 0; i < boardSize; i++) {
+            for(int j = 0; j< boardSize; j++) {
+                randomNumber = rand.nextInt(poolOfImpression.size());
+                if(poolOfImpression.get(randomNumber).getNumber() == 999) {
+                    boardArray[i][j].setAsEmpty();
+                }
+                boardArray[i][j].setValue(poolOfImpression.get(randomNumber).getNumber());
+                poolOfImpression.get(randomNumber).decreaseNumOfImp();
+
+                if(poolOfImpression.get(randomNumber).numOfImp == 0) {
+                    poolOfImpression.remove(randomNumber);
+                }
+            }
         }
 
+        //set the cursor in one of the remain empty cells
+        boolean foundEmpty = false;
+        for(int i = 0; i < boardSize && !foundEmpty; i++) {
+            for (int j = 0; j < boardSize && !foundEmpty; j++) {
+                if(boardArray[i][j].isEmpty()) {
+                    foundEmpty = true;
+                    boardArray[i][j].setAsCursor();
+                    cursorRow = i;
+                    cursorCol = j;
+                }
+            }
+        }
+
+        return new Board(boardArray, boardSize);
     }
 
-    private void buildRandomBoard(int rangeFrom, int rangeTo) {
+    public ArrayList<PoolEmement> createPool(int boardSize, int rangeFrom, int rangeTo){
+        ArrayList<PoolEmement> pool = new ArrayList<PoolEmement>();
+        int rangeSize = rangeTo - rangeFrom + 1;
+        int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / rangeSize;
+        
+        for(int i = rangeFrom; i <= rangeTo; i++){
+            pool.add(new PoolEmement(i, numOfImpressions));
+        }
+        pool.add(new PoolEmement(999, ((int)(Math.pow(boardSize,2) - 1) % rangeSize) + 1));
+        
+        return pool;
+    } 
 
-    }
+    private Cell[][] createEmptyBoard(int boardSize) {
+        //Board board;
 
-    private Board buildExplicitBoard(GameDescriptor gd){
-        Board board;
-        int boardSize = gd.getBoard().getSize().intValue();
+        //int boardSize = gd.getBoard().getSize().intValue();
         Cell[][] boardArray = new Cell[boardSize][boardSize];
 
         for(int i = 0; i < boardSize; i++) {
@@ -190,6 +235,21 @@ public class GameEngine {
                 boardArray[i][j].setAsEmpty();
             }
         }
+        return boardArray;
+    }
+
+    private Board buildExplicitBoard(GameDescriptor gd){
+        Board board;
+        int boardSize = gd.getBoard().getSize().intValue();
+        Cell[][] boardArray = createEmptyBoard(boardSize);
+                //new Cell[boardSize][boardSize];
+
+//        for(int i = 0; i < boardSize; i++) {
+//            for (int j = 0; j < boardSize; j++) {
+//                boardArray[i][j] = new Cell();
+//                boardArray[i][j].setAsEmpty();
+//            }
+//        }
         List<GameDescriptor.Board.Structure.Squares.Square> squareList = gd.getBoard().getStructure().getSquares().getSquare();
         GameDescriptor.Board.Structure.Squares.Square curSquare;
         for(int i=0; i< squareList.size(); i++) {

@@ -3,6 +3,8 @@ import generated.GameDescriptor;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 
@@ -10,15 +12,20 @@ import java.io.InputStream;
 public class XML_Handler {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "generated";
 
-    public static GameDescriptor getGameDescriptor(String xml_path){
+    public static GameDescriptor getGameDescriptor(String xml_path) throws Exception{
         GameDescriptor gameDescriptor = null;
-        InputStream inputStream = XML_Handler.class.getResourceAsStream("\\resources\\x.xml");
+        InputStream inputStream;//XML_Handler.class.getResourceAsStream("\\resources\\random.xml");
         try {
+            inputStream = new FileInputStream(xml_path);
              gameDescriptor = deserializeFrom(inputStream);
 
 
         } catch (JAXBException e) {
-            e.printStackTrace();
+            throw e;
+            // e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            throw e;
+            //System.out.println("File not found!");
         }
 
         return gameDescriptor;
