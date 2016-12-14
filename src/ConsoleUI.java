@@ -1,3 +1,4 @@
+import Exceptions.*;
 import generated.GameDescriptor;
 
 import javax.xml.bind.JAXBException;
@@ -24,6 +25,8 @@ public class ConsoleUI {
     private static GameEngine gameEngine;
     private static boolean endCurrentGame = false;
     private static boolean exitApplication = false;
+    private static boolean gameLoaded = false;
+    private static String loadedXmlFilePath = null;
     private static Scanner scanner = new Scanner(System.in);
 
 
@@ -116,54 +119,80 @@ public class ConsoleUI {
         switch (userChoice){
             case 1:
                 loadLevel();
+                gameLoaded = true;
+                endCurrentGame = false;
                 break;
             case 2:
-                runGameMainLoop();
+                if(gameLoaded){
+                    endCurrentGame = false;
+                    runGameMainLoop();
+                }else{
+                    System.out.println("Please load a game first.");
+                    System.out.println();
+                }
                 break;
         }
     }
 
-private static void loadLevel() {
-    gameEngine = new GameEngine();
-    String xml_path = "";
-    boolean xmlPathValid = false;
-    System.out.println("Please enter xml path:");
-    //validate file name
-    //scanner.next();
-    GameDescriptor gameDescriptor = null;
-    xmlPathValid = false;
-    do{
-        try{
-            xml_path = scanner.nextLine();
-            gameDescriptor = XML_Handler.getGameDescriptor(xml_path);
-            xmlPathValid = true;
+    private static void loadLevel() {
+        gameEngine = new GameEngine();
 
-        } catch(FileNotFoundException e) {
-            System.out.print("File not found!");
-        } catch(JAXBException e) {
-            if(!xml_path.endsWith(".xml"))
-                System.out.println("The file you asked for isn't a xml file!");
-            else
-                System.out.print("Error trying to deserialize JAXB file");
-        } catch (Exception e) {
-            System.out.print("ERROR");
-        }
-        finally {
-            if(!xmlPathValid){
-                System.out.println(" Please try again:");
-            }
-        }
-
-
-    }while(!xmlPathValid);
-
-
-    if(XML_Handler.validate(gameDescriptor)){
+        GameDescriptor gameDescriptor = getGameDescriptor();
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
+        gameEngine.setPlayers(createBasicPlayer());
     }
 
-    gameEngine.setPlayers(createBasicPlayer());
-}
+    private static GameDescriptor getGameDescriptor(){
+        boolean xmlPathValid = false;
+        boolean xmlContentValid = false;
+        String xml_path = null;
+        System.out.println("Please enter xml path:");
+        GameDescriptor gameDescriptor = null;
+
+        do{
+            try{
+                xml_path = scanner.nextLine();
+                gameDescriptor = XML_Handler.getGameDescriptorFromXml(xml_path);
+                XML_Handler.validate(gameDescriptor);
+                xmlPathValid = true;
+                xmlContentValid = true;
+
+            } catch (CellOutOfBoundsException e) {
+                System.out.print(e.getMessage());
+            } catch (CursorCellException e) {
+                System.out.print(e.getMessage());
+            } catch (DuplicateCellException e) {
+                System.out.print(e.getMessage());
+            } catch (InvalidBoardSizeException e) {
+                System.out.print(e.getMessage());
+            } catch (InvalidRangeException e) {
+                System.out.print(e.getMessage());
+            } catch (InvalidRangeCompareToBoardSizeException e){
+                System.out.print(e.getMessage());
+            } catch(FileNotFoundException e) {
+                System.out.print("File not found!");
+            } catch(JAXBException e) {
+                if(!xml_path.endsWith(".xml"))
+                    System.out.print("The file you asked for isn't a xml file!");
+                else
+                    System.out.print("Error trying to deserialize JAXB file");
+            } catch (Exception e) {
+                System.out.print("An unhandled error occured");
+
+            }
+            finally {
+                if(!xmlPathValid){
+                    System.out.println(" Please try again:");
+                }
+            }
+
+
+        }while(!xmlPathValid && !xmlContentValid);
+
+        loadedXmlFilePath = xml_path;
+        return gameDescriptor;
+    }
+
 
     private static void runGameMainLoop() {
         int choice;
@@ -241,6 +270,12 @@ private static void loadLevel() {
             case 4:
                 //resetGame();
                 endCurrentGame = true;
+                try{
+                    gameEngine.loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(loadedXmlFilePath));
+
+                } catch (Exception e){
+                    System.out.println("An unhandled error occured");
+                }
                 break;
             case 5:
                 exitApplication = true;
@@ -269,6 +304,8 @@ private static void loadLevel() {
             } catch (CellNumberOutOfBoundsException e){
                 System.out.println(e.getMessage());
             } catch(EmptyCellException e) {
+                System.out.println(e.getMessage());
+            } catch(CursorCellException e) {
                 System.out.println(e.getMessage());
             } catch (Exception e) {
                 System.out.println("Input is invalid. Please try again.");

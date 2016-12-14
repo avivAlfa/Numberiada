@@ -1,3 +1,6 @@
+import Exceptions.CellNumberOutOfBoundsException;
+import Exceptions.CursorCellException;
+import Exceptions.EmptyCellException;
 import generated.GameDescriptor;
 
 import java.util.*;
@@ -175,7 +178,7 @@ public class GameEngine {
 
     private Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
         Cell[][] boardArray = createEmptyBoard(boardSize);
-        List<PoolEmement> poolOfImpression = createPool(boardSize, rangeFrom, rangeTo);
+        List<PoolElement> poolOfImpression = createPool(boardSize, rangeFrom, rangeTo);
         Random rand = new Random();
         int randomNumber;
 
@@ -185,10 +188,12 @@ public class GameEngine {
                 if(poolOfImpression.get(randomNumber).getNumber() == 999) {
                     boardArray[i][j].setAsEmpty();
                 }
-                boardArray[i][j].setValue(poolOfImpression.get(randomNumber).getNumber());
-                poolOfImpression.get(randomNumber).decreaseNumOfImp();
+                else{
+                    boardArray[i][j].setValue(poolOfImpression.get(randomNumber).getNumber());
+                }
+                poolOfImpression.get(randomNumber).decreaseNum2();
 
-                if(poolOfImpression.get(randomNumber).numOfImp == 0) {
+                if(poolOfImpression.get(randomNumber).num2 == 0) {
                     poolOfImpression.remove(randomNumber);
                 }
             }
@@ -210,15 +215,15 @@ public class GameEngine {
         return new Board(boardArray, boardSize);
     }
 
-    public ArrayList<PoolEmement> createPool(int boardSize, int rangeFrom, int rangeTo){
-        ArrayList<PoolEmement> pool = new ArrayList<PoolEmement>();
+    public ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo){
+        ArrayList<PoolElement> pool = new ArrayList<PoolElement>();
         int rangeSize = rangeTo - rangeFrom + 1;
         int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / rangeSize;
         
         for(int i = rangeFrom; i <= rangeTo; i++){
-            pool.add(new PoolEmement(i, numOfImpressions));
+            pool.add(new PoolElement(i, numOfImpressions));
         }
-        pool.add(new PoolEmement(999, ((int)(Math.pow(boardSize,2) - 1) % rangeSize) + 1));
+        pool.add(new PoolElement(999, ((int)(Math.pow(boardSize,2) - 1) % rangeSize) + 1));
         
         return pool;
     } 

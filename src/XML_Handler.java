@@ -1,3 +1,4 @@
+import Exceptions.*;
 import generated.GameDescriptor;
 
 import javax.xml.bind.JAXBContext;
@@ -6,13 +7,15 @@ import javax.xml.bind.Unmarshaller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class XML_Handler {
     private final static String JAXB_XML_GAME_PACKAGE_NAME = "generated";
 
-    public static GameDescriptor getGameDescriptor(String xml_path) throws Exception{
+    public static GameDescriptor getGameDescriptorFromXml(String xml_path) throws Exception{
         GameDescriptor gameDescriptor = null;
         InputStream inputStream;//XML_Handler.class.getResourceAsStream("\\resources\\random.xml");
         try {
@@ -25,7 +28,8 @@ public class XML_Handler {
             // e.printStackTrace();
         } catch (FileNotFoundException e) {
             throw e;
-            //System.out.println("File not found!");
+        } catch (Exception e) {
+            throw e;
         }
 
         return gameDescriptor;
@@ -37,9 +41,60 @@ public class XML_Handler {
         return (GameDescriptor) u.unmarshal(in);
     }
 
-    public static boolean validate(GameDescriptor gd)
-    {
-        return true;
+    public static void validate(GameDescriptor gd) throws Exception {
+        int boardSize = gd.getBoard().getSize().intValue();
+        if(boardSize < 5 || boardSize > 50){
+            throw new InvalidBoardSizeException();
+        }
+        if((gd.getBoard().getStructure().getType()).toLowerCase().equals("random")){
+            validateRandomBoard(gd);
+        }else{
+            validateExplicitBoard(gd);
+        }
+    }
+
+    private static void validateRandomBoard(GameDescriptor gd) throws Exception{
+        int rangeFrom = gd.getBoard().getStructure().getRange().getFrom();
+        int rangeTo = gd.getBoard().getStructure().getRange().getTo();
+        int boardSize = gd.getBoard().getSize().intValue();
+
+        if(rangeTo - rangeFrom + 1 > Math.pow(boardSize,2) - 1 ){
+            throw new InvalidRangeCompareToBoardSizeException();
+        }
+
+        if(rangeTo < rangeFrom){
+            throw new InvalidRangeException();
+        }
+    }
+
+    private static void validateExplicitBoard(GameDescriptor gd) throws Exception{
+        int boardSize = gd.getBoard().getSize().intValue();
+        int currRow, currCol, currValue;
+        PoolElement cell;
+        Set<PoolElement> seenSquares = new HashSet<PoolElement>();
+        List<GameDescriptor.Board.Structure.Squares.Square> squaresList = gd.getBoard().getStructure().getSquares().getSquare();
+        GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
+
+        for(int i = 0; i < squaresList.size(); i++){
+            currRow = squaresList.get(i).getRow().intValue();
+            currCol = squaresList.get(i).getColumn().intValue();
+            currValue = squaresList.get(i).getValue().intValue();
+
+            if((currRow > boardSize) || (currCol > boardSize)) {
+                throw new CellOutOfBoundsException(currRow, currCol, currValue, boardSize);
+            }
+
+            cell = new PoolElement(currRow,currCol);
+            if(seenSquares.contains(cell)){
+                throw new DuplicateCellException(currRow, currCol, currValue);
+            }else{
+                seenSquares.add(cell);
+            }
+        }
+
+        if(marker.getRow().intValue() > boardSize || marker.getColumn().intValue() > boardSize){
+            throw new CursorOutOfBoundsException(marker.getRow().intValue(), marker.getColumn().intValue(), boardSize);
+        }
     }
 
 

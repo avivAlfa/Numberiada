@@ -1,3 +1,5 @@
+package Exceptions;
+
 /**
  * Created by alfav on 11/28/2016.
  */
