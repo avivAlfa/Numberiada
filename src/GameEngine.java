@@ -1,6 +1,7 @@
 import Exceptions.CellNumberOutOfBoundsException;
 import Exceptions.CursorCellException;
 import Exceptions.EmptyCellException;
+import Exceptions.InvalidPlayerTypeException;
 import generated.GameDescriptor;
 
 import java.util.*;
@@ -60,22 +61,17 @@ public class GameEngine {
         this.cursorCol = col;
     }
 
-    public void createBasicPlayer(String firstPlayerName, String secondPlayerName){
-        players = new ArrayList<Player>();
-        Player p1 = new Player(firstPlayerName,0,true);
-        Player p2 = new Player(secondPlayerName,0,true);
-        players.add(p1);
-        players.add(p2);
-    }
-
-
     public String getCurrentPlayerName()
     {
         return players.get(playerTurnIndex).getName();
     }
 
+    public boolean isCurrentPlayerHuman(){
+        return players.get(playerTurnIndex).isHuman();
+    }
 
-    public Cell getChosenCell(int cellNumber) {
+
+    public Cell getChosenCellAccordingToIndex(int cellNumber) {
        // Cell chosenCell = new Cell();
 
         if (playerTurnIndex % 2 == 0) { //even - row player}
@@ -102,7 +98,7 @@ public class GameEngine {
         if(!gameBoard.isIndexInBorders(cellNumber)) {
             throw new CellNumberOutOfBoundsException();
         }
-        Cell chosenCell = getChosenCell((cellNumber));
+        Cell chosenCell = getChosenCellAccordingToIndex((cellNumber));
         if(chosenCell.isEmpty()){
             throw new EmptyCellException();
         } else if(chosenCell.isCursor()) {
@@ -113,14 +109,47 @@ public class GameEngine {
     }
 
     public void playMove(int chosenNumber){
+        Cell chosenCell;
+
         Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
         cursorCell.setAsEmpty();
 
-        Cell chosenCell = getChosenCell(chosenNumber);
+        if(!players.get(playerTurnIndex).isHuman()){
+            chosenNumber = getComputerChosenCellNumber();
+        }
+
+        chosenCell = getChosenCellAccordingToIndex(chosenNumber);
         players.get(playerTurnIndex).addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
-
         updateCursor(chosenNumber);
+        changeTurn();
+    }
+
+
+    public int getComputerChosenCellNumber(){
+        int maxCellIndex = 0;
+        int maxValue = 0;
+
+        if(playerTurnIndex%2 == 0) {//row Player
+            for(int i=0; i <gameBoard.getSize(); i++) {
+                if(gameBoard.getCell(cursorRow, i).getValue() > maxValue){
+                    maxValue = gameBoard.getCell(cursorRow, i).getValue();
+                    maxCellIndex = i;
+                }
+            }
+        }
+        else {
+            for(int i=0; i < gameBoard.getSize(); i++) {
+                Cell currentCell = gameBoard.getCell(i, cursorCol);
+                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+                    if (gameBoard.getCell(i, cursorCol).getValue() > maxValue) {
+                        maxValue = gameBoard.getCell(i, cursorCol).getValue();
+                        maxCellIndex = i;
+                    }
+                }
+            }
+        }
+        return maxCellIndex;
     }
 
     public void changeTurn() {
@@ -175,6 +204,12 @@ public class GameEngine {
         return ((diff / (60*1000) % 60) + ":" + (diff / 1000 % 60));
     }
 
+    public void loadGameParams(){
+        playerTurnIndex = 0;
+        movesCnt = 0;
+        resignedPlayers = null;
+    }
+
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
@@ -185,7 +220,7 @@ public class GameEngine {
            cursorRow = marker.getRow().intValue() - 1;
            cursorCol = marker.getColumn().intValue() - 1;
         }
-        playerTurnIndex = 0;
+        players = buildPlayersList(gd.getPlayers().getPlayer());
     }
 
     private Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
@@ -259,14 +294,7 @@ public class GameEngine {
         Board board;
         int boardSize = gd.getBoard().getSize().intValue();
         Cell[][] boardArray = createEmptyBoard(boardSize);
-                //new Cell[boardSize][boardSize];
 
-//        for(int i = 0; i < boardSize; i++) {
-//            for (int j = 0; j < boardSize; j++) {
-//                boardArray[i][j] = new Cell();
-//                boardArray[i][j].setAsEmpty();
-//            }
-//        }
         List<GameDescriptor.Board.Structure.Squares.Square> squareList = gd.getBoard().getStructure().getSquares().getSquare();
         GameDescriptor.Board.Structure.Squares.Square curSquare;
         for(int i=0; i< squareList.size(); i++) {
@@ -278,6 +306,24 @@ public class GameEngine {
         return new Board(boardArray, boardSize);
     }
 
+    private List<Player> buildPlayersList(List<GameDescriptor.Players.Player> playersListFromGameDescriptor)
+    {
+        List<Player> playersList = new ArrayList<Player>();
+        Player newPlayer;
+        for(int i = 0; i < playersListFromGameDescriptor.size(); i++){
+            newPlayer = new Player();
+            newPlayer.setName(playersListFromGameDescriptor.get(i).getName());
+            newPlayer.setScore(0);
+            if(playersListFromGameDescriptor.get(i).getType().equals("Human")){
+                newPlayer.setAsHuman();
+            }else if(playersListFromGameDescriptor.get(i).getType().equals("Computer") ){
+                newPlayer.setAsComputer();
+            }
+            playersList.add(newPlayer);
+        }
+        return playersList;
+    }
+
 
     public void removeCurrentPlayerFromGame(){
         if(resignedPlayers == null){
@@ -285,10 +331,18 @@ public class GameEngine {
         }
         resignedPlayers.add(players.get(playerTurnIndex));
         players.remove(playerTurnIndex);
+        if(playerTurnIndex == players.size()) {//last player resigned
+            playerTurnIndex--;
+        }
     }
 
     public int getNumOfPlayingPlayers(){
         return players.size();
     }
 
+    public void restartGame(String xml_path)throws Exception{
+        loadGameParams();
+        loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(xml_path));
+
+    }
 }

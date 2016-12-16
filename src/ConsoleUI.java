@@ -141,8 +141,9 @@ public class ConsoleUI {
         gameEngine = new GameEngine();
 
         GameDescriptor gameDescriptor = getGameDescriptor();
+        gameEngine.loadGameParams();
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
-        gameEngine.createBasicPlayer("RowPlayer", "ColPlayer");
+        //gameEngine.createBasicPlayer("RowPlayer", "ColPlayer");
     }
 
     private static GameDescriptor getGameDescriptor(){
@@ -170,7 +171,9 @@ public class ConsoleUI {
                 System.out.print(e.getMessage());
             } catch (InvalidRangeException e) {
                 System.out.print(e.getMessage());
-            } catch (InvalidRangeCompareToBoardSizeException e){
+            } catch (InvalidRangeCompareToBoardSizeException e) {
+                System.out.print(e.getMessage());
+            } catch (InvalidPlayerTypeException e){
                 System.out.print(e.getMessage());
             } catch(FileNotFoundException e) {
                 System.out.print("File not found!");
@@ -205,9 +208,13 @@ public class ConsoleUI {
 
         gameOver = gameEngine.endGame();
         while(!gameOver && !endCurrentGame && !exitApplication){
-            System.out.println();
-            runMenu(MenuType.MAIN_MENU);
-
+            if(gameEngine.isCurrentPlayerHuman()) {
+                System.out.println();
+                runMenu(MenuType.MAIN_MENU);
+            }
+            else { //current player is computer
+                gameEngine.playMove(0);
+            }
             gameOver = gameEngine.endGame();
         }
 
@@ -264,7 +271,6 @@ public class ConsoleUI {
                 break;
             case 2:
                 chooseMove();
-                gameEngine.changeTurn();
                 printBoard();
                 break;
             case 3:
@@ -278,7 +284,7 @@ public class ConsoleUI {
                 }
 
                 try{
-                    gameEngine.loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(loadedXmlFilePath));
+                    gameEngine.restartGame(loadedXmlFilePath);
 
                 } catch (Exception e){
                     System.out.println("An unhandled error occured");

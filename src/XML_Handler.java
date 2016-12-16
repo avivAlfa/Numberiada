@@ -51,6 +51,7 @@ public class XML_Handler {
         }else{
             validateExplicitBoard(gd);
         }
+        validatePlayers(gd);
     }
 
     private static void validateRandomBoard(GameDescriptor gd) throws Exception{
@@ -95,6 +96,16 @@ public class XML_Handler {
         if(marker.getRow().intValue() > boardSize || marker.getColumn().intValue() > boardSize){
             throw new CursorOutOfBoundsException(marker.getRow().intValue(), marker.getColumn().intValue(), boardSize);
         }
+    }
+
+    private static void validatePlayers(GameDescriptor gd)throws Exception{
+        List<GameDescriptor.Players.Player> players = gd.getPlayers().getPlayer();
+        for (GameDescriptor.Players.Player player: players){
+            if(!player.getType().equals("Human") && !player.getType().equals("Computer")){
+                throw new InvalidPlayerTypeException();
+            }
+        }
+
     }
 
 

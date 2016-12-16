@@ -4,6 +4,8 @@ public class Player {
     private int score = 0;
     private boolean isHuman = false;
 
+    public Player() {}
+
     public Player(String name, int score, boolean isHuman) {
         this.name = name;
         this.score = score;
@@ -30,5 +32,9 @@ public class Player {
         score += scoreToAdd;
     }
 
+    public boolean isHuman() { return this.isHuman;}
 
+    public void setAsHuman(){ this.isHuman = true;}
+
+    public void setAsComputer() { this.isHuman = false; }
 }
