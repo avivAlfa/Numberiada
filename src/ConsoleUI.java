@@ -51,6 +51,7 @@ public class ConsoleUI {
             case START_MENU:
                 System.out.println("(1) Load level");
                 System.out.println("(2) Start game");
+                System.out.println("(3) Exit");
                 break;
             case MAIN_MENU:
                 System.out.println("(1) Display game status");
@@ -105,7 +106,7 @@ public class ConsoleUI {
         boolean validInput = false;
         switch (menuType){
             case START_MENU:
-                validInput = userChoice == 1 || userChoice == 2;
+                validInput = userChoice == 1 || userChoice == 2 || userChoice == 3;
                 break;
             case MAIN_MENU:
                 validInput = userChoice > 0 && userChoice < 6; //change to menuItem labels
@@ -131,6 +132,8 @@ public class ConsoleUI {
                     System.out.println();
                 }
                 break;
+            case 3:
+                exitApplication = true;
         }
     }
 
@@ -139,7 +142,7 @@ public class ConsoleUI {
 
         GameDescriptor gameDescriptor = getGameDescriptor();
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
-        gameEngine.setPlayers(createBasicPlayer());
+        gameEngine.createBasicPlayer("RowPlayer", "ColPlayer");
     }
 
     private static GameDescriptor getGameDescriptor(){
@@ -175,7 +178,7 @@ public class ConsoleUI {
                 if(!xml_path.endsWith(".xml"))
                     System.out.print("The file you asked for isn't a xml file!");
                 else
-                    System.out.print("Error trying to deserialize JAXB file");
+                    System.out.print("Error trying to retrieve data from XML file");
             } catch (Exception e) {
                 System.out.print("An unhandled error occured");
 
@@ -268,8 +271,12 @@ public class ConsoleUI {
                 printGameStatistics();
                 break;
             case 4:
-                //resetGame();
-                endCurrentGame = true;
+                gameEngine.removeCurrentPlayerFromGame();
+                if(gameEngine.getNumOfPlayingPlayers() == 1){
+                    endCurrentGame = true;
+                    printAllPlayersResignedMessage();
+                }
+
                 try{
                     gameEngine.loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(loadedXmlFilePath));
 
@@ -319,15 +326,21 @@ public class ConsoleUI {
     }
 
     private static void printGameStatistics() {
-        Player [] players = gameEngine.getPlayers();
+        List<Player> players = gameEngine.getPlayers();
+        List<Player> resignedPlayers = gameEngine.getResignedPlayers();
 
         System.out.println("Game statistics:");
         System.out.println("Players' number of moves: " + gameEngine.getMovesCnt());
         System.out.println("Game duration: " + gameEngine.getTimeDuration());
-        for(int i = 0 ; i < players.length ; i++) {
-            System.out.println(players[i].getName() + " score: " + players[i].getScore());
+        for(int i = 0 ; i < players.size() ; i++) {
+            System.out.println(players.get(i).getName() + " score: " + players.get(i).getScore());
         }
-        System.out.println();
+        if(resignedPlayers != null){
+            for(int i = 0 ; i < resignedPlayers.size() ; i++) {
+                System.out.println(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore());
+            }
+        }
+
     }
 
     private static  void printGameWinner(){
@@ -346,10 +359,12 @@ public class ConsoleUI {
         System.out.println();
     }
 
-    private static Player[] createBasicPlayer(){
-        Player p1 = new Player("RowPlayer",0,true);
-        Player p2 = new Player("ColumnPlayer",0,true);
-        Player[] players = {p1,p2};
-        return players;
+    private static void printAllPlayersResignedMessage(){
+        System.out.println("Game Over");
+        System.out.println("The winner is " + gameEngine.getCurrentPlayerName() + " duo to all other players resignment");
+        printGameStatistics();
+        System.out.println();
     }
+
+
 }

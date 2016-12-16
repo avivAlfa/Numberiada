@@ -7,7 +7,8 @@ import java.util.*;
 
 public class GameEngine {
     private Board gameBoard;
-    private Player [] players;
+    private List<Player> players;
+    private List<Player> resignedPlayers;
     private int playerTurnIndex;
     private int cursorRow;
     private int cursorCol;
@@ -24,13 +25,12 @@ public class GameEngine {
     }
 
     public Player getPlayerByIndex(int index){
-        return players[index];
+        return players.get(index);
     }
 
-    public void setPlayers(Player[] i_players){ players = i_players;}
+    public void setPlayers(List<Player> i_players){ players = i_players;}
 
-    public void setPlayerByIndex(Player player, int index){
-        players[index] = player;
+    public void setPlayerByIndex(Player player, int index){ players.add(index, player);
     }
 
     public int getPlayerTurnIndex() {
@@ -43,7 +43,9 @@ public class GameEngine {
 
     public Board getGameBoard() { return gameBoard; }
 
-    public Player[] getPlayers(){ return players; }
+    public List<Player> getPlayers(){ return players; }
+
+    public List<Player> getResignedPlayers() {return resignedPlayers; }
 
     public int getCursorRow() {
         return cursorRow;
@@ -58,10 +60,20 @@ public class GameEngine {
         this.cursorCol = col;
     }
 
+    public void createBasicPlayer(String firstPlayerName, String secondPlayerName){
+        players = new ArrayList<Player>();
+        Player p1 = new Player(firstPlayerName,0,true);
+        Player p2 = new Player(secondPlayerName,0,true);
+        players.add(p1);
+        players.add(p2);
+    }
+
+
     public String getCurrentPlayerName()
     {
-        return players[playerTurnIndex].getName();
+        return players.get(playerTurnIndex).getName();
     }
+
 
     public Cell getChosenCell(int cellNumber) {
        // Cell chosenCell = new Cell();
@@ -105,7 +117,7 @@ public class GameEngine {
         cursorCell.setAsEmpty();
 
         Cell chosenCell = getChosenCell(chosenNumber);
-        players[playerTurnIndex].addScore(chosenCell.getValue());
+        players.get(playerTurnIndex).addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
 
         updateCursor(chosenNumber);
@@ -114,7 +126,7 @@ public class GameEngine {
     public void changeTurn() {
         playerTurnIndex++;
         movesCnt++;
-        if(playerTurnIndex == players.length){
+        if(playerTurnIndex == players.size()){
             playerTurnIndex = 0;
         }
     }
@@ -142,15 +154,15 @@ public class GameEngine {
         List<Player> gameWinners = new ArrayList<Player>();
         int maxScore = 0;
 
-        for(int i = 0 ; i < players.length ; i++) {
-            if(players[i].getScore() > maxScore){
-                maxScore = players[i].getScore();
+        for(int i = 0 ; i < players.size() ; i++) {
+            if(players.get(i).getScore() > maxScore){
+                maxScore = players.get(i).getScore();
             }
         }
 
-        for(int i = 0 ; i < players.length ; i++) {
-            if(players[i].getScore() == maxScore){
-                gameWinners.add(players[i]);
+        for(int i = 0 ; i < players.size() ; i++) {
+            if(players.get(i).getScore() == maxScore){
+                gameWinners.add(players.get(i));
             }
         }
         return gameWinners;
@@ -264,6 +276,19 @@ public class GameEngine {
         boardArray[gd.getBoard().getStructure().getSquares().getMarker().getRow().intValue() - 1][gd.getBoard().getStructure().getSquares().getMarker().getColumn().intValue() - 1].setAsCursor();
 
         return new Board(boardArray, boardSize);
+    }
+
+
+    public void removeCurrentPlayerFromGame(){
+        if(resignedPlayers == null){
+            resignedPlayers = new ArrayList<>();
+        }
+        resignedPlayers.add(players.get(playerTurnIndex));
+        players.remove(playerTurnIndex);
+    }
+
+    public int getNumOfPlayingPlayers(){
+        return players.size();
     }
 
 }
