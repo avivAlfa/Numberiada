@@ -1,5 +1,6 @@
 import Exceptions.*;
 import generated.GameDescriptor;
+import resources.RunMode;
 
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
@@ -8,20 +9,6 @@ import java.util.List;
 
 public class ConsoleUI {
 
-    public enum MenuType
-    {
-        START_MENU,
-        MAIN_MENU
-    }
-    public enum MainMenuItem //move to other location
-    {
-        DISPLAY, //Display game status
-        PLAY,    //Play move
-        SHOW,    //Show game statistics
-        END,     //End game
-        EXIT     //Exit application
-    }
-
     private static GameEngine gameEngine;
     private static boolean endCurrentGame = false;
     private static boolean exitApplication = false;
@@ -29,11 +16,97 @@ public class ConsoleUI {
     private static String loadedXmlFilePath = null;
     private static Scanner scanner = new Scanner(System.in);
 
+    private static RunMode runMode;
+    private static List<String> movesList;
+
 
     public static void runGame()
     {
+
+        setRunMode();
         while(!exitApplication){
             runMenu((MenuType.START_MENU));
+        }
+    }
+
+    private static void setRunMode()
+    {
+        int input;
+        Boolean inputIsValid = false;
+
+        System.out.println("Please choose run mode of the game:");
+        System.out.println("(1) User");
+        System.out.println("(2) File");
+
+        do {
+            try{
+                //userChoice = scanner.nextInt();
+                input = scanner.nextInt();
+                if(input == 1){
+                    runMode = RunMode.USER;
+                    inputIsValid = true;
+                }else if(input == 2){
+                    runMode = RunMode.FILE;
+                    initListFromUserFile();
+                    inputIsValid = true;
+                }
+                else {
+                    System.out.println("Input is out of range, Please try again.");
+                }
+
+            } catch (Exception e) {
+                System.out.println("Input is invalid. Please try again.");
+            }finally {
+                cleanBuffer();
+            }
+        }
+        while(!inputIsValid);
+    }
+
+    private static void initListFromUserFile(){
+        //TODO: create list from file
+        movesList = new LinkedList<String>();
+        movesList.add("1");
+        movesList.add("C:\\Users\\alfav\\Desktop\\a\\x.xml");
+        movesList.add("2");
+        movesList.add("2");
+        movesList.add("4");
+        movesList.add("2"); //remove this row for human vs com ->com move
+        movesList.add("1");//remove this row for human vs com ->com move
+        movesList.add("2");
+        movesList.add("2");
+    }
+
+    public static int getIntInput() throws Exception{
+        int input = 0;
+        switch (runMode) {
+            case USER:
+                input = scanner.nextInt();
+                break;
+            case FILE:
+                input = Integer.parseInt(movesList.get(0));
+                movesList.remove(0);
+                break;
+        }
+        return input;
+    }
+    public static String getStringInput(){
+        String input = null;
+        switch (runMode) {
+            case USER:
+                input = scanner.nextLine();
+                break;
+            case FILE:
+                input = (movesList.get(0));
+                movesList.remove(0);
+                break;
+        }
+        return input;
+    }
+
+    private static void cleanBuffer(){
+        if(runMode == RunMode.USER){
+            scanner.nextLine();
         }
     }
 
@@ -70,7 +143,8 @@ public class ConsoleUI {
 
         do {
             try{
-                userChoice = scanner.nextInt();
+                //userChoice = scanner.nextInt();
+                userChoice = getIntInput();
                 if(isValidInput(menuType, userChoice)){
                     inputIsValid = true;
                 }
@@ -82,7 +156,7 @@ public class ConsoleUI {
                 System.out.println("Input is invalid. Please try again.");
                 //scanner.nextLine();
             }finally {
-                scanner.nextLine();
+                cleanBuffer();
             }
         }
         while(!inputIsValid);
@@ -155,7 +229,8 @@ public class ConsoleUI {
 
         do{
             try{
-                xml_path = scanner.nextLine();
+               // xml_path = scanner.nextLine();
+                xml_path = getStringInput();
                 gameDescriptor = XML_Handler.getGameDescriptorFromXml(xml_path);
                 XML_Handler.validate(gameDescriptor);
                 xmlPathValid = true;
@@ -309,7 +384,8 @@ public class ConsoleUI {
 
         do {
             try {
-                userChoice = scanner.nextInt();
+                //userChoice = scanner.nextInt();
+                userChoice = getIntInput();
                 userChoice--;
                 if (gameEngine.isValidCell(userChoice)){
                     inputIsValid = true;
@@ -323,7 +399,8 @@ public class ConsoleUI {
             } catch (Exception e) {
                 System.out.println("Input is invalid. Please try again.");
             } finally {
-                scanner.nextLine();
+                //scanner.nextLine();
+                cleanBuffer();
             }
         }
         while(!inputIsValid);
@@ -367,7 +444,7 @@ public class ConsoleUI {
 
     private static void printAllPlayersResignedMessage(){
         System.out.println("Game Over");
-        System.out.println("The winner is " + gameEngine.getCurrentPlayerName() + " duo to all other players resignment");
+        System.out.println("The winner is " + gameEngine.getCurrentPlayerName() + " due to all other players resignment");
         printGameStatistics();
         System.out.println();
     }
