@@ -128,13 +128,16 @@ public class GameEngine {
 
     public int getComputerChosenCellNumber(){
         int maxCellIndex = 0;
-        int maxValue = 0;
+        int maxValue = -999;
 
         if(playerTurnIndex%2 == 0) {//row Player
             for(int i=0; i <gameBoard.getSize(); i++) {
-                if(gameBoard.getCell(cursorRow, i).getValue() > maxValue){
-                    maxValue = gameBoard.getCell(cursorRow, i).getValue();
-                    maxCellIndex = i;
+                Cell currentCell = gameBoard.getCell(cursorRow, i);
+                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+                    if (currentCell.getValue() > maxValue) {
+                        maxValue = currentCell.getValue();
+                        maxCellIndex = i;
+                    }
                 }
             }
         }
@@ -142,8 +145,8 @@ public class GameEngine {
             for(int i=0; i < gameBoard.getSize(); i++) {
                 Cell currentCell = gameBoard.getCell(i, cursorCol);
                 if(!currentCell.isCursor() && !currentCell.isEmpty()) {
-                    if (gameBoard.getCell(i, cursorCol).getValue() > maxValue) {
-                        maxValue = gameBoard.getCell(i, cursorCol).getValue();
+                    if (currentCell.getValue() > maxValue) {
+                        maxValue = currentCell.getValue();
                         maxCellIndex = i;
                     }
                 }
