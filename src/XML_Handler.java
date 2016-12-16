@@ -17,10 +17,10 @@ public class XML_Handler {
 
     public static GameDescriptor getGameDescriptorFromXml(String xml_path) throws Exception{
         GameDescriptor gameDescriptor = null;
-        InputStream inputStream;//XML_Handler.class.getResourceAsStream("\\resources\\random.xml");
+        InputStream inputStream; //XML_Handler.class.getResourceAsStream("\\resources\\random.xml");
         try {
             inputStream = new FileInputStream(xml_path);
-             gameDescriptor = deserializeFrom(inputStream);
+            gameDescriptor = deserializeFrom(inputStream);
 
 
         } catch (JAXBException e) {

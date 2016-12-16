@@ -3,7 +3,7 @@ import generated.GameDescriptor;
 import resources.RunMode;
 
 import javax.xml.bind.JAXBException;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -65,16 +65,31 @@ public class ConsoleUI {
 
     private static void initListFromUserFile(){
         //TODO: create list from file
-        movesList = new LinkedList<String>();
-        movesList.add("1");
-        movesList.add("C:\\Users\\alfav\\Desktop\\a\\x.xml");
-        movesList.add("2");
-        movesList.add("2");
-        movesList.add("4");
-        movesList.add("2"); //remove this row for human vs com ->com move
-        movesList.add("1");//remove this row for human vs com ->com move
-        movesList.add("2");
-        movesList.add("2");
+        movesList = new ArrayList<>();
+        System.out.println("Please enter the path of the steps file");
+        boolean fileLoaded = false;
+
+        scanner.nextLine();
+        while(!fileLoaded) {
+
+            String filePath = scanner.nextLine();
+            try {
+                FileReader fr = new FileReader(filePath);
+                BufferedReader textReader = new BufferedReader(fr);
+
+                String line;
+                while ((line = textReader.readLine()) != null) {
+                    movesList.add(line);
+                }
+                textReader.close();
+                fileLoaded = true;
+            } catch (FileNotFoundException e) {
+                System.out.println("The path you've entered isn't correct! Please try again");
+            } catch (IOException e) {
+                System.out.println("Error reading file, please provide a path to another file.");
+            }
+        }
+
     }
 
     public static int getIntInput() throws Exception{
