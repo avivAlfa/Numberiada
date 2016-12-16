@@ -2,32 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9ab39112-8fae-44f4-b577-c2e6231c4bb9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/CellOutOfBoundsException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/CursorOutOfBoundsException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/DuplicateCellException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/InvalidBoardSizeException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/InvalidRangeCompareToBoardSizeException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Exceptions/InvalidRangeException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/PoolElement.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/CellNumberOutOfBoundsException.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/CursorCellException.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/EmptyCellException.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/PoolEmement.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/PoolEmement.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/CellNumberOutOfBoundsException.java" afterPath="$PROJECT_DIR$/src/Exceptions/CellNumberOutOfBoundsException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/CursorCellException.java" afterPath="$PROJECT_DIR$/src/Exceptions/CursorCellException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/EmptyCellException.java" afterPath="$PROJECT_DIR$/src/Exceptions/EmptyCellException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$1.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$MainMenuItem.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$MainMenuItem.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$MenuType.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI$MenuType.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/ConsoleUI.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/GameEngine.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/GameEngine.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Numberiada_NA/XML_Handler.class" afterPath="$PROJECT_DIR$/out/production/Numberiada_NA/XML_Handler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ConsoleUI.java" afterPath="$PROJECT_DIR$/src/ConsoleUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameEngine.java" afterPath="$PROJECT_DIR$/src/GameEngine.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/XML_Handler.java" afterPath="$PROJECT_DIR$/src/XML_Handler.java" />
     </list>
     <ignored path="Numberiada_NA.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,11 +27,11 @@
       <file leaf-file-name="GameEngine.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GameEngine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="194" column="0" selection-start-line="194" selection-start-column="0" selection-end-line="194" selection-end-column="0" />
+            <state relative-caret-position="328">
+              <caret line="162" column="44" selection-start-line="162" selection-start-column="44" selection-end-line="162" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#6855#6868#0" expanded="true" />
+                <element signature="e#6853#6866#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -65,8 +40,8 @@
       <file leaf-file-name="XML_Handler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/XML_Handler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="87" column="35" selection-start-line="87" selection-start-column="27" selection-end-line="87" selection-end-column="35" />
+            <state relative-caret-position="135">
+              <caret line="83" column="69" selection-start-line="83" selection-start-column="69" selection-end-line="83" selection-end-column="69" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2557#2570#0" expanded="true" />
@@ -75,103 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PoolElement.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/PoolElement.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
-              <folding>
-                <element signature="e#271#272#0" expanded="true" />
-                <element signature="e#298#299#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvalidRangeCompareToBoardSizeException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidRangeCompareToBoardSizeException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-              <folding>
-                <element signature="e#125#126#0" expanded="true" />
-                <element signature="e#209#210#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CursorOutOfBoundsException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Exceptions/CursorOutOfBoundsException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CellOutOfBoundsException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Exceptions/CellOutOfBoundsException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="30" column="5" selection-start-line="6" selection-start-column="0" selection-end-line="30" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvalidRangeException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidRangeException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="9" selection-end-column="5" />
-              <folding>
-                <element signature="e#151#152#0" expanded="true" />
-                <element signature="e#239#240#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameDescriptor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/generated/GameDescriptor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#10999#11000#0" expanded="true" />
-                <element signature="e#11027#11028#0" expanded="true" />
-                <element signature="e#17839#17840#0" expanded="true" />
-                <element signature="e#17874#17875#0" expanded="true" />
-                <element signature="e#18433#18434#0" expanded="true" />
-                <element signature="e#18473#18474#0" expanded="true" />
-                <element signature="e#25136#25137#0" expanded="true" />
-                <element signature="e#25179#25180#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="InvalidBoardSizeException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidBoardSizeException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="8" column="81" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="81" />
-              <folding>
-                <element signature="e#155#156#0" expanded="true" />
-                <element signature="e#243#244#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConsoleUI.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ConsoleUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ConsoleUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="179" column="32" selection-start-line="179" selection-start-column="32" selection-end-line="179" selection-end-column="32" />
+            <state relative-caret-position="6909">
+              <caret line="308" column="47" selection-start-line="308" selection-start-column="47" selection-end-line="308" selection-end-column="47" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -221,11 +104,11 @@
         <option value="$PROJECT_DIR$/src/Exceptions/DuplicateCellException.java" />
         <option value="$PROJECT_DIR$/src/Exceptions/CursorOutOfBoundsException.java" />
         <option value="$PROJECT_DIR$/src/Exceptions/InvalidRangeCompareToBoardSizeException.java" />
-        <option value="$PROJECT_DIR$/src/ConsoleUI.java" />
-        <option value="$PROJECT_DIR$/src/GameEngine.java" />
         <option value="$PROJECT_DIR$/src/XML_Handler.java" />
         <option value="$PROJECT_DIR$/src/PoolEmement.java" />
         <option value="$PROJECT_DIR$/src/PoolElement.java" />
+        <option value="$PROJECT_DIR$/src/GameEngine.java" />
+        <option value="$PROJECT_DIR$/src/ConsoleUI.java" />
       </list>
     </option>
   </component>
@@ -303,24 +186,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Numberiada_NA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Numberiada_NA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Exceptions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -807,12 +672,12 @@
       <workItem from="1481217854574" duration="600000" />
       <workItem from="1481476453350" duration="12827000" />
       <workItem from="1481535951170" duration="17651000" />
-      <workItem from="1481645018637" duration="29815000" />
+      <workItem from="1481645018637" duration="34828000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101629000" />
+    <option name="totallyTimeSpent" value="106642000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -834,7 +699,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.32992035" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="210" y="83" width="1567" height="820" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="true" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.32992035" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="201" y="41" width="1567" height="820" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -845,7 +710,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3275218" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3275218" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -966,7 +831,7 @@
           <caret line="99" column="16" selection-start-line="99" selection-start-column="16" selection-end-line="99" selection-end-column="16" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6855#6868#0" expanded="true" />
+            <element signature="e#6853#6866#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1043,7 +908,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6855#6868#0" expanded="true" />
+            <element signature="e#6853#6866#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1104,7 +969,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6855#6868#0" expanded="true" />
+            <element signature="e#6853#6866#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1165,7 +1030,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#6855#6868#0" expanded="true" />
+            <element signature="e#6853#6866#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1291,8 +1156,8 @@
         <state relative-caret-position="175">
           <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="9" selection-end-column="5" />
           <folding>
-            <element signature="e#148#149#0" expanded="true" />
-            <element signature="e#219#220#0" expanded="true" />
+            <element signature="e#148#149#0" expanded="false" />
+            <element signature="e#219#220#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1358,17 +1223,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidRangeCompareToBoardSizeException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding>
-            <element signature="e#125#126#0" expanded="true" />
-            <element signature="e#209#210#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidBoardSizeException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
@@ -1380,31 +1234,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameEngine.java">
+    <entry file="file://$PROJECT_DIR$/src/Exceptions/InvalidRangeCompareToBoardSizeException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="194" column="0" selection-start-line="194" selection-start-column="0" selection-end-line="194" selection-end-column="0" />
+        <state relative-caret-position="175">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#6855#6868#0" expanded="true" />
+            <element signature="e#125#126#0" expanded="true" />
+            <element signature="e#209#210#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ConsoleUI.java">
+    <entry file="file://$PROJECT_DIR$/src/PoolElement.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="179" column="32" selection-start-line="179" selection-start-column="32" selection-end-line="179" selection-end-column="32" />
+        <state relative-caret-position="1000">
+          <caret line="44" column="16" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="16" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#271#272#0" expanded="true" />
+            <element signature="e#298#299#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/XML_Handler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="87" column="35" selection-start-line="87" selection-start-column="27" selection-end-line="87" selection-end-column="35" />
+        <state relative-caret-position="135">
+          <caret line="83" column="69" selection-start-line="83" selection-start-column="69" selection-end-line="83" selection-end-column="69" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2557#2570#0" expanded="true" />
@@ -1412,13 +1267,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/PoolElement.java">
+    <entry file="file://$PROJECT_DIR$/src/GameEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
+        <state relative-caret-position="328">
+          <caret line="162" column="44" selection-start-line="162" selection-start-column="44" selection-end-line="162" selection-end-column="44" />
           <folding>
-            <element signature="e#271#272#0" expanded="true" />
-            <element signature="e#298#299#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#6853#6866#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ConsoleUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6909">
+          <caret line="308" column="47" selection-start-line="308" selection-start-column="47" selection-end-line="308" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

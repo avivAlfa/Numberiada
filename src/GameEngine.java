@@ -160,7 +160,7 @@ public class GameEngine {
         Date curr = new Date();
         long diff = curr.getTime() - startingTime;
 
-        return ((diff / (60*1000) % 60) + " : " + (diff / 1000 % 60));
+        return ((diff / (60*1000) % 60) + ":" + (diff / 1000 % 60));
     }
 
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
