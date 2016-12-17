@@ -184,7 +184,7 @@ public class GameEngine {
 
     public List<Player> getGameWinners(){
         List<Player> gameWinners = new ArrayList<Player>();
-        int maxScore = 0;
+        int maxScore = players.get(0).getScore();
 
         for(int i = 0 ; i < players.size() ; i++) {
             if(players.get(i).getScore() > maxScore){

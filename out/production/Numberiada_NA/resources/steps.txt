@@ -1,9 +1,4 @@
 1
-C:\Users\nofard\Documents\Studies\JavaCourse2\Numberiada\src\resources\n.xml
+C:\Users\alfav\IdeaProjects\Numberiada_NA\src\resources\n.xml
 2
-2
-4
-2
-1
-2
-1
+3

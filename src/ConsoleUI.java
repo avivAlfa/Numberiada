@@ -64,7 +64,6 @@ public class ConsoleUI {
     }
 
     private static void initListFromUserFile(){
-        //TODO: create list from file
         movesList = new ArrayList<>();
         System.out.println("Please enter the path of the steps file");
         boolean fileLoaded = false;
@@ -311,7 +310,19 @@ public class ConsoleUI {
         if(gameOver){
             printGameWinner();
             printGameStatistics();
-            exitApplication = true;
+            endCurrentGame = true;
+        }
+        if(endCurrentGame){
+            restartGame();
+        }
+    }
+
+    private static void restartGame(){
+        try{
+            gameEngine.restartGame(loadedXmlFilePath);
+
+        } catch (Exception e){
+            System.out.println("An unhandled error occured");
         }
     }
 
@@ -372,13 +383,6 @@ public class ConsoleUI {
                     endCurrentGame = true;
                     printAllPlayersResignedMessage();
                 }
-
-                try{
-                    gameEngine.restartGame(loadedXmlFilePath);
-
-                } catch (Exception e){
-                    System.out.println("An unhandled error occured");
-                }
                 break;
             case 5:
                 exitApplication = true;
@@ -428,7 +432,7 @@ public class ConsoleUI {
         List<Player> resignedPlayers = gameEngine.getResignedPlayers();
 
         System.out.println("Game statistics:");
-        System.out.println("Players' number of moves: " + gameEngine.getMovesCnt());
+        System.out.println("Players number of moves: " + gameEngine.getMovesCnt());
         System.out.println("Game duration: " + gameEngine.getTimeDuration());
         for(int i = 0 ; i < players.size() ; i++) {
             System.out.println(players.get(i).getName() + " score: " + players.get(i).getScore());
@@ -438,7 +442,7 @@ public class ConsoleUI {
                 System.out.println(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore());
             }
         }
-
+        System.out.println();
     }
 
     private static  void printGameWinner(){
