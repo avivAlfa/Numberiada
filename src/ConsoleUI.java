@@ -262,6 +262,8 @@ public class ConsoleUI {
                 System.out.print(e.getMessage());
             } catch (InvalidRangeCompareToBoardSizeException e) {
                 System.out.print(e.getMessage());
+            } catch (InvalidRangeValuesException e){
+                System.out.print(e.getMessage());
             } catch (InvalidPlayerTypeException e){
                 System.out.print(e.getMessage());
             } catch(FileNotFoundException e) {

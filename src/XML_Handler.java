@@ -66,6 +66,10 @@ public class XML_Handler {
         if(rangeTo < rangeFrom){
             throw new InvalidRangeException();
         }
+
+        if(rangeFrom < -99 || rangeTo > 99){
+            throw new InvalidRangeValuesException();
+        }
     }
 
     private static void validateExplicitBoard(GameDescriptor gd) throws Exception{
