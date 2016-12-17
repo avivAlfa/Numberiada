@@ -8,7 +8,7 @@ import java.util.*;
 
 public class GameEngine {
     private Board gameBoard;
-    private List<Player> players;
+    private List<Player> players = null;
     private List<Player> resignedPlayers;
     private int playerTurnIndex;
     private int cursorRow;
@@ -223,7 +223,9 @@ public class GameEngine {
            cursorRow = marker.getRow().intValue() - 1;
            cursorCol = marker.getColumn().intValue() - 1;
         }
-        players = buildPlayersList(gd.getPlayers().getPlayer());
+        if(gd.getPlayers() != null) {
+            players = buildPlayersListFromDescriptor(gd.getPlayers().getPlayer());
+        }
     }
 
     private Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
@@ -309,8 +311,7 @@ public class GameEngine {
         return new Board(boardArray, boardSize);
     }
 
-    private List<Player> buildPlayersList(List<GameDescriptor.Players.Player> playersListFromGameDescriptor)
-    {
+    private List<Player> buildPlayersListFromDescriptor(List<GameDescriptor.Players.Player> playersListFromGameDescriptor) {
         List<Player> playersList = new ArrayList<Player>();
         Player newPlayer;
         for(int i = 0; i < playersListFromGameDescriptor.size(); i++){
@@ -325,6 +326,14 @@ public class GameEngine {
             playersList.add(newPlayer);
         }
         return playersList;
+    }
+
+    public void buildBasicPlayers(){
+        players = new ArrayList<Player>();
+        Player player1 = new Player("RowPlayer", 0, true);
+        Player player2 = new Player("ColPlayer", 0, true);
+        players.add(player1);
+        players.add(player2);
     }
 
 

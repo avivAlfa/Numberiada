@@ -3,21 +3,9 @@
 <GameDescriptor xsi:noNamespaceSchemaLocation="Numberiada.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<GameType>Basic</GameType>
 	<Board>
-		<Size>10</Size>
+		<Size>7</Size>
 		<Structure type="Random">
-			<Range from="-99" to="99"/>
+			<Range from="0" to="15"/>
 		</Structure>
 	</Board>	
-	<Players>
-		<Player id="1">
-			<Name>RowPlayer</Name>
-			<Type>Human</Type>
-			<Color>0</Color>
-		</Player>
-		<Player id="2">
-			<Name>ColumnPlayer</Name>
-			<Type>Computer</Type>
-			<Color>0</Color>
-		</Player>
-	</Players>	
 </GameDescriptor>

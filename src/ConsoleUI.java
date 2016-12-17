@@ -231,7 +231,9 @@ public class ConsoleUI {
         GameDescriptor gameDescriptor = getGameDescriptor();
         gameEngine.loadGameParams();
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
-        //gameEngine.createBasicPlayer("RowPlayer", "ColPlayer");
+        if(gameEngine.getPlayers() == null){
+            gameEngine.buildBasicPlayers();
+        }
     }
 
     private static GameDescriptor getGameDescriptor(){
@@ -444,7 +446,6 @@ public class ConsoleUI {
                 System.out.println(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore());
             }
         }
-        System.out.println();
     }
 
     private static  void printGameWinner(){

@@ -103,13 +103,15 @@ public class XML_Handler {
     }
 
     private static void validatePlayers(GameDescriptor gd)throws Exception{
-        List<GameDescriptor.Players.Player> players = gd.getPlayers().getPlayer();
-        for (GameDescriptor.Players.Player player: players){
-            if(!player.getType().equals("Human") && !player.getType().equals("Computer")){
-                throw new InvalidPlayerTypeException();
+        if(gd.getPlayers()!=null) {
+            List<GameDescriptor.Players.Player> players = gd.getPlayers().getPlayer();
+
+            for (GameDescriptor.Players.Player player : players) {
+                if (!player.getType().equals("Human") && !player.getType().equals("Computer")) {
+                    throw new InvalidPlayerTypeException();
+                }
             }
         }
-
     }
 
 
