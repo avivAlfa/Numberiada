@@ -1,6 +1,5 @@
 import Exceptions.*;
 import generated.GameDescriptor;
-import resources.RunMode;
 
 import javax.xml.bind.JAXBException;
 import java.io.*;
@@ -8,7 +7,6 @@ import java.util.*;
 import java.util.List;
 
 public class ConsoleUI {
-
     private static GameEngine gameEngine;
     private static boolean endCurrentGame = false;
     private static boolean exitApplication = false;
@@ -57,7 +55,7 @@ public class ConsoleUI {
             } catch (Exception e) {
                 System.out.println("Input is invalid. Please try again.");
             }finally {
-                cleanBuffer();
+                scanner.nextLine();
             }
         }
         while(!inputIsValid);
