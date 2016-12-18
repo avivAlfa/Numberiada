@@ -133,6 +133,7 @@ public class ConsoleUI {
     }
 
     private static void printMenu(MenuType menuType) {
+        System.out.println();
         System.out.println("Please choose an option from the menu");
         switch (menuType) {
             case START_MENU:
@@ -231,9 +232,7 @@ public class ConsoleUI {
         GameDescriptor gameDescriptor = getGameDescriptor();
         gameEngine.loadGameParams();
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
-        if(gameEngine.getPlayers() == null){
-            gameEngine.buildBasicPlayers();
-        }
+
     }
 
     private static GameDescriptor getGameDescriptor(){
@@ -302,7 +301,6 @@ public class ConsoleUI {
         gameOver = gameEngine.endGame();
         while(!gameOver && !endCurrentGame && !exitApplication){
             if(gameEngine.isCurrentPlayerHuman()) {
-                System.out.println();
                 runMenu(MenuType.MAIN_MENU);
             }
             else { //current player is computer
@@ -468,7 +466,6 @@ public class ConsoleUI {
         System.out.println("Game Over");
         System.out.println("The winner is " + gameEngine.getCurrentPlayerName() + " due to all other players resignment");
         printGameStatistics();
-        System.out.println();
     }
 
 

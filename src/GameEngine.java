@@ -211,6 +211,7 @@ public class GameEngine {
         playerTurnIndex = 0;
         movesCnt = 0;
         resignedPlayers = null;
+        players = null;
     }
 
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
@@ -225,6 +226,9 @@ public class GameEngine {
         }
         if(gd.getPlayers() != null) {
             players = buildPlayersListFromDescriptor(gd.getPlayers().getPlayer());
+        }
+        else {
+            buildBasicPlayers();
         }
     }
 

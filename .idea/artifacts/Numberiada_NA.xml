@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Numberiada_NA">
+    <output-path>$PROJECT_DIR$/out/artifacts/Numberiada_NA</output-path>
+    <root id="archive" name="Numberiada_NA.jar">
+      <element id="module-output" name="Numberiada_NA" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

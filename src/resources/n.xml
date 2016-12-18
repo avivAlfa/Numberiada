@@ -39,7 +39,7 @@
 		</Player>
 		<Player id="2">
 			<Name>ColumnPlayer</Name>
-			<Type>Computer</Type>
+			<Type>Human</Type>
 			<Color>0</Color>
 		</Player>
 	</Players>
