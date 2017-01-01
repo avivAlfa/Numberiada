@@ -2,6 +2,7 @@ import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -22,6 +23,8 @@ public class GameController {
     @FXML
     private Label filePathLabel;
     @FXML
+    private TextArea pathTxt;
+    @FXML
     private Button loadFileButton;
     @FXML
     private Button startButton;
@@ -29,6 +32,8 @@ public class GameController {
     private Button playMoveButton;
     @FXML
     private Label statisticsLabel;
+    @FXML
+    private Label messageLabel;
 
     public void setModel(GameEngine model) {
         this.gameEngine = model;
@@ -37,14 +42,16 @@ public class GameController {
     @FXML
     void loadFileButton_OnClick(ActionEvent event) {
         GameDescriptor gameDescriptor = getGameDescriptor();
-        gameEngine.loadGameParams();
-        gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
-        JOptionPane.showMessageDialog(null, gameDescriptor.getGameType());
+        if(gameDescriptor != null) {
+            messageLabel.setText("XML loaded!");
+            gameEngine.loadGameParams();
+            gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
+            JOptionPane.showMessageDialog(null, gameDescriptor.getGameType());
+            startButton.setDisable(false);
+        } else
+            startButton.setDisable(true);
     }
 
-    public static void test(){
-
-    }
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
@@ -63,57 +70,70 @@ public class GameController {
         String xml_path = null;
         GameDescriptor gameDescriptor = null;
 
-        do{
+//        do{
             try{
                 xml_path = getPathFromDialog();
+                pathTxt.setText(xml_path);
                 gameDescriptor = XML_Handler.getGameDescriptorFromXml(xml_path);
                 XML_Handler.validate(gameDescriptor);
                 xmlPathValid = true;
                 xmlContentValid = true;
 
             } catch (CellOutOfBoundsException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+               // JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (CursorCellException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+               // JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (DuplicateCellException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+               // JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (InvalidBoardSizeException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+                //JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (InvalidRangeException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+                //JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (InvalidRangeCompareToBoardSizeException e) {
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+                //JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (InvalidRangeValuesException e){
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+                //JOptionPane.showMessageDialog(null, e.getMessage());
             } catch (InvalidPlayerTypeException e){
-                System.out.print(e.getMessage());
+                messageLabel.setText(e.getMessage());
+                //JOptionPane.showMessageDialog(null, e.getMessage());
             } catch(FileNotFoundException e) {
-                System.out.print("File not found!");
+                messageLabel.setText("File not found!");
+                //JOptionPane.showMessageDialog(null, "File not found!");
             } catch(JAXBException e) {
                 if(!xml_path.endsWith(".xml"))
-                    System.out.print("The file you asked for isn't a xml file!");
+                    messageLabel.setText("The file you asked for isn't a xml file!");
+                   // JOptionPane.showMessageDialog(null, "The file you asked for isn't a xml file!");
                 else
-                    System.out.print("Error trying to retrieve data from XML file");
+                    messageLabel.setText("Error trying to retrieve data from XML file");
+                    //JOptionPane.showMessageDialog(null, "Error trying to retrieve data from XML file");
             } catch (Exception e) {
-                System.out.print("An unhandled error occured");
+                messageLabel.setText("An unhandled error occured");
+                //JOptionPane.showMessageDialog(null, "An unhandled error occured");
 
             }
-            finally {
+            /*finally {
                 if(!xmlPathValid){
-                    System.out.println(" Please try again:");
+                    JOptionPane.showMessageDialog(null, " Please try again:");
                 }
-            }
+            }*/
 
 
-        }while(!xmlPathValid && !xmlContentValid);
+        //}while(!xmlPathValid && !xmlContentValid);
 
        // loadedXmlFilePath = xml_path;
         return gameDescriptor;
     }
 
 
-    public String getPathFromDialog()
-    {
+    public String getPathFromDialog() {
+
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(null);
         String selectedPath;
