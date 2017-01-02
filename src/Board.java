@@ -11,6 +11,10 @@ public class Board {
         this.size = size;
     }
 
+    public Cell[][] getBoard() {
+        return board;
+    }
+
     public int getSize() {
         return size;
     }

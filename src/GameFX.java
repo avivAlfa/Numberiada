@@ -18,7 +18,7 @@ public class GameFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        GameEngine model = new GameEngine();
+       // GameEngine model = new GameEngine();
 
         primaryStage.setTitle("Numberiada");
 
@@ -30,8 +30,8 @@ public class GameFX extends Application {
         URL url = getClass().getResource("resources/gameFX.fxml");
         fxmlLoader.setLocation(url);
         Parent root = fxmlLoader.load(url.openStream());
-        GameController gameController = fxmlLoader.getController();
-        gameController.setModel(model);
+      //  GameController gameController = fxmlLoader.getController();
+      //  gameController.setModel(model);
 
         Scene scene = new Scene(root, 700, 500);
 
