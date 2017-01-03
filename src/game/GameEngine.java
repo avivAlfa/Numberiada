@@ -1,9 +1,10 @@
+package game;
+
 import Exceptions.CellNumberOutOfBoundsException;
 import Exceptions.CursorCellException;
 import Exceptions.EmptyCellException;
 import Exceptions.InvalidPlayerTypeException;
 import generated.GameDescriptor;
-
 import java.util.*;
 
 public class GameEngine {
@@ -85,14 +86,22 @@ public class GameEngine {
        // return  chosenCell;
     }
 
-    public void updateCursor(int cellNumber){
-        if (playerTurnIndex % 2 == 0) { //even - row player}
-            cursorCol = cellNumber;
+//    public void updateCursor(int cellNumber){
+//        if (playerTurnIndex % 2 == 0) { //even - row player}
+//            cursorCol = cellNumber;
+//        }
+//        else { //col player
+//            cursorRow = cellNumber;
+//        }
+//    }
+        public void updateCursor(int row, int col){
+            if (playerTurnIndex % 2 == 0) { //even - row player}
+                cursorCol = col;
+            }
+            else { //col player
+                cursorRow = row;
+            }
         }
-        else { //col player
-            cursorRow = cellNumber;
-        }
-    }
 
     public boolean isValidCell(int cellNumber) throws Exception {
         if(!gameBoard.isIndexInBorders(cellNumber)) {
@@ -108,20 +117,38 @@ public class GameEngine {
         return true;
     }
 
-    public void playMove(int chosenNumber){
+//    public void playMove(int chosenNumber){
+//        Cell chosenCell;
+//
+//        Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
+//        cursorCell.setAsEmpty();
+//
+//        if(!players.get(playerTurnIndex).isHuman()){
+//            chosenNumber = getComputerChosenCellNumber();
+//        }
+//
+//        chosenCell = getChosenCellAccordingToIndex(chosenNumber);
+//        players.get(playerTurnIndex).addScore(chosenCell.getValue());
+//        chosenCell.setAsCursor();
+//        updateCursor(chosenNumber);
+//        changeTurn();
+//    }
+
+    public void playMove(int chosenRow, int chosenCol){
         Cell chosenCell;
 
         Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
         cursorCell.setAsEmpty();
 
-        if(!players.get(playerTurnIndex).isHuman()){
-            chosenNumber = getComputerChosenCellNumber();
-        }
+//        if(!players.get(playerTurnIndex).isHuman()){
+//            chosenNumber = getComputerChosenCellNumber();
+//        }
 
-        chosenCell = getChosenCellAccordingToIndex(chosenNumber);
+      //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
+        chosenCell = gameBoard.getCell(chosenRow, chosenCol);
         players.get(playerTurnIndex).addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
-        updateCursor(chosenNumber);
+        updateCursor(chosenRow, chosenCol);
         changeTurn();
     }
 
@@ -249,7 +276,7 @@ public class GameEngine {
                 }
                 poolOfImpression.get(randomNumber).decreaseNum2();
 
-                if(poolOfImpression.get(randomNumber).num2 == 0) {
+                if(poolOfImpression.get(randomNumber).getNum2() == 0) {
                     poolOfImpression.remove(randomNumber);
                 }
             }
@@ -358,7 +385,8 @@ public class GameEngine {
 
     public void restartGame(String xml_path)throws Exception{
         loadGameParams();
-        loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(xml_path));
+        //TODO: rewrite restart
+    //    loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(xml_path));
 
     }
 }

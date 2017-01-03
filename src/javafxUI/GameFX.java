@@ -1,4 +1,4 @@
-/**
+package javafxUI; /**
  * Created by alfav on 12/28/2016.
  */
 
@@ -27,7 +27,7 @@ public class GameFX extends Application {
 
         //if you want to load the FXML and get access to its controller
         FXMLLoader fxmlLoader = new FXMLLoader();
-        URL url = getClass().getResource("resources/gameFX.fxml");
+        URL url = getClass().getResource("/resources/gameFX.fxml");
         fxmlLoader.setLocation(url);
         Parent root = fxmlLoader.load(url.openStream());
       //  GameController gameController = fxmlLoader.getController();

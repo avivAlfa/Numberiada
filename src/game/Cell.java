@@ -1,3 +1,4 @@
+package game;
 
 public class Cell {
     private int value;
@@ -21,6 +22,7 @@ public class Cell {
     public boolean isEmpty() {return this.isEmpty;}
 
     public void setAsEmpty(){
+        this.value = -999;
         this.isEmpty = true;
         this.isCursor = false;
     }
@@ -28,6 +30,7 @@ public class Cell {
     public boolean isCursor() {return  this.isCursor;}
 
     public void setAsCursor(){
+        this.value = 999;
         this.isCursor = true;
         this.isEmpty = false;
     }

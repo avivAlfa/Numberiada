@@ -1,3 +1,5 @@
+package game;
+
 import generated.GameDescriptor;
 
 public class Board {

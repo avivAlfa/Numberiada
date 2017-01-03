@@ -1,4 +1,7 @@
+package game;
+
 import Exceptions.*;
+import game.PoolElement;
 import generated.GameDescriptor;
 
 import javax.xml.bind.JAXBContext;

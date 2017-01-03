@@ -1,3 +1,5 @@
+package game;
+
 /**
  * Created by alfav on 12/13/2016.
  */

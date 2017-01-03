@@ -1,10 +1,9 @@
-import javafx.beans.binding.Bindings;
+package javafxUI;
+
+import game.Board;
+import game.GameEngine;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -13,16 +12,16 @@ import javafx.scene.layout.Pane;
 import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
+import javafxUI.CellUI;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.JAXBException;
 import javax.swing.*;
 
 public class GameController {
     private GameEngine gameEngine;
-    private CellUI[][] gameBoardUI;
+    private BoardUI gameBoardUI;
 
     @FXML
     private Pane mainPane;
@@ -99,8 +98,8 @@ public class GameController {
         try{
             xml_path = getPathFromDialog();
             pathTxt.setText(xml_path);
-            gameDescriptor = XML_Handler.getGameDescriptorFromXml(xml_path);
-            XML_Handler.validate(gameDescriptor);
+            gameDescriptor = game.XML_Handler.getGameDescriptorFromXml(xml_path);
+            game.XML_Handler.validate(gameDescriptor);
             xmlPathValid = true;
             xmlContentValid = true;
 
@@ -192,11 +191,12 @@ public class GameController {
 
     private void loadGameGrid(){
         Board gameBoard = gameEngine.getGameBoard();
-        gameBoardUI = new CellUI[gameBoard.getSize()][gameBoard.getSize()];
+        gameBoardUI = new BoardUI(new CellUI[gameBoard.getSize()][gameBoard.getSize()]);
         for(int i = 0; i <gameBoard.getSize(); i++){
             for(int j = 0; j < gameBoard.getSize(); j++){
                 CellUI currCell = new CellUI(gameBoard.getCell(i,j));
-                gameBoardUI[i][j] = currCell;
+                //currCell.setOnAction(event -> gameEngine.playMove(i,j));
+                gameBoardUI.setCellUI(currCell,i,j);
                 gameGrid.add(currCell,i,j,1,1);
             }
           //  gameGrid.getRowConstraints().get(i).s
