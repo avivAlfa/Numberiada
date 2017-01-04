@@ -2,26 +2,36 @@ package javafxUI;
 
 import game.Board;
 import game.GameEngine;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+import game.Player;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.*;
 import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
-import javafxUI.CellUI;
-
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.swing.*;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
-public class GameController {
+public class GameController implements Initializable{
     private GameEngine gameEngine;
     private BoardUI gameBoardUI;
+    private CellUI selectedCell = new CellUI();
+    private SimpleBooleanProperty gameIsRunning;
+    private SimpleBooleanProperty gameUploaded;
 
     @FXML
     private Pane mainPane;
@@ -65,29 +75,105 @@ public class GameController {
         this.gameEngine = model;
     }
 */
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        gameIsRunning = new SimpleBooleanProperty(false);
+        gameUploaded = new SimpleBooleanProperty(false);
+
+        loadFileButton.disableProperty().bind(gameIsRunning);
+        startButton.disableProperty().bind(Bindings.or(gameIsRunning, Bindings.not(gameUploaded)));
+        playMoveButton.disableProperty().bind(Bindings.not(gameIsRunning));
+
+    }
+
     @FXML
     void loadFileButton_OnClick(ActionEvent event) {
         GameDescriptor gameDescriptor = getGameDescriptor();
         if(gameDescriptor != null) {
             loadGameEngine(gameDescriptor);
             loadGameGrid();
-            bindComponents();
+            handleTurn();
             messageLabel.setText("");
-            startButton.setDisable(false);
-
+            gameUploaded.setValue(true);
         } else
-            startButton.setDisable(true);
+            gameUploaded.setValue(false);
     }
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
+        CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(),gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
+        int row = GridPane.getRowIndex(selectedCell);
+        int col = GridPane.getColumnIndex(selectedCell);
+        gameEngine.playMove(row,col);
+
+        cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
+        selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
+        selectedCell.setStyle("-fx-base: #ececec ");
+        handleTurn();
 
     }
 
     @FXML
     void startButton_OnClick(ActionEvent event) {
+        gameIsRunning.setValue(true);
+    }
+
+    @FXML
+    private void cellUI_OnClick(CellUI cell){
+        selectedCell.setStyle("-fx-base: #ececec ");
+        selectedCell = cell;
+        selectedCell.setStyle("-fx-base: #b6e7c9;");
 
     }
+
+    private void handleTurn(){
+        currentPlayerLabel.setText(gameEngine.getCurrentPlayerName());
+        totalMovesLabel.setText(String.valueOf(gameEngine.getMovesCnt()));
+        //TODO:scoretable update
+        if(gameEngine.endGame()){
+            handleEndGame();
+        }
+    }
+
+    private void handleEndGame(){
+        String endGameMessage = createEndGameMessage();
+        popupMessage(endGameMessage);
+        gameIsRunning.setValue(false);
+        gameUploaded.setValue(false);
+
+    }
+
+    private String createEndGameMessage(){
+        List<Player> gameWinners = gameEngine.getGameWinners();
+        StringBuilder endGameMessage = new StringBuilder();
+        endGameMessage.append("Game Over\n");
+        if(gameWinners.size() == 1){
+            endGameMessage.append("The winner is " + gameWinners.get(0).getName() + " with score of " + gameWinners.get(0).getScore() + "!\n");
+        }else{
+            endGameMessage.append("It's a Tie!\n");
+        }
+
+        List<Player> players = gameEngine.getPlayers();
+        List<Player> resignedPlayers = gameEngine.getResignedPlayers();
+
+        endGameMessage.append("\n");
+        endGameMessage.append("Players total moves: " + gameEngine.getMovesCnt() + "\n");
+        for(int i = 0 ; i < players.size() ; i++) {
+            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
+        }
+        if(resignedPlayers != null){
+            for(int i = 0 ; i < resignedPlayers.size() ; i++) {
+                endGameMessage.append(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore()+"\n");
+            }
+        }
+        return endGameMessage.toString();
+    }
+
+    private void popupMessage(String msg){
+        JOptionPane.showMessageDialog(null, msg);
+    }
+
     private GameDescriptor getGameDescriptor(){
         boolean xmlPathValid = false;
         boolean xmlContentValid = false;
@@ -189,25 +275,17 @@ public class GameController {
         gameEngine.loadGameParamsFromDescriptor(gameDescriptor);
     }
 
-    private void loadGameGrid(){
+    private void loadGameGrid() {
         Board gameBoard = gameEngine.getGameBoard();
         gameBoardUI = new BoardUI(new CellUI[gameBoard.getSize()][gameBoard.getSize()]);
-        for(int i = 0; i <gameBoard.getSize(); i++){
-            for(int j = 0; j < gameBoard.getSize(); j++){
-                CellUI currCell = new CellUI(gameBoard.getCell(i,j));
-                //currCell.setOnAction(event -> gameEngine.playMove(i,j));
-                gameBoardUI.setCellUI(currCell,i,j);
-                gameGrid.add(currCell,i,j,1,1);
+        for (int i = 0; i < gameBoard.getSize(); i++) {
+            for (int j = 0; j < gameBoard.getSize(); j++) {
+                CellUI currCell = new CellUI(gameBoard.getCell(i, j));
+                currCell.setOnAction(e -> cellUI_OnClick((CellUI) e.getSource()));
+                gameBoardUI.setCellUI(currCell, i, j);
+                gameGrid.add(currCell, j, i, 1, 1);
             }
-          //  gameGrid.getRowConstraints().get(i).s
+            //  gameGrid.getRowConstraints().get(i).s
         }
     }
-
-    private void bindComponents() {
-        totalMovesLabel.textProperty().bind(new SimpleIntegerProperty(gameEngine.getMovesCnt()).asString());
-        currentPlayerLabel.textProperty().bind(new SimpleStringProperty(gameEngine.getCurrentPlayerName()));
-        //TODO: view and bind player score table
-
-    }
-
 }
