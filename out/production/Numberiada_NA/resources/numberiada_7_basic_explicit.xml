@@ -3,7 +3,7 @@
 <GameDescriptor xsi:noNamespaceSchemaLocation="Numberiada.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<GameType>Basic</GameType>
 	<Board>
-		<Size>7</Size>
+		<Size>8</Size>
 		<Structure type="Explicit">
 			<Squares>
 				<Square row="1" column="2" color="0">

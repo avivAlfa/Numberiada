@@ -28,8 +28,8 @@ public class CellUI extends Button {
         isCursorProperty = new SimpleBooleanProperty(content.isCursor());
 
 
-        this.setPrefSize(60,60);
-        this.disableProperty().bind(Bindings.or(isEmptyProperty,isCursorProperty));
+        this.setPrefSize(62,62);
+        //this.disableProperty().bind(Bindings.or(isEmptyProperty,isCursorProperty));
         this.textProperty().bind(
                 Bindings.when(isCursorProperty)
                         .then("@")

@@ -5,7 +5,10 @@ import Exceptions.CursorCellException;
 import Exceptions.EmptyCellException;
 import Exceptions.InvalidPlayerTypeException;
 import generated.GameDescriptor;
+
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class GameEngine {
     private Board gameBoard;
@@ -153,6 +156,30 @@ public class GameEngine {
     }
 
 
+    public List<Point> getPossibleCells() {
+        List<Point> possibleCells = new ArrayList<Point>();
+        Cell currCell;
+
+        if (playerTurnIndex % 2 == 0) { //rowPlayer{
+            for (int j = 0; j < gameBoard.getSize(); j++) {
+                currCell = gameBoard.getCell(cursorRow, j);
+                if ((!currCell.isEmpty()) && ((!currCell.isCursor()))) {
+                    possibleCells.add(new Point(cursorRow, j));
+                }
+            }
+
+        }
+        else {
+            for (int i = 0; i < gameBoard.getSize(); i++) {
+                currCell = gameBoard.getCell(i, cursorCol);
+                if ((!currCell.isEmpty()) && ((!currCell.isCursor()))) {
+                    possibleCells.add(new Point(i, cursorCol));
+                }
+            }
+        }
+        return possibleCells;
+    }
+
     public int getComputerChosenCellNumber(){
         int maxCellIndex = 0;
         int maxValue = -999;
@@ -206,7 +233,8 @@ public class GameEngine {
                 }
             }
         }
-        return gameEnded;
+
+        return gameEnded || players.size() == 1;
     }
 
     public List<Player> getGameWinners(){
@@ -377,6 +405,7 @@ public class GameEngine {
         if(playerTurnIndex == players.size()) {//last player resigned
             playerTurnIndex--;
         }
+
     }
 
     public int getNumOfPlayingPlayers(){
@@ -388,5 +417,28 @@ public class GameEngine {
         //TODO: rewrite restart
     //    loadGameParamsFromDescriptor(XML_Handler.getGameDescriptorFromXml(xml_path));
 
+    }
+
+    public String createEndGameMessage(){
+        List<Player> gameWinners = getGameWinners();
+        StringBuilder endGameMessage = new StringBuilder();
+        //endGameMessage.append("Game Over\n");
+        if(gameWinners.size() == 1){
+            endGameMessage.append("The winner is " + gameWinners.get(0).getName() + " with score of " + gameWinners.get(0).getScore() + "!\n");
+        }else{
+            endGameMessage.append("It's a Tie!\n");
+        }
+
+        endGameMessage.append("\n");
+        endGameMessage.append("Players total moves: " + movesCnt + "\n");
+        for(int i = 0 ; i < players.size() ; i++) {
+            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
+        }
+        if(resignedPlayers != null){
+            for(int i = 0 ; i < resignedPlayers.size() ; i++) {
+                endGameMessage.append(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore()+"\n");
+            }
+        }
+        return endGameMessage.toString();
     }
 }

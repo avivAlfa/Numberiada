@@ -33,7 +33,7 @@ public class GameFX extends Application {
       //  GameController gameController = fxmlLoader.getController();
       //  gameController.setModel(model);
 
-        Scene scene = new Scene(root, 700, 500);
+        Scene scene = new Scene(root, 727, 608);
 
 //        Button singInButton = (Button) scene.lookup("#signInButton");
 //        final Text actionTarget = (Text)scene.lookup("#actiontarget");

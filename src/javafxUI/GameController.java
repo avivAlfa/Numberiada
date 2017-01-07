@@ -17,6 +17,9 @@ import javafx.scene.layout.*;
 import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,11 +35,12 @@ public class GameController implements Initializable{
     private CellUI selectedCell = new CellUI();
     private SimpleBooleanProperty gameIsRunning;
     private SimpleBooleanProperty gameUploaded;
+    private SimpleBooleanProperty gameEndView;
 
     @FXML
     private Pane mainPane;
     @FXML
-    private AnchorPane topPane;
+    private Pane topPane;
     @FXML
     private Label filePathLabel;
     @FXML
@@ -60,35 +64,37 @@ public class GameController implements Initializable{
     @FXML
     private Button playMoveButton;
     @FXML
+    private Button retireButton;
+    @FXML
     private Label totalMovesLabel;
     @FXML
     private Label currentPlayerLabel;
     @FXML
-    private TableView<?> playerScoreTable;
+    private Button nextButton;
     @FXML
-    private TableColumn<?, ?> playerColumn;
+    private Button prevButton;
     @FXML
-    private TableColumn<?, ?> scoreColumn;
+    private ListView<?> playersListView;
 
-/*
-    public void setModel(GameEngine model) {
-        this.gameEngine = model;
-    }
-*/
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gameIsRunning = new SimpleBooleanProperty(false);
         gameUploaded = new SimpleBooleanProperty(false);
+        gameEndView = new SimpleBooleanProperty(false);
 
         loadFileButton.disableProperty().bind(gameIsRunning);
         startButton.disableProperty().bind(Bindings.or(gameIsRunning, Bindings.not(gameUploaded)));
         playMoveButton.disableProperty().bind(Bindings.not(gameIsRunning));
-
+        pathTxt.disableProperty().bind(gameIsRunning);
+        retireButton.disableProperty().bind(Bindings.not(gameIsRunning));
+        prevButton.visibleProperty().bind(gameEndView);
+        nextButton.visibleProperty().bind(gameEndView);
     }
 
     @FXML
     void loadFileButton_OnClick(ActionEvent event) {
+        resetGame();
         GameDescriptor gameDescriptor = getGameDescriptor();
         if(gameDescriptor != null) {
             loadGameEngine(gameDescriptor);
@@ -102,6 +108,7 @@ public class GameController implements Initializable{
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
+        updatePrevPossibleCells();
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(),gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
@@ -123,7 +130,23 @@ public class GameController implements Initializable{
     private void cellUI_OnClick(CellUI cell){
         selectedCell.setStyle("-fx-base: #ececec ");
         selectedCell = cell;
-        selectedCell.setStyle("-fx-base: #b6e7c9;");
+        selectedCell.setStyle("-fx-base: #add8e6;");
+
+    }
+
+    @FXML
+    void retireButton_OnClick(ActionEvent event) {
+        gameEngine.removeCurrentPlayerFromGame();
+        handleTurn();
+    }
+
+    @FXML
+    void nextButton_OnClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void prevButton_OnClick(ActionEvent event) {
 
     }
 
@@ -134,44 +157,55 @@ public class GameController implements Initializable{
         if(gameEngine.endGame()){
             handleEndGame();
         }
+        else{
+            updatePossibleCells();
+        }
     }
+
+    private void updatePrevPossibleCells(){
+        List<Point> prevPossibleCells = gameEngine.getPossibleCells();
+
+        for (Point p : prevPossibleCells) {
+            gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(true);
+        }
+    }
+
+    private void updatePossibleCells(){
+
+        List<Point> possibleCells = gameEngine.getPossibleCells();
+
+        for (Point p : possibleCells) {
+            gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(false);
+        }
+    }
+
+
 
     private void handleEndGame(){
-        String endGameMessage = createEndGameMessage();
-        popupMessage(endGameMessage);
+        String endGameMessage = gameEngine.createEndGameMessage();
+        popupMessage(endGameMessage, "Game Over", -1);
+        //TODO: Prev Next situation
+        gameEndView.setValue(true);
+        gameIsRunning.setValue(false);
+
+
+    }
+
+    private void resetGame(){
+        gameGrid.getChildren().clear();
         gameIsRunning.setValue(false);
         gameUploaded.setValue(false);
+        gameEngine = null;
+        gameBoardUI = null;
+        selectedCell = new CellUI();
 
     }
 
-    private String createEndGameMessage(){
-        List<Player> gameWinners = gameEngine.getGameWinners();
-        StringBuilder endGameMessage = new StringBuilder();
-        endGameMessage.append("Game Over\n");
-        if(gameWinners.size() == 1){
-            endGameMessage.append("The winner is " + gameWinners.get(0).getName() + " with score of " + gameWinners.get(0).getScore() + "!\n");
-        }else{
-            endGameMessage.append("It's a Tie!\n");
-        }
-
-        List<Player> players = gameEngine.getPlayers();
-        List<Player> resignedPlayers = gameEngine.getResignedPlayers();
-
-        endGameMessage.append("\n");
-        endGameMessage.append("Players total moves: " + gameEngine.getMovesCnt() + "\n");
-        for(int i = 0 ; i < players.size() ; i++) {
-            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
-        }
-        if(resignedPlayers != null){
-            for(int i = 0 ; i < resignedPlayers.size() ; i++) {
-                endGameMessage.append(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore()+"\n");
-            }
-        }
-        return endGameMessage.toString();
-    }
-
-    private void popupMessage(String msg){
-        JOptionPane.showMessageDialog(null, msg);
+    private void popupMessage(String msg,String type, int jOptionPane){
+        JOptionPane optionPane = new JOptionPane(msg, jOptionPane);
+        JDialog dialog = optionPane.createDialog(type);
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);
     }
 
     private GameDescriptor getGameDescriptor(){
@@ -243,12 +277,15 @@ public class GameController implements Initializable{
 
 
     public String getPathFromDialog() {
-
-        final JFileChooser fc = new JFileChooser();
-        int returnVal = fc.showOpenDialog(null);
-        String selectedPath;
+        String selectedPath = null;
+        FileChooser fc = new FileChooser();
+        int returnVal;
+        File file = fc.showOpenDialog(new Stage());
+        if(file !=null){
+            selectedPath = file.getPath();
+        }
         //   if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File file = fc.getSelectedFile();
+        //File file = fc.getSelectedFile();
         //This is where a real application would open the file.
 //            JOptionPane.showMessageDialog(null, "Opening: " + file.getName() + ".");
 //            //log.append("Opening: " + file.getName() + "." + newline);
@@ -256,7 +293,7 @@ public class GameController implements Initializable{
 //            JOptionPane.showMessageDialog(null, "Open command cancelled by user.");
 //           // log.append("Open command cancelled by user." + newline);
 //        }
-        selectedPath = (returnVal == JFileChooser.APPROVE_OPTION) ? file.getPath() : null;
+
         return selectedPath;
     }
 
@@ -281,6 +318,7 @@ public class GameController implements Initializable{
         for (int i = 0; i < gameBoard.getSize(); i++) {
             for (int j = 0; j < gameBoard.getSize(); j++) {
                 CellUI currCell = new CellUI(gameBoard.getCell(i, j));
+                currCell.disableProperty().setValue(true);
                 currCell.setOnAction(e -> cellUI_OnClick((CellUI) e.getSource()));
                 gameBoardUI.setCellUI(currCell, i, j);
                 gameGrid.add(currCell, j, i, 1, 1);
