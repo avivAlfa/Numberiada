@@ -10,12 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cca54fe9-2aae-4d03-a488-cff135bdb91a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/GameEngine.java" afterPath="$PROJECT_DIR$/src/game/GameEngine.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javafxUI/CellUI.java" afterPath="$PROJECT_DIR$/src/javafxUI/CellUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javafxUI/GameController.java" afterPath="$PROJECT_DIR$/src/javafxUI/GameController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javafxUI/GameFX.java" afterPath="$PROJECT_DIR$/src/javafxUI/GameFX.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/resources/gameFX.fxml" afterPath="$PROJECT_DIR$/src/resources/gameFX.fxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/resources/numberiada_7_basic_explicit.xml" afterPath="$PROJECT_DIR$/src/resources/numberiada_7_basic_explicit.xml" />
     </list>
     <ignored path="Numberiada_NA.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,8 +94,8 @@
       <file leaf-file-name="CellUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/javafxUI/CellUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+            <state relative-caret-position="344">
+              <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -182,8 +177,8 @@
         <option value="$PROJECT_DIR$/src/game/GameEngine.java" />
         <option value="$PROJECT_DIR$/src/javafxUI/GameController.java" />
         <option value="$PROJECT_DIR$/src/javafxUI/GameFX.java" />
-        <option value="$PROJECT_DIR$/src/javafxUI/CellUI.java" />
         <option value="$PROJECT_DIR$/src/resources/numberiada_7_basic_explicit.xml" />
+        <option value="$PROJECT_DIR$/src/javafxUI/CellUI.java" />
       </list>
     </option>
   </component>
@@ -816,12 +811,12 @@
       <workItem from="1483291010282" duration="3604000" />
       <workItem from="1483345257183" duration="21349000" />
       <workItem from="1483429152368" duration="4430000" />
-      <workItem from="1483461856413" duration="52877000" />
+      <workItem from="1483461856413" duration="57253000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="111711000" />
+    <option name="totallyTimeSpent" value="116087000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
@@ -1412,8 +1407,8 @@
         <state relative-caret-position="450">
           <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#482#483#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#482#483#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1496,9 +1491,9 @@
         <state relative-caret-position="209">
           <caret line="205" column="0" selection-start-line="205" selection-start-column="0" selection-end-line="205" selection-end-column="0" />
           <folding>
-            <element signature="e#7869#7870#0" expanded="true" />
-            <element signature="e#7912#7913#0" expanded="true" />
-            <element signature="e#8250#8251#0" expanded="true" />
+            <element signature="e#7869#7870#0" expanded="false" />
+            <element signature="e#7912#7913#0" expanded="false" />
+            <element signature="e#8250#8251#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1508,8 +1503,8 @@
         <state relative-caret-position="384">
           <caret line="145" column="0" selection-start-line="145" selection-start-column="0" selection-end-line="145" selection-end-column="0" />
           <folding>
-            <element signature="e#3921#3922#0" expanded="true" />
-            <element signature="e#3962#3963#0" expanded="true" />
+            <element signature="e#3921#3922#0" expanded="false" />
+            <element signature="e#3962#3963#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1572,8 +1567,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javafxUI/CellUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        <state relative-caret-position="344">
+          <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
           <folding />
         </state>
       </provider>

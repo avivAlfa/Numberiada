@@ -9,6 +9,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import static jdk.nashorn.internal.objects.NativeFunction.bind;
 
@@ -16,6 +18,7 @@ public class CellUI extends Button {
     private Cell content;
     SimpleBooleanProperty  isEmptyProperty;
     SimpleBooleanProperty isCursorProperty;
+    ImageView markerImage;
 
     //private StringProperty value;
 
@@ -26,17 +29,28 @@ public class CellUI extends Button {
         content = cell;
         isEmptyProperty = new SimpleBooleanProperty(content.isEmpty());
         isCursorProperty = new SimpleBooleanProperty(content.isCursor());
+        markerImage = new ImageView(new Image(getClass().getResourceAsStream("/resources/marker.png")));
 
 
         this.setPrefSize(62,62);
         //this.disableProperty().bind(Bindings.or(isEmptyProperty,isCursorProperty));
+//        this.textProperty().bind(
+//                Bindings.when(isCursorProperty)
+//                        .then("@")
+//                        .otherwise
+//                                (Bindings.when(isEmptyProperty)
+//                                .then("")
+//                                .otherwise(Bindings.concat(content.getValue()))));
+
+
+        if(content.isCursor())
+            this.setGraphic(markerImage);
+
         this.textProperty().bind(
-                Bindings.when(isCursorProperty)
-                        .then("@")
-                        .otherwise
-                                (Bindings.when(isEmptyProperty)
-                                .then("")
-                                .otherwise(Bindings.concat(content.getValue()))));
+                Bindings.when(Bindings.or(isCursorProperty,isEmptyProperty))
+                                        .then("")
+                                        .otherwise(Bindings.concat(content.getValue())));
+
 
     }
 
@@ -48,9 +62,9 @@ public class CellUI extends Button {
         isEmptyProperty.setValue(content.isEmpty());
         isCursorProperty.setValue(content.isCursor());
         if(isCursorProperty.getValue())
-            this.setStyle("-fx-base: #b6e7c8;");
+            this.setGraphic(markerImage);
         else
-           this.setStyle("-fx-base: #ececec ");
+           this.setGraphic(null);
 
     }
 
