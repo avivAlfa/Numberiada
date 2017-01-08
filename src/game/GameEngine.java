@@ -10,17 +10,25 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class GameEngine {
-    private Board gameBoard;
-    private List<Player> players = null;
-    private List<Player> resignedPlayers;
-    private int playerTurnIndex;
-    private int cursorRow;
-    private int cursorCol;
-    private int movesCnt = 0;
-    private long startingTime;
+public abstract class GameEngine {
+    protected Board gameBoard;
+    protected List<Player> players = null;
+    protected List<Player> resignedPlayers;
+    protected int playerTurnIndex;
+    protected int cursorRow;
+    protected int cursorCol;
+    protected int movesCnt = 0;
+    protected long startingTime;
 
-    public GameEngine(){}
+    //public GameEngine(){}
+
+    public abstract List<Point> getPossibleCells();
+    public abstract boolean endGame();
+    protected abstract Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo);
+    protected abstract ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo);
+
+
+
 
     public int getMovesCnt() { return movesCnt; }
 
@@ -70,24 +78,24 @@ public class GameEngine {
         return players.get(playerTurnIndex).getName();
     }
 
-    public boolean isCurrentPlayerHuman(){
-        return players.get(playerTurnIndex).isHuman();
-    }
+//    public boolean isCurrentPlayerHuman(){
+//        return players.get(playerTurnIndex).isHuman();
+//    }
 
 
-    public Cell getChosenCellAccordingToIndex(int cellNumber) {
-       // Cell chosenCell = new Cell();
-
-        if (playerTurnIndex % 2 == 0) { //even - row player}
-           // chosenCell = gameBoard.getCell(cursor, cellNumber);
-            return gameBoard.getCell(cursorRow, cellNumber);
-        }
-        else {
-            //chosenCell = gameBoard.getCell(cellNumber, cursor);;
-            return gameBoard.getCell(cellNumber, cursorCol);
-        }
-       // return  chosenCell;
-    }
+//    public Cell getChosenCellAccordingToIndex(int cellNumber) {
+//       // Cell chosenCell = new Cell();
+//
+//        if (playerTurnIndex % 2 == 0) { //even - row player}
+//           // chosenCell = gameBoard.getCell(cursor, cellNumber);
+//            return gameBoard.getCell(cursorRow, cellNumber);
+//        }
+//        else {
+//            //chosenCell = gameBoard.getCell(cellNumber, cursor);;
+//            return gameBoard.getCell(cellNumber, cursorCol);
+//        }
+//       // return  chosenCell;
+//    }
 
 //    public void updateCursor(int cellNumber){
 //        if (playerTurnIndex % 2 == 0) { //even - row player}
@@ -97,28 +105,21 @@ public class GameEngine {
 //            cursorRow = cellNumber;
 //        }
 //    }
-        public void updateCursor(int row, int col){
-            if (playerTurnIndex % 2 == 0) { //even - row player}
-                cursorCol = col;
-            }
-            else { //col player
-                cursorRow = row;
-            }
-        }
 
-    public boolean isValidCell(int cellNumber) throws Exception {
-        if(!gameBoard.isIndexInBorders(cellNumber)) {
-            throw new CellNumberOutOfBoundsException();
-        }
-        Cell chosenCell = getChosenCellAccordingToIndex((cellNumber));
-        if(chosenCell.isEmpty()){
-            throw new EmptyCellException();
-        } else if(chosenCell.isCursor()) {
-            throw new CursorCellException();
-        }
 
-        return true;
-    }
+//    public boolean isValidCell(int cellNumber) throws Exception {
+//        if(!gameBoard.isIndexInBorders(cellNumber)) {
+//            throw new CellNumberOutOfBoundsException();
+//        }
+//        Cell chosenCell = getChosenCellAccordingToIndex((cellNumber));
+//        if(chosenCell.isEmpty()){
+//            throw new EmptyCellException();
+//        } else if(chosenCell.isCursor()) {
+//            throw new CursorCellException();
+//        }
+//
+//        return true;
+//    }
 
 //    public void playMove(int chosenNumber){
 //        Cell chosenCell;
@@ -137,6 +138,56 @@ public class GameEngine {
 //        changeTurn();
 //    }
 
+//    public void playMove(int chosenRow, int chosenCol){
+//        Cell chosenCell;
+//
+//        Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
+//        cursorCell.setAsEmpty();
+//
+////        if(!players.get(playerTurnIndex).isHuman()){
+////            chosenNumber = getComputerChosenCellNumber();
+////        }
+//
+//      //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
+//        chosenCell = gameBoard.getCell(chosenRow, chosenCol);
+//        players.get(playerTurnIndex).addScore(chosenCell.getValue());
+//        chosenCell.setAsCursor();
+//        updateCursor(chosenRow, chosenCol);
+//        changeTurn();
+//    }
+
+
+
+
+//    public int getComputerChosenCellNumber(){
+//        int maxCellIndex = 0;
+//        int maxValue = -999;
+//
+//        if(playerTurnIndex%2 == 0) {//row Player
+//            for(int i=0; i <gameBoard.getSize(); i++) {
+//                Cell currentCell = gameBoard.getCell(cursorRow, i);
+//                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+//                    if (currentCell.getValue() > maxValue) {
+//                        maxValue = currentCell.getValue();
+//                        maxCellIndex = i;
+//                    }
+//                }
+//            }
+//        }
+//        else {
+//            for(int i=0; i < gameBoard.getSize(); i++) {
+//                Cell currentCell = gameBoard.getCell(i, cursorCol);
+//                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+//                    if (currentCell.getValue() > maxValue) {
+//                        maxValue = currentCell.getValue();
+//                        maxCellIndex = i;
+//                    }
+//                }
+//            }
+//        }
+//        return maxCellIndex;
+//    }
+
     public void playMove(int chosenRow, int chosenCol){
         Cell chosenCell;
 
@@ -147,95 +198,27 @@ public class GameEngine {
 //            chosenNumber = getComputerChosenCellNumber();
 //        }
 
-      //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
+        //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
         chosenCell = gameBoard.getCell(chosenRow, chosenCol);
         players.get(playerTurnIndex).addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
         updateCursor(chosenRow, chosenCol);
+        movesCnt++;
         changeTurn();
     }
 
-
-    public List<Point> getPossibleCells() {
-        List<Point> possibleCells = new ArrayList<Point>();
-        Cell currCell;
-
-        if (playerTurnIndex % 2 == 0) { //rowPlayer{
-            for (int j = 0; j < gameBoard.getSize(); j++) {
-                currCell = gameBoard.getCell(cursorRow, j);
-                if ((!currCell.isEmpty()) && ((!currCell.isCursor()))) {
-                    possibleCells.add(new Point(cursorRow, j));
-                }
-            }
-
-        }
-        else {
-            for (int i = 0; i < gameBoard.getSize(); i++) {
-                currCell = gameBoard.getCell(i, cursorCol);
-                if ((!currCell.isEmpty()) && ((!currCell.isCursor()))) {
-                    possibleCells.add(new Point(i, cursorCol));
-                }
-            }
-        }
-        return possibleCells;
-    }
-
-    public int getComputerChosenCellNumber(){
-        int maxCellIndex = 0;
-        int maxValue = -999;
-
-        if(playerTurnIndex%2 == 0) {//row Player
-            for(int i=0; i <gameBoard.getSize(); i++) {
-                Cell currentCell = gameBoard.getCell(cursorRow, i);
-                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
-                    if (currentCell.getValue() > maxValue) {
-                        maxValue = currentCell.getValue();
-                        maxCellIndex = i;
-                    }
-                }
-            }
-        }
-        else {
-            for(int i=0; i < gameBoard.getSize(); i++) {
-                Cell currentCell = gameBoard.getCell(i, cursorCol);
-                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
-                    if (currentCell.getValue() > maxValue) {
-                        maxValue = currentCell.getValue();
-                        maxCellIndex = i;
-                    }
-                }
-            }
-        }
-        return maxCellIndex;
+    public void updateCursor(int row, int col){
+        cursorRow = row;
+        cursorCol = col;
     }
 
     public void changeTurn() {
         playerTurnIndex++;
-        movesCnt++;
         if(playerTurnIndex == players.size()){
             playerTurnIndex = 0;
         }
     }
 
-    public boolean endGame(){
-        boolean gameEnded = true;
-        if (playerTurnIndex % 2 == 0) { //even - row player}
-            for(int j=0; j < gameBoard.getSize(); j++){
-                if(gameBoard.getCell(cursorRow, j).isEmpty() == false && j != cursorCol){
-                    gameEnded = false;
-                }
-            }
-        }
-        else { //col player
-            for (int i = 0; i < gameBoard.getSize(); i++) {
-                if (gameBoard.getCell(i, cursorCol).isEmpty() == false && i != cursorRow) {
-                    gameEnded = false;
-                }
-            }
-        }
-
-        return gameEnded || players.size() == 1;
-    }
 
     public List<Player> getGameWinners(){
         List<Player> gameWinners = new ArrayList<Player>();
@@ -274,10 +257,10 @@ public class GameEngine {
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
             gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo());
         } else {
-           gameBoard = buildExplicitBoard(gd);
-           GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
-           cursorRow = marker.getRow().intValue() - 1;
-           cursorCol = marker.getColumn().intValue() - 1;
+            gameBoard = buildExplicitBoard(gd);
+            GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
+            cursorRow = marker.getRow().intValue() - 1;
+            cursorCol = marker.getColumn().intValue() - 1;
         }
         if(gd.getPlayers() != null) {
             players = buildPlayersListFromDescriptor(gd.getPlayers().getPlayer());
@@ -287,59 +270,35 @@ public class GameEngine {
         }
     }
 
-    private Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
-        Cell[][] boardArray = createEmptyBoard(boardSize);
-        List<PoolElement> poolOfImpression = createPool(boardSize, rangeFrom, rangeTo);
-        Random rand = new Random();
-        int randomNumber;
-
-        for(int i = 0; i < boardSize; i++) {
-            for(int j = 0; j< boardSize; j++) {
-                randomNumber = rand.nextInt(poolOfImpression.size());
-                if(poolOfImpression.get(randomNumber).getNumber() == 999) {
-                    boardArray[i][j].setAsEmpty();
-                }
-                else{
-                    boardArray[i][j].setValue(poolOfImpression.get(randomNumber).getNumber());
-                }
-                poolOfImpression.get(randomNumber).decreaseNum2();
-
-                if(poolOfImpression.get(randomNumber).getNum2() == 0) {
-                    poolOfImpression.remove(randomNumber);
-                }
+    protected List<Player> buildPlayersListFromDescriptor(List<GameDescriptor.Players.Player> playersListFromGameDescriptor) {
+        List<Player> playersList = new ArrayList<Player>();
+        Player newPlayer;
+        for(int i = 0; i < playersListFromGameDescriptor.size(); i++){
+            newPlayer = new Player();
+            newPlayer.setId(playersListFromGameDescriptor.get(i).getId().intValue());
+            newPlayer.setName(playersListFromGameDescriptor.get(i).getName());
+            newPlayer.setScore(0);
+            newPlayer.setColor(playersListFromGameDescriptor.get(i).getColor());
+            if(playersListFromGameDescriptor.get(i).getType().equals("Human")){
+                newPlayer.setAsHuman();
+            }else if(playersListFromGameDescriptor.get(i).getType().equals("Computer") ){
+                newPlayer.setAsComputer();
             }
-        }
 
-        //set the cursor in one of the remain empty cells
-        boolean foundEmpty = false;
-        for(int i = 0; i < boardSize && !foundEmpty; i++) {
-            for (int j = 0; j < boardSize && !foundEmpty; j++) {
-                if(boardArray[i][j].isEmpty()) {
-                    foundEmpty = true;
-                    boardArray[i][j].setAsCursor();
-                    cursorRow = i;
-                    cursorCol = j;
-                }
-            }
+            playersList.add(newPlayer);
         }
-
-        return new Board(boardArray, boardSize);
+        return playersList;
     }
 
-    public ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo){
-        ArrayList<PoolElement> pool = new ArrayList<PoolElement>();
-        int rangeSize = rangeTo - rangeFrom + 1;
-        int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / rangeSize;
-        
-        for(int i = rangeFrom; i <= rangeTo; i++){
-            pool.add(new PoolElement(i, numOfImpressions));
-        }
-        pool.add(new PoolElement(999, ((int)(Math.pow(boardSize,2) - 1) % rangeSize) + 1));
-        
-        return pool;
-    } 
+    public void buildBasicPlayers(){
+        players = new ArrayList<Player>();
+        Player player1 = new Player("RowPlayer", 0, true);
+        Player player2 = new Player("ColPlayer", 0, true);
+        players.add(player1);
+        players.add(player2);
+    }
 
-    private Cell[][] createEmptyBoard(int boardSize) {
+    public Cell[][] createEmptyBoard(int boardSize) {
         //Board board;
 
         //int boardSize = gd.getBoard().getSize().intValue();
@@ -354,45 +313,23 @@ public class GameEngine {
         return boardArray;
     }
 
-    private Board buildExplicitBoard(GameDescriptor gd){
-        Board board;
+    public Board buildExplicitBoard(GameDescriptor gd){
         int boardSize = gd.getBoard().getSize().intValue();
+        int currRow,currCol;
         Cell[][] boardArray = createEmptyBoard(boardSize);
 
         List<GameDescriptor.Board.Structure.Squares.Square> squareList = gd.getBoard().getStructure().getSquares().getSquare();
         GameDescriptor.Board.Structure.Squares.Square curSquare;
         for(int i=0; i< squareList.size(); i++) {
             curSquare = squareList.get(i);
-            boardArray[curSquare.getRow().intValue()-1][curSquare.getColumn().intValue()-1].setValue(curSquare.getValue().intValue());
+            currRow = curSquare.getRow().intValue()-1;
+            currCol = curSquare.getColumn().intValue()-1;
+            boardArray[currRow][currCol].setValue(curSquare.getValue().intValue());
+            boardArray[currRow][currCol].setColor(curSquare.getColor());
         }
         boardArray[gd.getBoard().getStructure().getSquares().getMarker().getRow().intValue() - 1][gd.getBoard().getStructure().getSquares().getMarker().getColumn().intValue() - 1].setAsCursor();
 
         return new Board(boardArray, boardSize);
-    }
-
-    private List<Player> buildPlayersListFromDescriptor(List<GameDescriptor.Players.Player> playersListFromGameDescriptor) {
-        List<Player> playersList = new ArrayList<Player>();
-        Player newPlayer;
-        for(int i = 0; i < playersListFromGameDescriptor.size(); i++){
-            newPlayer = new Player();
-            newPlayer.setName(playersListFromGameDescriptor.get(i).getName());
-            newPlayer.setScore(0);
-            if(playersListFromGameDescriptor.get(i).getType().equals("Human")){
-                newPlayer.setAsHuman();
-            }else if(playersListFromGameDescriptor.get(i).getType().equals("Computer") ){
-                newPlayer.setAsComputer();
-            }
-            playersList.add(newPlayer);
-        }
-        return playersList;
-    }
-
-    public void buildBasicPlayers(){
-        players = new ArrayList<Player>();
-        Player player1 = new Player("RowPlayer", 0, true);
-        Player player2 = new Player("ColPlayer", 0, true);
-        players.add(player1);
-        players.add(player2);
     }
 
 

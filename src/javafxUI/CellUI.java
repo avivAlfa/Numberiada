@@ -1,6 +1,7 @@
 package javafxUI;
 
 import game.Cell;
+import game.Colors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringExpression;
@@ -11,6 +12,7 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
 
 import static jdk.nashorn.internal.objects.NativeFunction.bind;
 
@@ -51,6 +53,7 @@ public class CellUI extends Button {
                                         .then("")
                                         .otherwise(Bindings.concat(content.getValue())));
 
+        this.setStyle("-fx-text-fill: "+ Colors.getColor(content.getColor())+"; -fx-font-size: 16;font-weight: bold;");
 
     }
 
@@ -61,6 +64,8 @@ public class CellUI extends Button {
     public void updateValues(){
         isEmptyProperty.setValue(content.isEmpty());
         isCursorProperty.setValue(content.isCursor());
+
+        this.setStyle("-fx-text-fill: "+Colors.getColor(content.getColor())+";-fx-font-size: 16;font-weight: bold;");
         if(isCursorProperty.getValue())
             this.setGraphic(markerImage);
         else

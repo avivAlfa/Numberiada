@@ -1,8 +1,6 @@
 package javafxUI;
 
-import game.Board;
-import game.GameEngine;
-import game.Player;
+import game.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -88,8 +86,8 @@ public class GameController implements Initializable{
         playMoveButton.disableProperty().bind(Bindings.not(gameIsRunning));
         pathTxt.disableProperty().bind(gameIsRunning);
         retireButton.disableProperty().bind(Bindings.not(gameIsRunning));
-        prevButton.visibleProperty().bind(gameEndView);
         nextButton.visibleProperty().bind(gameEndView);
+        prevButton.visibleProperty().bind(gameEndView);
     }
 
     @FXML
@@ -116,7 +114,9 @@ public class GameController implements Initializable{
 
         cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
         selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
-        selectedCell.setStyle("-fx-base: #ececec ");
+        //selectedCell.setStyle("-fx-base: #ececec ");
+        selectedCell.setStyle("-fx-text-fill: "+Colors.getColor(selectedCell.getContent().getColor())+";-fx-font-size: 16;font-weight: bold;-fx-base: #ececec; ");
+
         handleTurn();
 
     }
@@ -128,10 +128,12 @@ public class GameController implements Initializable{
 
     @FXML
     private void cellUI_OnClick(CellUI cell){
-        selectedCell.setStyle("-fx-base: #ececec ");
-        selectedCell = cell;
-        selectedCell.setStyle("-fx-base: #add8e6;");
+        if(selectedCell.getContent() == null)
+            selectedCell=cell;
 
+        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 16;font-weight: bold;-fx-base: #ececec; ");
+        selectedCell = cell;
+        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 16;font-weight: bold;-fx-base: #add8e6; ");
     }
 
     @FXML
@@ -158,7 +160,10 @@ public class GameController implements Initializable{
             handleEndGame();
         }
         else{
-            updatePossibleCells();
+            while(! possibleCellsUpdate() &&!gameEngine.endGame()) {
+                popupMessage("Unavailable numbers for you\nMy ondolences\nSkip to the next player!","Stop!",1);
+                gameEngine.changeTurn();
+            }
         }
     }
 
@@ -170,13 +175,15 @@ public class GameController implements Initializable{
         }
     }
 
-    private void updatePossibleCells(){
+    private boolean possibleCellsUpdate(){
 
         List<Point> possibleCells = gameEngine.getPossibleCells();
 
         for (Point p : possibleCells) {
             gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(false);
         }
+
+        return possibleCells.size() != 0;
     }
 
 
@@ -195,6 +202,7 @@ public class GameController implements Initializable{
         gameGrid.getChildren().clear();
         gameIsRunning.setValue(false);
         gameUploaded.setValue(false);
+        gameEndView.setValue(false);
         gameEngine = null;
         gameBoardUI = null;
         selectedCell = new CellUI();
@@ -300,10 +308,10 @@ public class GameController implements Initializable{
     private void loadGameEngine(GameDescriptor gameDescriptor){
         switch (gameDescriptor.getGameType()){
             case "Basic":
-                gameEngine = new GameEngine(); //new BasicEngine
+                gameEngine = new BasicGameEngine(); //new BasicEngine
                 break;
             case "Advance":
-                //new AdvanceEngine
+                gameEngine = new AdvancedGameEngine();
                 break;
             default:
                 gameEngine = null;

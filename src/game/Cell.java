@@ -2,12 +2,18 @@ package game;
 
 public class Cell {
     private int value;
+    private int color;
     private boolean isEmpty = false;
     private boolean isCursor = false;
 
     Cell(){}
     Cell(int value) {
         this.value = value;
+    }
+
+    Cell(int value, int color) {
+        this.value = value;
+        this.color = color;
     }
 
     public int getValue() {
@@ -18,6 +24,10 @@ public class Cell {
         this.value = value;
         this.isEmpty = false;
     }
+
+    public int getColor() {return color; }
+
+    public void setColor(int color) {this.color = color; }
 
     public boolean isEmpty() {return this.isEmpty;}
 
