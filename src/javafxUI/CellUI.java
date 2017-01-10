@@ -53,7 +53,7 @@ public class CellUI extends Button {
                                         .then("")
                                         .otherwise(Bindings.concat(content.getValue())));
 
-        this.setStyle("-fx-text-fill: "+ Colors.getColor(content.getColor())+"; -fx-font-size: 16;font-weight: bold;");
+        this.setStyle("-fx-text-fill: "+ Colors.getColor(content.getColor())+"; -fx-font-size: 14;font-weight: bold;");
 
     }
 
@@ -65,7 +65,7 @@ public class CellUI extends Button {
         isEmptyProperty.setValue(content.isEmpty());
         isCursorProperty.setValue(content.isCursor());
 
-        this.setStyle("-fx-text-fill: "+Colors.getColor(content.getColor())+";-fx-font-size: 16;font-weight: bold;");
+        this.setStyle("-fx-text-fill: "+Colors.getColor(content.getColor())+";-fx-font-size: 14;font-weight: bold;");
         if(isCursorProperty.getValue())
             this.setGraphic(markerImage);
         else

@@ -37,14 +37,29 @@ public class AdvancedGameEngine extends GameEngine {
         return false;
     }
 
-    @Override
-    protected Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
-        return null;
-    }
 
     @Override
-    protected ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo) {
-        return null;
+    public List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers) {
+        List<Integer> pool = new ArrayList<Integer>();
+        int rangeSize = rangeTo - rangeFrom + 1;
+
+        int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / (rangeSize*numOfPlayers);
+
+
+        for(int i = rangeFrom; i <= rangeTo; i++) {
+            for (int j = 0; j < numOfImpressions; j++) {
+               // for(int colorIndex; colorIndex < numOfPlayers; colorIndex++)
+                pool.add(i);
+            }
+        }
+        for(int i = 0; i < ((int)((Math.pow(boardSize,2) - 1) % rangeSize*numOfPlayers)); i++) { //empty cells
+            pool.add(-999);
+        }
+        pool.add(999); //cursor
+
+        return pool;
     }
+
+
 
 }

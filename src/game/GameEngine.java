@@ -24,10 +24,7 @@ public abstract class GameEngine {
 
     public abstract List<Point> getPossibleCells();
     public abstract boolean endGame();
-    protected abstract Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo);
-    protected abstract ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo);
-
-
+    protected abstract List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers);
 
 
     public int getMovesCnt() { return movesCnt; }
@@ -78,6 +75,7 @@ public abstract class GameEngine {
         return players.get(playerTurnIndex).getName();
     }
 
+    public int getCurrentPlayerID(){ return players.get(playerTurnIndex).getId();}
 //    public boolean isCurrentPlayerHuman(){
 //        return players.get(playerTurnIndex).isHuman();
 //    }
@@ -255,7 +253,7 @@ public abstract class GameEngine {
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
-            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo());
+            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo(), gd.getPlayers().getPlayer().size());
         } else {
             gameBoard = buildExplicitBoard(gd);
             GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
@@ -332,6 +330,26 @@ public abstract class GameEngine {
         return new Board(boardArray, boardSize);
     }
 
+    public Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers) {
+        Cell[][] boardArray = createEmptyBoard(boardSize);
+        List<Integer> poolOfNumbers = createPool(boardSize, rangeFrom, rangeTo, numOfPlayers);
+        Collections.shuffle(poolOfNumbers);
+        int index=0;
+        for(int i = 0; i < boardSize; i++) {
+            for(int j = 0; j < boardSize; j++) {
+                boardArray[i][j].setValue(poolOfNumbers.get(index));
+                if(poolOfNumbers.get(index) == -999)
+                    boardArray[i][j].setAsEmpty();
+                else if(poolOfNumbers.get(index) == 999){
+                    boardArray[i][j].setAsCursor();
+                    cursorRow = i;
+                    cursorCol = j;
+                }
+                index++;
+            }
+        }
+        return new Board(boardArray, boardSize);
+    }
 
     public void removeCurrentPlayerFromGame(){
         if(resignedPlayers == null){
@@ -359,7 +377,11 @@ public abstract class GameEngine {
     public String createEndGameMessage(){
         List<Player> gameWinners = getGameWinners();
         StringBuilder endGameMessage = new StringBuilder();
-        //endGameMessage.append("Game Over\n");
+
+        if(players.size()==1){
+            endGameMessage.append("Game ended due to all other players resignment\n");
+        }
+
         if(gameWinners.size() == 1){
             endGameMessage.append("The winner is " + gameWinners.get(0).getName() + " with score of " + gameWinners.get(0).getScore() + "!\n");
         }else{

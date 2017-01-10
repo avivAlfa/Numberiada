@@ -50,19 +50,40 @@ public class XML_Handler {
             throw new InvalidBoardSizeException();
         }
         if((gd.getBoard().getStructure().getType()).toLowerCase().equals("random")){
-            validateRandomBoard(gd);
+            if(gd.getGameType().equals("Basic"))
+                validateBasicRandomBoard(gd);
+            else
+                validateAdvancedRandomBoard(gd);
         }else{
             validateExplicitBoard(gd);
         }
         validatePlayers(gd);
     }
 
-    private static void validateRandomBoard(GameDescriptor gd) throws Exception{
+    private static void validateBasicRandomBoard(GameDescriptor gd) throws Exception{
         int rangeFrom = gd.getBoard().getStructure().getRange().getFrom();
         int rangeTo = gd.getBoard().getStructure().getRange().getTo();
         int boardSize = gd.getBoard().getSize().intValue();
 
         if(rangeTo - rangeFrom + 1 > Math.pow(boardSize,2) - 1 ){
+            throw new InvalidRangeCompareToBoardSizeException();
+        }
+
+        if(rangeTo < rangeFrom){
+            throw new InvalidRangeException();
+        }
+
+        if(rangeFrom < -99 || rangeTo > 99){
+            throw new InvalidRangeValuesException();
+        }
+    }
+
+    private static void validateAdvancedRandomBoard(GameDescriptor gd) throws Exception{
+        int rangeFrom = gd.getBoard().getStructure().getRange().getFrom();
+        int rangeTo = gd.getBoard().getStructure().getRange().getTo();
+        int boardSize = gd.getBoard().getSize().intValue();
+
+        if((rangeTo - rangeFrom + 1)*(gd.getPlayers().getPlayer().size()) > Math.pow(boardSize,2) - 1 ){
             throw new InvalidRangeCompareToBoardSizeException();
         }
 

@@ -68,6 +68,8 @@ public class GameController implements Initializable{
     @FXML
     private Label currentPlayerLabel;
     @FXML
+    private Label playerIdLabel;
+    @FXML
     private Button nextButton;
     @FXML
     private Button prevButton;
@@ -115,7 +117,7 @@ public class GameController implements Initializable{
         cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
         selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
         //selectedCell.setStyle("-fx-base: #ececec ");
-        selectedCell.setStyle("-fx-text-fill: "+Colors.getColor(selectedCell.getContent().getColor())+";-fx-font-size: 16;font-weight: bold;-fx-base: #ececec; ");
+        selectedCell.setStyle("-fx-text-fill: "+Colors.getColor(selectedCell.getContent().getColor())+";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
 
         handleTurn();
 
@@ -131,9 +133,9 @@ public class GameController implements Initializable{
         if(selectedCell.getContent() == null)
             selectedCell=cell;
 
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 16;font-weight: bold;-fx-base: #ececec; ");
+        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
         selectedCell = cell;
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 16;font-weight: bold;-fx-base: #add8e6; ");
+        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #add8e6; ");
     }
 
     @FXML
@@ -153,18 +155,24 @@ public class GameController implements Initializable{
     }
 
     private void handleTurn(){
-        currentPlayerLabel.setText(gameEngine.getCurrentPlayerName());
-        totalMovesLabel.setText(String.valueOf(gameEngine.getMovesCnt()));
+        updateStatistics();
         //TODO:scoretable update
         if(gameEngine.endGame()){
             handleEndGame();
         }
         else{
-            while(! possibleCellsUpdate() &&!gameEngine.endGame()) {
-                popupMessage("Unavailable numbers for you\nMy ondolences\nSkip to the next player!","Stop!",1);
+            while(! possibleCellsUpdate() && !gameEngine.endGame()) {
+                popupMessage("I am sorry " + gameEngine.getCurrentPlayerName() + " Unavailable numbers for you\nMy condolences\nSkip to the next player!","Stop!",1);
                 gameEngine.changeTurn();
+                updateStatistics();
             }
         }
+    }
+
+    private void updateStatistics(){
+        currentPlayerLabel.setText(gameEngine.getCurrentPlayerName());
+        playerIdLabel.setText(Integer.toString(gameEngine.getCurrentPlayerID()));
+        totalMovesLabel.setText(String.valueOf(gameEngine.getMovesCnt()));
     }
 
     private void updatePrevPossibleCells(){
@@ -280,7 +288,10 @@ public class GameController implements Initializable{
         //}while(!xmlPathValid && !xmlContentValid);
 
         // loadedXmlFilePath = xml_path;
-        return gameDescriptor;
+        if(xmlContentValid)
+            return gameDescriptor;
+        else
+            return null;
     }
 
 
