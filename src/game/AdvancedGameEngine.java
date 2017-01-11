@@ -33,6 +33,30 @@ public class AdvancedGameEngine extends GameEngine {
     }
 
     @Override
+    public List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol){
+        List<Point> nextPlayerOpportunities = new ArrayList<Point>();
+        Cell currCell;
+        int nextPlayerIndex = getNextPlayerIndex();
+
+        for (int j = 0; j < gameBoard.getSize(); j++) {
+            currCell = gameBoard.getCell(selectedRow, j);
+            if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && currCell.getColor()==players.get(nextPlayerIndex).getColor()) {
+                nextPlayerOpportunities.add(new Point(selectedRow, j));
+            }
+        }
+
+        for (int i = 0; i < gameBoard.getSize(); i++) {
+            currCell = gameBoard.getCell(i, selectedCol);
+            if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && (currCell.getColor() == players.get(nextPlayerIndex).getColor())) {
+                nextPlayerOpportunities.add(new Point(i, selectedCol));
+            }
+        }
+
+        return nextPlayerOpportunities;
+    }
+
+
+    @Override
     public boolean endGame() {
         return false;
     }
@@ -64,6 +88,7 @@ public class AdvancedGameEngine extends GameEngine {
     public String getPlayerColor(Player player) {
         return Colors.getColor(player.getColor());
     }
+
 
 
 

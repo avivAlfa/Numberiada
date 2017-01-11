@@ -26,6 +26,7 @@ public abstract class GameEngine {
     public abstract boolean endGame();
     protected abstract List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers);
     public abstract String getPlayerColor(Player player);
+    public abstract List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol);
 
 
     public int getMovesCnt() { return movesCnt; }
@@ -78,9 +79,17 @@ public abstract class GameEngine {
 
     public int getCurrentPlayerID(){ return players.get(playerTurnIndex).getId();}
 
+    public int getNextPlayerIndex(){
+        int index = playerTurnIndex + 1;
+        if(index == players.size()){
+            index = 0;
+        }
+        return index;
+    }
+
     public int getPreviousPlayerIndex(){
         int index = playerTurnIndex - 1;
-        if(playerTurnIndex == 0)
+        if(index < 0)
             index = players.size() - 1;
         return index;
     }

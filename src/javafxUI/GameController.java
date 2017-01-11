@@ -21,6 +21,7 @@ import javafx.scene.layout.*;
 import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -38,6 +39,7 @@ public class GameController implements Initializable{
     private GameEngine gameEngine;
     private BoardUI gameBoardUI;
     private CellUI selectedCell = new CellUI();
+    private List<Point> nextPlayerOpportunities;
     private SimpleBooleanProperty gameIsRunning;
     private SimpleBooleanProperty gameUploaded;
     private SimpleBooleanProperty gameEndView;
@@ -131,6 +133,7 @@ public class GameController implements Initializable{
         selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
         //selectedCell.setStyle("-fx-base: #ececec ");
         selectedCell.setStyle("-fx-text-fill: "+Colors.getColor(selectedCell.getContent().getColor())+";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
+        hideNextPlayerOpportunities();
 
         handleTurn();
 
@@ -146,9 +149,13 @@ public class GameController implements Initializable{
         if(selectedCell.getContent() == null)
             selectedCell=cell;
 
+
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
+        hideNextPlayerOpportunities();
         selectedCell = cell;
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #add8e6; ");
+        showNextPlayerOppotunities();
+
     }
 
     @FXML
@@ -209,6 +216,20 @@ public class GameController implements Initializable{
         return possibleCells.size() != 0;
     }
 
+    private void showNextPlayerOppotunities(){
+        nextPlayerOpportunities = gameEngine.getNextPlayerOpportunities(GridPane.getRowIndex(selectedCell),GridPane.getColumnIndex(selectedCell));
+        Border border = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2)));
+        for (Point p : nextPlayerOpportunities) {
+            gameBoardUI.getCell((int) p.getX(), (int) p.getY()).setBorder(border);
+        }
+    }
+    private  void hideNextPlayerOpportunities(){
+        if(nextPlayerOpportunities != null) {
+            for (Point p : nextPlayerOpportunities) {
+                gameBoardUI.getCell((int) p.getX(), (int) p.getY()).setBorder(null);
+            }
+        }
+    }
 
 
     private void handleEndGame(){

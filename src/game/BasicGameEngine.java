@@ -30,6 +30,32 @@ public class BasicGameEngine extends GameEngine {
     }
 
     @Override
+    public List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol) {
+        List<Point> nextPlayerOpportunities = new ArrayList<Point>();
+        Cell currCell;
+        int nextPlayerIndex = getNextPlayerIndex();
+
+        if (nextPlayerIndex % 2 == 0) { //rowPlayer{
+            for (int j = 0; j < gameBoard.getSize(); j++) {
+                currCell = gameBoard.getCell(selectedRow, j);
+                if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && j != selectedCol) {
+                    nextPlayerOpportunities.add(new Point(selectedRow, j));
+                }
+            }
+        }
+        else {
+            for (int i = 0; i < gameBoard.getSize(); i++) {
+                currCell = gameBoard.getCell(i, selectedCol);
+                if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && i != selectedRow) {
+                    nextPlayerOpportunities.add(new Point(i, selectedCol));
+                }
+            }
+        }
+
+        return nextPlayerOpportunities;
+    }
+
+    @Override
     public boolean endGame(){
         boolean gameEnded = true;
         if (playerTurnIndex % 2 == 0) { //even - row player}
@@ -113,5 +139,7 @@ public class BasicGameEngine extends GameEngine {
     public String getPlayerColor(Player player) {
         return "";
     }
+
+
 
 }
