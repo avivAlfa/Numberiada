@@ -1,6 +1,9 @@
 package javafxUI;
 
 import game.*;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -12,12 +15,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.File;
@@ -118,8 +124,9 @@ public class GameController implements Initializable{
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(),gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
-        gameEngine.playMove(row,col);
 
+        //playAnimation(cursorCellUI, selectedCell);
+        gameEngine.playMove(row,col);
         cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
         selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
         //selectedCell.setStyle("-fx-base: #ececec ");
@@ -362,5 +369,35 @@ public class GameController implements Initializable{
     }
 
 
+    private void playAnimation(CellUI cursorCell, CellUI selectedCell){
+        ImageView markerImage = new ImageView(new Image(getClass().getResourceAsStream("/resources/marker.png")));
+        int selectedRow = GridPane.getRowIndex(selectedCell);
+        int selectedCol = GridPane.getColumnIndex(selectedCell);
+        int cursorRow = GridPane.getRowIndex(cursorCell);
+        int cursorCol = GridPane.getColumnIndex(cursorCell);
 
+
+        //gameGrid.getChildren().add(markerImage);
+        markerImage.setLayoutX(cursorCell.getLayoutX() + 12);
+        markerImage.setLayoutY(cursorCell.getLayoutY()+topPane.getHeight()+18);
+        mainPane.getChildren().add(markerImage);
+
+
+        //markerImage.relocate(selectedCell.translateXProperty().getValue(), selectedCell.translateYProperty().getValue());
+
+
+        Timeline timeline = new Timeline();
+        Duration time = new Duration(1* 1000);
+        KeyValue keyValue;
+        if(selectedRow == cursorRow){
+            keyValue = new KeyValue(markerImage.translateXProperty(), selectedCell.getLayoutX()-cursorCell.getLayoutX());
+        }else{
+            keyValue = new KeyValue(markerImage.translateYProperty(), selectedCell.getLayoutY()-cursorCell.getLayoutY());
+        }
+
+        KeyFrame keyFrame = new KeyFrame(time, keyValue);
+        timeline.getKeyFrames().add(keyFrame);
+        timeline.play();
+
+    }
 }
