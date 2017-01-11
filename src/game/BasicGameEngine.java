@@ -109,6 +109,9 @@ public class BasicGameEngine extends GameEngine {
         return pool;
     }
 
-
+    @Override
+    public String getPlayerColor(Player player) {
+        return "";
+    }
 
 }

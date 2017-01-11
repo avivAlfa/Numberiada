@@ -2,8 +2,9 @@ package javafxUI;
 
 import game.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -34,6 +35,7 @@ public class GameController implements Initializable{
     private SimpleBooleanProperty gameIsRunning;
     private SimpleBooleanProperty gameUploaded;
     private SimpleBooleanProperty gameEndView;
+    private ObservableList<String> playerStatistics;
 
     @FXML
     private Pane mainPane;
@@ -74,7 +76,7 @@ public class GameController implements Initializable{
     @FXML
     private Button prevButton;
     @FXML
-    private ListView<?> playersListView;
+    private ListView<String> playersListView;
 
 
     @Override
@@ -90,6 +92,9 @@ public class GameController implements Initializable{
         retireButton.disableProperty().bind(Bindings.not(gameIsRunning));
         nextButton.visibleProperty().bind(gameEndView);
         prevButton.visibleProperty().bind(gameEndView);
+
+        playerStatistics = FXCollections.observableArrayList();
+        playersListView.setItems(playerStatistics);
     }
 
     @FXML
@@ -99,6 +104,7 @@ public class GameController implements Initializable{
         if(gameDescriptor != null) {
             loadGameEngine(gameDescriptor);
             loadGameGrid();
+            loadGamePlayersList();
             handleTurn();
             messageLabel.setText("");
             gameUploaded.setValue(true);
@@ -173,6 +179,8 @@ public class GameController implements Initializable{
         currentPlayerLabel.setText(gameEngine.getCurrentPlayerName());
         playerIdLabel.setText(Integer.toString(gameEngine.getCurrentPlayerID()));
         totalMovesLabel.setText(String.valueOf(gameEngine.getMovesCnt()));
+        int prevPlayerIndex = gameEngine.getPreviousPlayerIndex();
+        playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
     }
 
     private void updatePrevPossibleCells(){
@@ -214,7 +222,7 @@ public class GameController implements Initializable{
         gameEngine = null;
         gameBoardUI = null;
         selectedCell = new CellUI();
-
+        playersListView.getItems().clear();
     }
 
     private void popupMessage(String msg,String type, int jOptionPane){
@@ -345,4 +353,14 @@ public class GameController implements Initializable{
             //  gameGrid.getRowConstraints().get(i).s
         }
     }
+
+    private void loadGamePlayersList(){
+        List<Player> playersList = gameEngine.getPlayers();
+        for(int i = 0; i < playersList.size(); i++) {
+            playerStatistics.add(i, gameEngine.getPlayerInfo(i));
+        }
+    }
+
+
+
 }

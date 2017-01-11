@@ -25,6 +25,7 @@ public abstract class GameEngine {
     public abstract List<Point> getPossibleCells();
     public abstract boolean endGame();
     protected abstract List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers);
+    public abstract String getPlayerColor(Player player);
 
 
     public int getMovesCnt() { return movesCnt; }
@@ -76,6 +77,26 @@ public abstract class GameEngine {
     }
 
     public int getCurrentPlayerID(){ return players.get(playerTurnIndex).getId();}
+
+    public int getPreviousPlayerIndex(){
+        int index = playerTurnIndex - 1;
+        if(playerTurnIndex == 0)
+            index = players.size() - 1;
+        return index;
+    }
+
+    public String getPlayerInfo(int index){
+        Player player = players.get(index);
+        String playerInfo;
+       // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
+        playerInfo = String.format("%1$-12s",player.getName());
+        playerInfo += String.format("%1$-5s",player.getScore());
+        playerInfo += String.format("%1$10s",getPlayerColor(player));
+
+        return playerInfo;
+    }
+
+
 //    public boolean isCurrentPlayerHuman(){
 //        return players.get(playerTurnIndex).isHuman();
 //    }
@@ -253,7 +274,8 @@ public abstract class GameEngine {
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
-            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo(), gd.getPlayers().getPlayer().size());
+            int numOfPlayers = (gd.getPlayers()!=null)?gd.getPlayers().getPlayer().size():0;
+            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo(), numOfPlayers);
         } else {
             gameBoard = buildExplicitBoard(gd);
             GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();

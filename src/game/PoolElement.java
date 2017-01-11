@@ -9,9 +9,9 @@ public class PoolElement {
 
     public PoolElement() {}
 
-    public PoolElement(int number, int numOfImp) {
-        this.num1 = number;
-        this.num2 = numOfImp;
+    public PoolElement(int num1, int num2) {
+        this.num1 = num1;
+        this.num2 = num2;
     }
 
     public int getNumber() {

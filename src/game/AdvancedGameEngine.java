@@ -60,6 +60,13 @@ public class AdvancedGameEngine extends GameEngine {
         return pool;
     }
 
+    @Override
+    public String getPlayerColor(Player player) {
+        return Colors.getColor(player.getColor());
+    }
+
+
+
 
 
 }
