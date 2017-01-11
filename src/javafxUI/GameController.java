@@ -293,9 +293,13 @@ public class GameController implements Initializable{
         } catch (InvalidRangeCompareToBoardSizeException e) {
             messageLabel.setText(e.getMessage());
             //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidRangeValuesException e){
+        } catch (InvalidRangeValuesException e) {
             messageLabel.setText(e.getMessage());
             //JOptionPane.showMessageDialog(null, e.getMessage());
+        }catch (InvalidNumberOfColorsException e) {
+            messageLabel.setText(e.getMessage());
+        }catch (InvalidNumberOfIDsException e) {
+            messageLabel.setText(e.getMessage());
         } catch (InvalidPlayerTypeException e){
             messageLabel.setText(e.getMessage());
             //JOptionPane.showMessageDialog(null, e.getMessage());

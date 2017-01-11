@@ -72,11 +72,11 @@ public class AdvancedGameEngine extends GameEngine {
 
         for(int i = rangeFrom; i <= rangeTo; i++) {
             for (int j = 0; j < numOfImpressions; j++) {
-               // for(int colorIndex; colorIndex < numOfPlayers; colorIndex++)
+               for(int colorIndex = 0; colorIndex < numOfPlayers; colorIndex++)
                 pool.add(i);
             }
         }
-        for(int i = 0; i < ((int)((Math.pow(boardSize,2) - 1) % rangeSize*numOfPlayers)); i++) { //empty cells
+        for(int i = 0; i < ((int)((Math.pow(boardSize,2) - 1) % (rangeSize*numOfPlayers))); i++) { //empty cells
             pool.add(-999);
         }
         pool.add(999); //cursor

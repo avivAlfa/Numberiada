@@ -5,7 +5,7 @@
 	<Board>
 		<Size>7</Size>
 		<Structure type="Random">
-			<Range to="10" from="-5"/>
+			<Range to="10" from="0"/>
 		</Structure>
 	</Board>	
 	<Players>

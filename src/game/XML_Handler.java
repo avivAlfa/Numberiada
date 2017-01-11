@@ -1,7 +1,6 @@
 package game;
 
 import Exceptions.*;
-import game.PoolElement;
 import generated.GameDescriptor;
 
 import javax.xml.bind.JAXBContext;
@@ -10,6 +9,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +49,7 @@ public class XML_Handler {
         if(boardSize < 5 || boardSize > 50){
             throw new InvalidBoardSizeException();
         }
+
         if((gd.getBoard().getStructure().getType()).toLowerCase().equals("random")){
             if(gd.getGameType().equals("Basic"))
                 validateBasicRandomBoard(gd);
@@ -57,7 +58,11 @@ public class XML_Handler {
         }else{
             validateExplicitBoard(gd);
         }
-        validatePlayers(gd);
+        if(gd.getGameType().equals("Advance"))
+            validatePlayers(gd, true);
+        else
+            validatePlayers(gd, false);
+
     }
 
     private static void validateBasicRandomBoard(GameDescriptor gd) throws Exception{
@@ -126,7 +131,9 @@ public class XML_Handler {
         }
     }
 
-    private static void validatePlayers(GameDescriptor gd)throws Exception{
+    private static void validatePlayers(GameDescriptor gd, boolean isAdvance)throws Exception{
+        HashSet<BigInteger> playersIds = new HashSet<>();
+        HashSet<Integer> playersColors = new HashSet<>();
         if(gd.getPlayers()!=null) {
             List<GameDescriptor.Players.Player> players = gd.getPlayers().getPlayer();
 
@@ -134,8 +141,25 @@ public class XML_Handler {
                 if (!player.getType().equals("Human") && !player.getType().equals("Computer")) {
                     throw new InvalidPlayerTypeException();
                 }
+                if(isAdvance) {
+                    playersIds.add(player.getId());
+                    playersColors.add(player.getColor());
+                }
             }
+            if(isAdvance) {
+                if(playersIds.size() != players.size()) {
+                    throw new InvalidNumberOfIDsException();
+                }
+                if(playersColors.size() != players.size()) {
+                    throw new InvalidNumberOfColorsException();
+                }
+            }
+
         }
+    }
+
+    private static void validateAdvancePlayer(GameDescriptor gd) throws Exception {
+
     }
 
 
