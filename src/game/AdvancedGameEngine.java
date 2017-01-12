@@ -58,7 +58,19 @@ public class AdvancedGameEngine extends GameEngine {
 
     @Override
     public boolean endGame() {
-        return false;
+        boolean gameEnded = true;
+        for(int j=0; j < gameBoard.getSize(); j++){
+            if(gameBoard.getCell(cursorRow, j).isEmpty() == false && j != cursorCol){
+                gameEnded = false;
+            }
+        }
+        for (int i = 0; i < gameBoard.getSize(); i++) {
+            if (gameBoard.getCell(i, cursorCol).isEmpty() == false && i != cursorRow) {
+                gameEnded = false;
+            }
+        }
+
+        return gameEnded || players.size() == 1;
     }
 
 
