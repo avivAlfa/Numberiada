@@ -89,6 +89,8 @@ public class GameController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+      //  mainPane.styleProperty("resources/nofar.css");
+    //    mainPane.getStylesheets().add("resources/nofar.css");
         gameIsRunning = new SimpleBooleanProperty(false);
         gameUploaded = new SimpleBooleanProperty(false);
         gameEndView = new SimpleBooleanProperty(false);
@@ -103,6 +105,8 @@ public class GameController implements Initializable{
 
         playerStatistics = FXCollections.observableArrayList();
         playersListView.setItems(playerStatistics);
+
+
     }
 
     @FXML
@@ -160,7 +164,10 @@ public class GameController implements Initializable{
 
     @FXML
     void retireButton_OnClick(ActionEvent event) {
+        updatePrevPossibleCells();
+        removeCurrentPlayerFromBoard();
         gameEngine.removeCurrentPlayerFromGame();
+
         handleTurn();
     }
 
@@ -171,6 +178,19 @@ public class GameController implements Initializable{
 
     @FXML
     void prevButton_OnClick(ActionEvent event) {
+
+    }
+
+    private void removeCurrentPlayerFromBoard() {
+        playerStatistics.remove(gameEngine.getPlayerTurnIndex());
+
+        List<Point> allPossibleCells = gameEngine.getAllPossibleCells();
+
+        for (Point p : allPossibleCells) {
+//       //     gameBoardUI.getCell((int)p.getX(), (int)p.getY()).setText("");
+            gameBoardUI.getCell((int)p.getX(), (int)p.getY()).updateValues();
+            //  gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(true);
+        }
 
     }
 
@@ -194,7 +214,10 @@ public class GameController implements Initializable{
         playerIdLabel.setText(Integer.toString(gameEngine.getCurrentPlayerID()));
         totalMovesLabel.setText(String.valueOf(gameEngine.getMovesCnt()));
         int prevPlayerIndex = gameEngine.getPreviousPlayerIndex();
-        playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
+        for(int i = 0; i < playerStatistics.size(); i++) {
+            playerStatistics.set(i, gameEngine.getPlayerInfo(i));
+        }
+       // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
     }
 
     private void updatePrevPossibleCells(){

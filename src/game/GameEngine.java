@@ -28,6 +28,7 @@ public abstract class GameEngine {
     protected abstract List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players);
     public abstract String getPlayerColor(Player player);
     public abstract List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol);
+    public abstract List<Point> getAllPossibleCells();
 
 
     public int getMovesCnt() { return movesCnt; }

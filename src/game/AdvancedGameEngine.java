@@ -11,6 +11,23 @@ import java.util.List;
 
 public class AdvancedGameEngine extends GameEngine {
 
+    @Override
+    public List<Point> getAllPossibleCells() {
+        List<Point> possibleCells = new ArrayList<Point>();
+        Cell currCell;
+
+        for (int j = 0; j < gameBoard.getSize(); j++) {
+            for(int i = 0; i< gameBoard.getSize(); i++) {
+                currCell = gameBoard.getCell(i, j);
+                if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && currCell.getColor() == players.get(playerTurnIndex).getColor()) {
+                    possibleCells.add(new Point(i, j));
+                    currCell.setAsEmpty();
+                }
+            }
+        }
+
+        return possibleCells;
+    }
 
     @Override
     public List<Point> getPossibleCells() {

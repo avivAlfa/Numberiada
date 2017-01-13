@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+
 public class BasicGameEngine extends GameEngine {
     @Override
     public List<Point> getPossibleCells() {
@@ -56,6 +57,11 @@ public class BasicGameEngine extends GameEngine {
         }
 
         return nextPlayerOpportunities;
+    }
+
+    @Override
+    public List<Point> getAllPossibleCells() {
+        return null;
     }
 
     @Override
