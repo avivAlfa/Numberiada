@@ -136,7 +136,7 @@ public class AdvancedGameEngine extends GameEngine {
 
     @Override
     public Point getComputerChosenCellIndexes(){
-        Point chosenIndexes = null;
+        Point chosenIndexes = new Point();
         int maxValue = -999;
 
         for(int i=0; i <gameBoard.getSize(); i++) {

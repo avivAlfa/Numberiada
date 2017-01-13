@@ -109,9 +109,9 @@ public abstract class GameEngine {
     }
 
 
-//    public boolean isCurrentPlayerHuman(){
-//        return players.get(playerTurnIndex).isHuman();
-//    }
+    public boolean isCurrentPlayerComputer(){
+        return players.get(playerTurnIndex).isHuman() == false;
+    }
 
 
 //    public Cell getChosenCellAccordingToIndex(int cellNumber) {
