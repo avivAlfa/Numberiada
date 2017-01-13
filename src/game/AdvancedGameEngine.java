@@ -134,7 +134,31 @@ public class AdvancedGameEngine extends GameEngine {
     }
 
 
+    @Override
+    public Point getComputerChosenCellIndexes(){
+        Point chosenIndexes = null;
+        int maxValue = -999;
 
+        for(int i=0; i <gameBoard.getSize(); i++) {
+            Cell currentCellByRow = gameBoard.getCell(cursorRow, i);
+            Cell currentCellByCol = gameBoard.getCell(i, cursorCol);
+
+            if(!currentCellByRow.isCursor() && !currentCellByRow.isEmpty() && currentCellByRow.getColor() == players.get(playerTurnIndex).getColor()) {
+                if (currentCellByRow.getValue() > maxValue) {
+                    maxValue = currentCellByRow.getValue();
+                    chosenIndexes.setLocation(cursorRow, i);
+                }
+            }
+            if(!currentCellByCol.isCursor() && !currentCellByCol.isEmpty()&& currentCellByCol.getColor() == players.get(playerTurnIndex).getColor()) {
+                if (currentCellByCol.getValue() > maxValue) {
+                    maxValue = currentCellByCol.getValue();
+                    chosenIndexes.setLocation(i,cursorCol);
+                }
+            }
+
+        }
+        return chosenIndexes;
+    }
 
 
 

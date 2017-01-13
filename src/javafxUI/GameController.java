@@ -8,6 +8,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -117,7 +120,7 @@ public class GameController implements Initializable{
             loadGameEngine(gameDescriptor);
             loadGameGrid();
             loadGamePlayersList();
-            handleTurn();
+            updateStatistics();
             messageLabel.setText("");
             gameUploaded.setValue(true);
         } else
@@ -146,6 +149,8 @@ public class GameController implements Initializable{
     @FXML
     void startButton_OnClick(ActionEvent event) {
         gameIsRunning.setValue(true);
+        handleTurn();
+
     }
 
     @FXML
@@ -196,7 +201,6 @@ public class GameController implements Initializable{
 
     private void handleTurn(){
         updateStatistics();
-        //TODO:scoretable update
         if(gameEngine.endGame()){
             handleEndGame();
         }
@@ -448,4 +452,6 @@ public class GameController implements Initializable{
         timeline.play();
 
     }
+
+    
 }
