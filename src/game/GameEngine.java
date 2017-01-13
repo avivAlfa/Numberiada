@@ -29,6 +29,7 @@ public abstract class GameEngine {
     public abstract String getPlayerColor(Player player);
     public abstract List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol);
     public abstract List<Point> getAllPossibleCells();
+    public abstract Point getComputerChosenCellIndexes();
 
 
     public int getMovesCnt() { return movesCnt; }
@@ -108,9 +109,9 @@ public abstract class GameEngine {
     }
 
 
-//    public boolean isCurrentPlayerHuman(){
-//        return players.get(playerTurnIndex).isHuman();
-//    }
+    public boolean isCurrentPlayerComputer(){
+        return players.get(playerTurnIndex).isHuman() == false;
+    }
 
 
 //    public Cell getChosenCellAccordingToIndex(int cellNumber) {

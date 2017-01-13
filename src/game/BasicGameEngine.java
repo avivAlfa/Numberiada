@@ -155,6 +155,34 @@ public class BasicGameEngine extends GameEngine {
         return "";
     }
 
+    @Override
+    public Point getComputerChosenCellIndexes(){
+        Point chosenIndexes = null;
+        int maxValue = -999;
 
+        if(playerTurnIndex%2 == 0) {//row Player
+            for(int i=0; i <gameBoard.getSize(); i++) {
+                Cell currentCell = gameBoard.getCell(cursorRow, i);
+                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+                    if (currentCell.getValue() > maxValue) {
+                        maxValue = currentCell.getValue();
+                        chosenIndexes.setLocation(cursorRow,i);
+                    }
+                }
+            }
+        }
+        else {
+            for(int i=0; i < gameBoard.getSize(); i++) {
+                Cell currentCell = gameBoard.getCell(i, cursorCol);
+                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
+                    if (currentCell.getValue() > maxValue) {
+                        maxValue = currentCell.getValue();
+                        chosenIndexes.setLocation(i,cursorCol);
+                    }
+                }
+            }
+        }
+        return chosenIndexes;
+    }
 
 }

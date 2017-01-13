@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
 <ScrollPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxUI.GameController">
    <content>
       <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="608.0" prefWidth="726.0">
@@ -25,7 +24,7 @@
                   <TextArea fx:id="pathTxt" editable="false" layoutX="109.0" layoutY="11.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="390.0" />
                   <Button fx:id="loadFileButton" layoutX="14.0" layoutY="11.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#loadFileButton_OnClick" prefHeight="25.0" prefWidth="90.0" text="Load File" />
                   <Label layoutX="630.0" layoutY="15.0" text="Skin select" />
-                  <CheckBox layoutX="529.0" layoutY="15.0" mnemonicParsing="false" text="Animation " />
+                  <CheckBox fx:id="animationCheckBox" layoutX="529.0" layoutY="15.0" mnemonicParsing="false" text="Animation " />
                </children>
             </Pane>
             <ScrollPane fx:id="gameBoardPane" layoutY="75.0" maxHeight="500.0" maxWidth="500.0" minHeight="500.0" minWidth="500.0" prefHeight="500.0" prefWidth="610.0">
@@ -59,7 +58,7 @@
                   <Label fx:id="playerIdLabel" layoutX="108.0" layoutY="85.0" />
                </children>
             </Pane>
-            <Pane fx:id="buttomPane" layoutY="578.0" prefHeight="32.0" prefWidth="610.0">
+            <Pane fx:id="buttomPane" layoutY="578.0" prefHeight="32.0" prefWidth="728.0">
                <children>
                   <Button fx:id="playMoveButton" layoutX="4.0" layoutY="2.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#playMoveButton_OnClick" prefHeight="25.0" prefWidth="122.0" text="Play move" />
                   <Button fx:id="retireButton" layoutX="132.0" layoutY="2.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" onAction="#retireButton_OnClick" prefHeight="25.0" prefWidth="122.0" text="Get me out of here!" />
