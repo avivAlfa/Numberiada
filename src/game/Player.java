@@ -66,4 +66,6 @@ public class Player {
     public void setAsHuman(){ this.isHuman = true;}
 
     public void setAsComputer() { this.isHuman = false; }
+
+
 }

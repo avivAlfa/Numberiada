@@ -1,4 +1,7 @@
 package game;
+
+import generated.GameDescriptor;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -117,20 +120,26 @@ public class BasicGameEngine extends GameEngine {
 //    }
 
     @Override
-    protected List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo,int numOfPlayers){
-        List<Integer> pool = new ArrayList<Integer>();
+    protected List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players){
+        List<PoolElement> pool = new ArrayList<PoolElement>();
         int rangeSize = rangeTo - rangeFrom + 1;
+        PoolElement tempElem;
         int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / rangeSize;
 
         for(int i = rangeFrom; i <= rangeTo; i++) {
             for (int j = 0; j < numOfImpressions; j++) {
-                pool.add(i);
+                tempElem = new PoolElement(i,0);
+                pool.add(tempElem);
             }
         }
+
         for(int i = 0; i < ((int)((Math.pow(boardSize,2) - 1) % rangeSize)); i++) { //empty cells
-            pool.add(-999);
+            tempElem = new PoolElement(-999, 0);
+            pool.add(tempElem);
+           // pool.add(-999);
         }
-        pool.add(999); //cursor
+        tempElem = new PoolElement(999, 0);
+        pool.add(tempElem); //cursor
 
         return pool;
     }

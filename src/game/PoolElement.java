@@ -1,36 +1,29 @@
 package game;
 
-/**
- * Created by alfav on 12/13/2016.
- */
 public class PoolElement {
-    int num1;
-    int num2;
+    int number;
+    int color;
 
     public PoolElement() {}
 
-    public PoolElement(int num1, int num2) {
-        this.num1 = num1;
-        this.num2 = num2;
+    public PoolElement(int number, int color) {
+        this.number = number;
+        this.color = color;
     }
 
     public int getNumber() {
-        return num1;
+        return number;
     }
 
-    public int getNum1() {
-        return num1;
-    }
+    public int getColor() { return color; }
 
-    public int getNum2() { return num2; }
+    public void setNumber(int num) { this.number = num; }
 
-    public void setNum1(int num1) { this.num1 = num1; }
+    public void setColor(int color) { this.color = color; }
 
-    public void setNum2(int num2) { this.num2 = num2; }
-
-    public void decreaseNum2() {
-        num2--;
-    }
+    //public void decreaseColor() {
+   //     color--;
+    //}
 
 
     @Override
@@ -43,7 +36,7 @@ public class PoolElement {
         }
         final PoolElement other = (PoolElement) obj;
 
-        if (this.num1 != other.num1 || this.num2 != other.num2) {
+        if (this.number != other.number || this.color != other.color) {
             return false;
         }
         return true;
@@ -52,8 +45,8 @@ public class PoolElement {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + this.num1;
-        hash += 53 * hash + this.num2;
+        hash = 53 * hash + this.number;
+        hash += 53 * hash + this.color;
         return hash;
     }
 

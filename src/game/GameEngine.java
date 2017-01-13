@@ -6,6 +6,7 @@ import Exceptions.EmptyCellException;
 import Exceptions.InvalidPlayerTypeException;
 import generated.GameDescriptor;
 
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class GameEngine {
 
     public abstract List<Point> getPossibleCells();
     public abstract boolean endGame();
-    protected abstract List<Integer> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers);
+    protected abstract List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players);
     public abstract String getPlayerColor(Player player);
     public abstract List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol);
 
@@ -283,8 +284,8 @@ public abstract class GameEngine {
     public void loadGameParamsFromDescriptor(GameDescriptor gd){
 
         if(gd.getBoard().getStructure().getType().toLowerCase().equals("random")) {
-            int numOfPlayers = (gd.getPlayers()!=null)?gd.getPlayers().getPlayer().size():0;
-            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo(), numOfPlayers);
+            List<GameDescriptor.Players.Player> players = (gd.getPlayers()!=null)?gd.getPlayers().getPlayer():null;
+            gameBoard = buildRandomBoard(gd.getBoard().getSize().intValue(), gd.getBoard().getStructure().getRange().getFrom(), gd.getBoard().getStructure().getRange().getTo(), players);
         } else {
             gameBoard = buildExplicitBoard(gd);
             GameDescriptor.Board.Structure.Squares.Marker marker = gd.getBoard().getStructure().getSquares().getMarker();
@@ -361,17 +362,18 @@ public abstract class GameEngine {
         return new Board(boardArray, boardSize);
     }
 
-    public Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers) {
+    public Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players) {
         Cell[][] boardArray = createEmptyBoard(boardSize);
-        List<Integer> poolOfNumbers = createPool(boardSize, rangeFrom, rangeTo, numOfPlayers);
+        List<PoolElement> poolOfNumbers = createPool(boardSize, rangeFrom, rangeTo, players);
         Collections.shuffle(poolOfNumbers);
         int index=0;
         for(int i = 0; i < boardSize; i++) {
             for(int j = 0; j < boardSize; j++) {
-                boardArray[i][j].setValue(poolOfNumbers.get(index));
-                if(poolOfNumbers.get(index) == -999)
+                boardArray[i][j].setValue(poolOfNumbers.get(index).getNumber());
+                boardArray[i][j].setColor(poolOfNumbers.get(index).getColor());
+                if(poolOfNumbers.get(index).getNumber() == -999)
                     boardArray[i][j].setAsEmpty();
-                else if(poolOfNumbers.get(index) == 999){
+                else if(poolOfNumbers.get(index).getNumber() == 999){
                     boardArray[i][j].setAsCursor();
                     cursorRow = i;
                     cursorCol = j;
