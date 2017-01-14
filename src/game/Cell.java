@@ -6,7 +6,7 @@ public class Cell {
     private boolean isEmpty = false;
     private boolean isCursor = false;
 
-    Cell(){}
+    public Cell(){}
     Cell(int value) {
         this.value = value;
     }

@@ -61,6 +61,11 @@ public class CellUI extends Button {
         return content;
     }
 
+    public void clear() {
+        this.content = null;
+
+    }
+
     public void updateValues(){
         isEmptyProperty.setValue(content.isEmpty());
         isCursorProperty.setValue(content.isCursor());

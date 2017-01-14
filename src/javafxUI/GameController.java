@@ -47,7 +47,7 @@ import java.util.ResourceBundle;
 public class GameController implements Initializable {
     private GameEngine gameEngine;
     private BoardUI gameBoardUI;
-    private CellUI selectedCell = new CellUI();
+    private CellUI selectedCell;
     private List<Point> possibleCells;
     private List<Point> nextPlayerOpportunities;
     private SimpleBooleanProperty gameIsRunning;
@@ -127,6 +127,7 @@ public class GameController implements Initializable {
         playerStatistics = FXCollections.observableArrayList();
         playersListView.setItems(playerStatistics);
 
+        selectedCell = new CellUI();
         gamePositions = new ArrayList<>();
     }
 
@@ -166,26 +167,31 @@ public class GameController implements Initializable {
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
-        //updatePrevPossibleCells();
-        CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
-        int row = GridPane.getRowIndex(selectedCell);
-        int col = GridPane.getColumnIndex(selectedCell);
+        
+        if(selectedCell.getStyle().contains(" #add8e6; ")) {
+            CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
+            int row = GridPane.getRowIndex(selectedCell);
+            int col = GridPane.getColumnIndex(selectedCell);
 
-        addCurrentPosition(selectedCell);
-
-        //playAnimation(cursorCellUI, selectedCell);
-        gameEngine.playMove(row, col);
+            addCurrentPosition(selectedCell);
 
 
+            //playAnimation(cursorCellUI, selectedCell);
+            gameEngine.playMove(row, col);
 
-        cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
-        selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
-        //selectedCell.setStyle("-fx-base: #ececec ");
+            cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
+            selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
+            clearSelected();
+            hideNextPlayerOpportunities();
+            gameEngine.changeTurn();
+            handleTurn();
+        }
+    }
+
+    private void clearSelected(){
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
-        hideNextPlayerOpportunities();
-        gameEngine.changeTurn();
-        handleTurn();
-
+        //selectedCell = null;
+        //selectedCell = new CellUI();
     }
 
     private void addCurrentPosition(CellUI cell) {
@@ -206,7 +212,7 @@ public class GameController implements Initializable {
 
     @FXML
     void startButton_OnClick(ActionEvent event) {
-        if(!pathTxt.getText().isEmpty()) {
+        if(gameEndView.getValue()) {
             restartGame();
         }
         gameIsRunning.setValue(true);
@@ -347,22 +353,19 @@ public class GameController implements Initializable {
             Stage s = new Stage();
             ProgressBar progressBar = new ProgressBar();
             progressBar.progressProperty().bind(task.progressProperty());
-            Scene sc = new Scene(progressBar, 500,20);
+            Scene sc = new Scene(progressBar, 300,20);
             s.titleProperty().bind(task.messageProperty());
             s.setScene(sc);
             s.initModality(Modality.APPLICATION_MODAL);
             s.show();
 
             task.setOnSucceeded(event -> {
-
                 s.close();
                 Point computerChoice = task.getValue();
                 CellUI selectedCellByComputer = null;
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
                 addCurrentPosition(selectedCellByComputer);
                 gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
-
-
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
                 gameEngine.changeTurn();
@@ -450,11 +453,10 @@ public class GameController implements Initializable {
     private void handleEndGame() {
         String endGameMessage = gameEngine.createEndGameMessage();
         Utils.popupMessage(endGameMessage, "Game Over", -1);
-        //TODO: Prev Next situation
         gameEndView.setValue(true);
         gameIsRunning.setValue(false);
 
-        selectedCell.disableProperty().setValue(true);
+        //selectedCell.disableProperty().setValue(true);//TODO:change to disable where cursor is (error when computer do last move)
         gamePositionIndex = gamePositions.size() - 1;
 
         isNextDisabled.setValue(true);
