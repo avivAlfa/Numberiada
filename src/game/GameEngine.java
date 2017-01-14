@@ -466,7 +466,7 @@ public abstract class GameEngine {
         }
 
         newPlayer = getPlayerByIndex(playerTurnIndex).clonePlayer();
-        return new GamePosition(newPlayer, newPlayers, new Point(cursorRow, cursorCol), gameBoard.getCell(cursorRow, cursorCol), movesCnt);
+        return new GamePosition(newPlayer, newPlayers, new Point(cursorRow, cursorCol), (gameBoard.getCell(cursorRow, cursorCol)).cloneCell(), movesCnt);
     }
 
     public List<Player> cloneCurrPlayerList() {

@@ -11,9 +11,16 @@ public class Cell {
         this.value = value;
     }
 
-    Cell(int value, int color) {
+    public Cell(int value, int color) {
         this.value = value;
         this.color = color;
+    }
+
+    public Cell(int value, int color, boolean isEmpty, boolean isCursor) {
+        this.value = value;
+        this.color = color;
+        this.isEmpty = isEmpty;
+        this.isCursor = isCursor;
     }
 
     public int getValue() {
@@ -26,7 +33,7 @@ public class Cell {
             this.value = value;
             this.isEmpty = false;
             this.isCursor = true;
-        }if(value == -999) {
+        }else if(value == -999) {
             this.value = value;
             this.isEmpty = true;
             this.isCursor = false;
@@ -55,5 +62,9 @@ public class Cell {
         this.value = 999;
         this.isCursor = true;
         this.isEmpty = false;
+    }
+
+    public Cell cloneCell() {
+        return new Cell(value, color);
     }
 }

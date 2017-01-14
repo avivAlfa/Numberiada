@@ -1,6 +1,7 @@
 package javafxUI;
 
 import game.*;
+import game.Cell;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -53,7 +54,7 @@ public class GameController implements Initializable {
     private SimpleBooleanProperty gameEndView;
     private ObservableList<String> playerStatistics;
     private List<GamePosition> gamePositions;
-    private int gamePositionIndex = 0;
+    private int gamePositionIndex;
 
 
 
@@ -135,7 +136,7 @@ public class GameController implements Initializable {
 
             //the cursor initial place
             gamePositions.add(gameEngine.getCurrentGamePos());
-            gamePositionIndex++;
+           // gamePositionIndex++;
         } else
             gameUploaded.setValue(false);
     }
@@ -148,11 +149,16 @@ public class GameController implements Initializable {
         int col = GridPane.getColumnIndex(selectedCell);
         GamePosition gamePosition;
 
-        gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent(), gameEngine.getMovesCnt());
+        if(selectedCell.getContent() != null)
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent().cloneCell(), gameEngine.getMovesCnt());
+        else
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+                    gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
+
 
         gamePositions.add(gamePosition);
-        gamePositionIndex++;
+    //    gamePositionIndex++;
 
         //playAnimation(cursorCellUI, selectedCell);
         gameEngine.playMove(row, col);
@@ -202,32 +208,48 @@ public class GameController implements Initializable {
 
     @FXML
     void nextButton_OnClick(ActionEvent event) {
-        if(gamePositionIndex < gamePositions.size() - 1) {
+        if(gamePositionIndex <= gamePositions.size() - 1) {
             gamePositionIndex++;
-            showGamePosition(gamePositions.get(gamePositionIndex));
+            showGamePosition();
+
+            GamePosition position = gamePositions.get(gamePositionIndex - 1);
+            gameEngine.setCellValue(position.getSelectedPoint(), new Cell(-999, 0, true, false));
+            gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
+
+            gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
+                    new Cell(999, 0,false,true));
+            gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
+                    (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
         }
     }
 
     @FXML
     void prevButton_OnClick(ActionEvent event) {
-        if(gamePositionIndex != 1) {
+        if(gamePositionIndex != 0) {
             gamePositionIndex--;
-            showGamePosition(gamePositions.get(gamePositionIndex));
+            showGamePosition();
+
+            GamePosition position = gamePositions.get(gamePositionIndex + 1);
+            gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
+            gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
+
+            gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
+                    new Cell(999, 0, false, true));
+            gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
+                    (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
         }
     }
 
-    private void showGamePosition(GamePosition position) {
+    private void showGamePosition() {
+        GamePosition position = gamePositions.get(gamePositionIndex);
 
         totalMovesLabel.setText(String.valueOf(position.getTotalMoves()));
         currentPlayerLabel.setText(position.getCurrPlayer().getName());
         playerIdLabel.setText(String.valueOf(position.getCurrPlayer().getId()));
         updateStatistics(position);
 
-        gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
-        gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
-       // selectedCell.setText(String.valueOf(position.getSelectedCell().getValue()));
 
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
+
 
     }
 
@@ -374,7 +396,8 @@ public class GameController implements Initializable {
         gameEndView.setValue(true);
         gameIsRunning.setValue(false);
 
-
+        selectedCell.disableProperty().setValue(true);
+        gamePositionIndex = gamePositions.size() - 1;
     }
 
     private void resetGame() {
@@ -510,6 +533,7 @@ public class GameController implements Initializable {
                 CellUI currCell = new CellUI(gameBoard.getCell(i, j));
                 currCell.disableProperty().setValue(true);
                 currCell.setOnAction(e -> cellUI_OnClick((CellUI) e.getSource()));
+
                 gameBoardUI.setCellUI(currCell, i, j);
                 gameGrid.add(currCell, j, i, 1, 1);
             }
