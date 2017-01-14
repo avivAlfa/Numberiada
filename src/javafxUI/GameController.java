@@ -160,18 +160,18 @@ public class GameController implements Initializable {
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
-        GamePosition gamePosition;
-
-        if(selectedCell.getContent() != null)
-            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent().cloneCell(), gameEngine.getMovesCnt());
-        else
-            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-                    gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
-
-
-        gamePositions.add(gamePosition);
-    //    gamePositionIndex++;
+//        GamePosition gamePosition;
+//
+//        if(selectedCell.getContent() != null)
+//            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+//                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent().cloneCell(), gameEngine.getMovesCnt());
+//        else
+//            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+//                    gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
+//
+//
+//        gamePositions.add(gamePosition);
+        addCurrentPosition(selectedCell);
 
         //playAnimation(cursorCellUI, selectedCell);
         gameEngine.playMove(row, col);
@@ -186,6 +186,22 @@ public class GameController implements Initializable {
         gameEngine.changeTurn();
         handleTurn();
 
+    }
+
+    private void addCurrentPosition(CellUI cell) {
+        GamePosition gamePosition;
+        int row = GridPane.getRowIndex(cell);
+        int col = GridPane.getColumnIndex(cell);
+
+        if(cell.getContent() != null)
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+                    gameEngine.cloneCurrPlayerList(), new Point(row, col), cell.getContent().cloneCell(), gameEngine.getMovesCnt());
+        else
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+                    gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
+
+
+        gamePositions.add(gamePosition);
     }
 
     @FXML
@@ -223,7 +239,7 @@ public class GameController implements Initializable {
 
     @FXML
     void nextButton_OnClick(ActionEvent event) {
-        if(gamePositionIndex <= gamePositions.size() - 1) {
+        if(gamePositionIndex < gamePositions.size() - 1) {
             gamePositionIndex++;
             showGamePosition();
 
@@ -261,9 +277,6 @@ public class GameController implements Initializable {
         currentPlayerLabel.setText(position.getCurrPlayer().getName());
         playerIdLabel.setText(String.valueOf(position.getCurrPlayer().getId()));
         updateStatistics(position);
-
-
-
 
     }
 
@@ -323,10 +336,15 @@ public class GameController implements Initializable {
             s.show();
 
             task.setOnSucceeded(event -> {
+
                 s.close();
-                CellUI selectedCellByComputer = null;
                 Point computerChoice = task.getValue();
+                CellUI selectedCellByComputer = null;
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
+                addCurrentPosition(selectedCellByComputer);
+                gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
+
+
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
                 gameEngine.changeTurn();

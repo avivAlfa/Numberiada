@@ -19,7 +19,6 @@ public class ComputerMoveTask extends Task<Point> {
             this.updateMessage(gameEngine.getCurrentPlayerName() + " Making decision");
             Thread.sleep(500);
             Point computerChoice = gameEngine.getComputerChosenCellIndexes();
-            gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
 
             return computerChoice;
         } catch (Exception e) {
