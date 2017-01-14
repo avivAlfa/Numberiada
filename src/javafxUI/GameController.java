@@ -4,6 +4,7 @@ import game.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -13,6 +14,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +28,7 @@ import generated.GameDescriptor;
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -43,6 +46,7 @@ public class GameController implements Initializable {
     private GameEngine gameEngine;
     private BoardUI gameBoardUI;
     private CellUI selectedCell = new CellUI();
+    private List<Point> possibleCells;
     private List<Point> nextPlayerOpportunities;
     private SimpleBooleanProperty gameIsRunning;
     private SimpleBooleanProperty gameUploaded;
@@ -50,6 +54,8 @@ public class GameController implements Initializable {
     private ObservableList<String> playerStatistics;
     private List<GamePosition> gamePositions;
     private int gamePositionIndex = 0;
+
+
 
     @FXML
     private Pane mainPane;
@@ -136,7 +142,7 @@ public class GameController implements Initializable {
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
-        updatePrevPossibleCells();
+        //updatePrevPossibleCells();
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
@@ -159,6 +165,7 @@ public class GameController implements Initializable {
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
         hideNextPlayerOpportunities();
         updateStatistics();
+        gameEngine.changeTurn();
         handleTurn();
 
     }
@@ -238,20 +245,18 @@ public class GameController implements Initializable {
 
     }
 
-    private void handleTurn() {
-        if (gameEngine.endGame()) {
-            handleEndGame();
-        }else{
-            skipUnavailableTurns();
-
-            if(gameEngine.isCurrentPlayerComputer()) {
-                //makeComputerMoves();
-                makeComputerMove();
-
-                skipUnavailableTurns();
+        private void handleTurn() {
+            if (gameEngine.endGame()) {
+                handleEndGame();
             }
+            else{
+                skipUnavailableTurns();
+                if (gameEngine.isCurrentPlayerComputer()) {
+                    makeComputerMove();
+                }
+            }
+
         }
-    }
 
     private void skipUnavailableTurns(){
         while (!gameEngine.endGame() && !possibleCellsUpdate()) {
@@ -264,28 +269,33 @@ public class GameController implements Initializable {
         }
     }
 
-    private void makeComputerMoves(){
-        while(!gameEngine.endGame() && gameEngine.isCurrentPlayerComputer()){
-            makeComputerMove();
-            skipUnavailableTurns();
-        }
-    }
 
     private void makeComputerMove() {
-        updatePrevPossibleCells();
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
-
         ComputerMoveTask task = new ComputerMoveTask(gameEngine);
         try {
             Thread t = new Thread(task);
             t.start();
+
+            Stage s = new Stage();
+            ProgressBar progressBar = new ProgressBar();
+            progressBar.progressProperty().bind(task.progressProperty());
+            Scene sc = new Scene(progressBar, 500,20);
+            s.titleProperty().bind(task.messageProperty());
+            s.setScene(sc);
+            s.initModality(Modality.APPLICATION_MODAL);
+            s.show();
+
             task.setOnSucceeded(event -> {
+                s.close();
                 CellUI selectedCellByComputer = null;
                 Point computerChoice = task.getValue();
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
                 updateStatistics();
+                gameEngine.changeTurn();
+                handleTurn();
 
             });
         } catch (Exception e) {
@@ -324,9 +334,15 @@ public class GameController implements Initializable {
     }
 
     private boolean possibleCellsUpdate() {
+        if(possibleCells != null){
+            //disable previous cells
+            for (Point p : possibleCells) {
+                gameBoardUI.getCell((int) p.getX(), (int) p.getY()).disableProperty().setValue(true);
+            }
+        }
 
-        List<Point> possibleCells = gameEngine.getPossibleCells();
-
+        possibleCells = gameEngine.getPossibleCells();
+        //enable new possible cells
         for (Point p : possibleCells) {
             gameBoardUI.getCell((int) p.getX(), (int) p.getY()).disableProperty().setValue(false);
         }

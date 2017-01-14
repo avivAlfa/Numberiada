@@ -157,7 +157,7 @@ public class BasicGameEngine extends GameEngine {
 
     @Override
     public Point getComputerChosenCellIndexes(){
-        Point chosenIndexes = null;
+        Point chosenIndexes = new Point();
         int maxValue = -999;
 
         if(playerTurnIndex%2 == 0) {//row Player
