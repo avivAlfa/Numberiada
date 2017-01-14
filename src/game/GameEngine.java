@@ -414,7 +414,7 @@ public abstract class GameEngine {
         resignedPlayers.add(players.get(playerTurnIndex));
         players.remove(playerTurnIndex);
         if(playerTurnIndex == players.size()) {//last player resigned
-            playerTurnIndex--;
+            playerTurnIndex=0;
         }
 
     }
