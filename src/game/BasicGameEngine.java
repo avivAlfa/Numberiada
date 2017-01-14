@@ -61,7 +61,7 @@ public class BasicGameEngine extends GameEngine {
 
     @Override
     public List<Point> getAllPossibleCells() {
-        return null;
+        return new ArrayList<Point>() ;
     }
 
     @Override

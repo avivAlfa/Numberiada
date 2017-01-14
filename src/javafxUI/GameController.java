@@ -167,7 +167,7 @@ public class GameController implements Initializable {
 
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
-        
+
         if(selectedCell.getStyle().contains(" #add8e6; ")) {
             CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
             int row = GridPane.getRowIndex(selectedCell);
