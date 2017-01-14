@@ -7,6 +7,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -55,6 +56,8 @@ public class GameController implements Initializable {
     private ObservableList<String> playerStatistics;
     private List<GamePosition> gamePositions;
     private int gamePositionIndex;
+    private SimpleBooleanProperty isNextDisabled;
+    private SimpleBooleanProperty isPrevDisabled;
 
     @FXML
     private Pane mainPane;
@@ -100,11 +103,15 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         //  mainPane.styleProperty("resources/nofar.css");
         //    mainPane.getStylesheets().add("resources/nofar.css");
         gameIsRunning = new SimpleBooleanProperty(false);
         gameUploaded = new SimpleBooleanProperty(false);
         gameEndView = new SimpleBooleanProperty(false);
+        isNextDisabled = new SimpleBooleanProperty(true);
+        isPrevDisabled = new SimpleBooleanProperty(true);
+
 
         loadFileButton.disableProperty().bind(gameIsRunning);
         startButton.disableProperty().bind(Bindings.or(gameIsRunning, Bindings.not(gameUploaded)));
@@ -113,6 +120,9 @@ public class GameController implements Initializable {
         retireButton.disableProperty().bind(Bindings.not(gameIsRunning));
         nextButton.visibleProperty().bind(gameEndView);
         prevButton.visibleProperty().bind(gameEndView);
+
+        nextButton.disableProperty().bind(isNextDisabled);
+        prevButton.disableProperty().bind(isPrevDisabled);
 
         playerStatistics = FXCollections.observableArrayList();
         playersListView.setItems(playerStatistics);
@@ -160,17 +170,7 @@ public class GameController implements Initializable {
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
-//        GamePosition gamePosition;
-//
-//        if(selectedCell.getContent() != null)
-//            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-//                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent().cloneCell(), gameEngine.getMovesCnt());
-//        else
-//            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-//                    gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
-//
-//
-//        gamePositions.add(gamePosition);
+
         addCurrentPosition(selectedCell);
 
         //playAnimation(cursorCellUI, selectedCell);
@@ -241,6 +241,14 @@ public class GameController implements Initializable {
     void nextButton_OnClick(ActionEvent event) {
         if(gamePositionIndex < gamePositions.size() - 1) {
             gamePositionIndex++;
+
+            if(gamePositionIndex == gamePositions.size() - 1 || gamePositionIndex == 0) {
+                isNextDisabled.setValue(true);
+                isPrevDisabled.setValue(false);
+            } else {
+                isPrevDisabled.setValue(false);
+                isNextDisabled.setValue(false);
+            }
             showGamePosition();
 
             GamePosition position = gamePositions.get(gamePositionIndex - 1);
@@ -258,6 +266,16 @@ public class GameController implements Initializable {
     void prevButton_OnClick(ActionEvent event) {
         if(gamePositionIndex != 0) {
             gamePositionIndex--;
+
+            if(gamePositionIndex == gamePositions.size() - 1 || gamePositionIndex == 0) {
+                isPrevDisabled.setValue(true);
+                isNextDisabled.setValue(false);
+
+            } else {
+                isPrevDisabled.setValue(false);
+                isNextDisabled.setValue(false);
+            }
+
             showGamePosition();
 
             GamePosition position = gamePositions.get(gamePositionIndex + 1);
@@ -371,8 +389,17 @@ public class GameController implements Initializable {
         currentPlayerLabel.setText(gamePosition.getCurrPlayer().getName());
         playerIdLabel.setText(Integer.toString(gamePosition.getCurrPlayer().getId()));
         totalMovesLabel.setText(String.valueOf(gamePosition.getTotalMoves()));
-        //int prevPlayerIndex = gameEngine.getPreviousPlayerIndex();
-        for (int i = 0; i < playerStatistics.size(); i++) {
+        int resinedSize = gamePosition.getAllPlayers().size() - playerStatistics.size();
+
+        if(resinedSize >= 0)
+            for (int i = 0; i< resinedSize; i++) {
+                playerStatistics.add("");
+            }
+        else {
+            playerStatistics.remove(playerStatistics.size() - 1);
+        }
+
+        for (int i = 0; i < gamePosition.getAllPlayers().size(); i++) {
             playerStatistics.set(i, gameEngine.getPlayerInfo(gamePosition.getAllPlayers().get(i)));
         }
         // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
@@ -429,6 +456,9 @@ public class GameController implements Initializable {
 
         selectedCell.disableProperty().setValue(true);
         gamePositionIndex = gamePositions.size() - 1;
+
+        isNextDisabled.setValue(true);
+        isPrevDisabled.setValue(false);
     }
 
     private void resetGame() {
