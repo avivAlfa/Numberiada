@@ -1,17 +1,22 @@
 package game;
 
+import java.awt.*;
 import java.util.List;
 
 public class GamePosition {
 
     Player currPlayer;
     List<Player> allPlayers;
+    Point selectedPoint;
     Cell selectedCell;
+    int totalMoves;
 
-    public GamePosition(Player currPlayer, List<Player> allPlayers, Cell selectedCell) {
+    public GamePosition(Player currPlayer, List<Player> allPlayers, Point selectedPoint, Cell selectedCell, int totalMoves) {
         this.currPlayer = currPlayer;
         this.allPlayers = allPlayers;
+        this.selectedPoint = selectedPoint;
         this.selectedCell = selectedCell;
+        this.totalMoves = totalMoves;
     }
 
     public Player getCurrPlayer() {
@@ -36,6 +41,22 @@ public class GamePosition {
 
     public void setSelectedCell(Cell selectedCell) {
         this.selectedCell = selectedCell;
+    }
+
+    public Point getSelectedPoint() {
+        return selectedPoint;
+    }
+
+    public void setSelectedPoint(Point selectedPoint) {
+        this.selectedPoint = selectedPoint;
+    }
+
+    public int getTotalMoves() {
+        return totalMoves;
+    }
+
+    public void setTotalMoves(int totalMoves) {
+        this.totalMoves = totalMoves;
     }
 
 }

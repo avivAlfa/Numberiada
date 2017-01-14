@@ -24,6 +24,15 @@ public class Player {
         this.isHuman = isHuman;
     }
 
+//    public Player(Player otherPlayer) {
+//        new Player(otherPlayer.getName(),
+//                otherPlayer.getId(), otherPlayer.getScore(), otherPlayer.getColor(), otherPlayer.isHuman());
+//    }
+
+    public Player clonePlayer() {
+        return new Player(name, id, score, color, isHuman);
+    }
+
     public int getId() {
         return id;
     }

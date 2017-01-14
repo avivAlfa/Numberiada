@@ -108,10 +108,27 @@ public abstract class GameEngine {
         return playerInfo;
     }
 
+    public String getPlayerInfo(Player player){
+        //Player player = players.get(index);
+        String playerInfo;
+        // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
+        playerInfo = String.format("%1$-12s",player.getName());
+        playerInfo += String.format("%1$-5s",player.getScore());
+        playerInfo += String.format("%1$10s",getPlayerColor(player));
+
+        return playerInfo;
+    }
+
+    public void setCellValue(Point point, Cell cell) {
+        gameBoard.getCell((int)point.getX(), (int)point.getY()).setValue(cell.getValue());
+        gameBoard.getCell((int)point.getX(), (int)point.getY()).setColor(cell.getColor());
+    }
+
 
     public boolean isCurrentPlayerComputer(){
         return players.get(playerTurnIndex).isHuman() == false;
     }
+
 
 
 //    public Cell getChosenCellAccordingToIndex(int cellNumber) {
@@ -241,6 +258,10 @@ public abstract class GameEngine {
     public void updateCursor(int row, int col){
         cursorRow = row;
         cursorCol = col;
+    }
+
+    public Cell getChosenCell(int row, int col) {
+        return gameBoard.getCell(row, col);
     }
 
     public void changeTurn() {
@@ -434,5 +455,27 @@ public abstract class GameEngine {
             }
         }
         return endGameMessage.toString();
+    }
+
+    public GamePosition getCurrentGamePos() {
+        List<Player> newPlayers = new ArrayList<>();
+        Player newPlayer;
+
+        for(Player player : players) {
+            newPlayers.add(player.clonePlayer());
+        }
+
+        newPlayer = getPlayerByIndex(playerTurnIndex).clonePlayer();
+        return new GamePosition(newPlayer, newPlayers, new Point(cursorRow, cursorCol), gameBoard.getCell(cursorRow, cursorCol), movesCnt);
+    }
+
+    public List<Player> cloneCurrPlayerList() {
+        List<Player> newList = new ArrayList<>();
+
+        for(Player player : players) {
+            newList.add(player.clonePlayer());
+        }
+
+        return newList;
     }
 }

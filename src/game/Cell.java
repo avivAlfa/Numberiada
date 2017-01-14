@@ -21,8 +21,20 @@ public class Cell {
     }
 
     public void setValue(int value) {
-        this.value = value;
-        this.isEmpty = false;
+
+        if(value == 999) {
+            this.value = value;
+            this.isEmpty = false;
+            this.isCursor = true;
+        }if(value == -999) {
+            this.value = value;
+            this.isEmpty = true;
+            this.isCursor = false;
+        }else {
+            this.value = value;
+            this.isEmpty = false;
+            this.isCursor = false;
+        }
     }
 
     public int getColor() {return color; }

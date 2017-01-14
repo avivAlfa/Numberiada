@@ -35,6 +35,7 @@ import java.io.FileNotFoundException;
 import javax.xml.bind.JAXBException;
 import javax.swing.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -47,6 +48,8 @@ public class GameController implements Initializable {
     private SimpleBooleanProperty gameUploaded;
     private SimpleBooleanProperty gameEndView;
     private ObservableList<String> playerStatistics;
+    private List<GamePosition> gamePositions;
+    private int gamePositionIndex = 0;
 
     @FXML
     private Pane mainPane;
@@ -109,7 +112,7 @@ public class GameController implements Initializable {
         playerStatistics = FXCollections.observableArrayList();
         playersListView.setItems(playerStatistics);
 
-
+        gamePositions = new ArrayList<>();
     }
 
     @FXML
@@ -123,6 +126,10 @@ public class GameController implements Initializable {
             updateStatistics();
             messageLabel.setText("");
             gameUploaded.setValue(true);
+
+            //the cursor initial place
+            gamePositions.add(gameEngine.getCurrentGamePos());
+            gamePositionIndex++;
         } else
             gameUploaded.setValue(false);
     }
@@ -133,9 +140,19 @@ public class GameController implements Initializable {
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         int row = GridPane.getRowIndex(selectedCell);
         int col = GridPane.getColumnIndex(selectedCell);
+        GamePosition gamePosition;
+
+        gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+                gameEngine.cloneCurrPlayerList(), new Point(row, col), selectedCell.getContent(), gameEngine.getMovesCnt());
+
+        gamePositions.add(gamePosition);
+        gamePositionIndex++;
 
         //playAnimation(cursorCellUI, selectedCell);
         gameEngine.playMove(row, col);
+
+
+
         cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
         selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
         //selectedCell.setStyle("-fx-base: #ececec ");
@@ -178,13 +195,35 @@ public class GameController implements Initializable {
 
     @FXML
     void nextButton_OnClick(ActionEvent event) {
-
+        if(gamePositionIndex < gamePositions.size() - 1) {
+            gamePositionIndex++;
+            showGamePosition(gamePositions.get(gamePositionIndex));
+        }
     }
 
     @FXML
     void prevButton_OnClick(ActionEvent event) {
+        if(gamePositionIndex != 1) {
+            gamePositionIndex--;
+            showGamePosition(gamePositions.get(gamePositionIndex));
+        }
+    }
+
+    private void showGamePosition(GamePosition position) {
+
+        totalMovesLabel.setText(String.valueOf(position.getTotalMoves()));
+        currentPlayerLabel.setText(position.getCurrPlayer().getName());
+        playerIdLabel.setText(String.valueOf(position.getCurrPlayer().getId()));
+        updateStatistics(position);
+
+        gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
+        gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
+       // selectedCell.setText(String.valueOf(position.getSelectedCell().getValue()));
+
+        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
 
     }
+
 
     private void removeCurrentPlayerFromBoard() {
         playerStatistics.remove(gameEngine.getPlayerTurnIndex());
@@ -265,6 +304,17 @@ public class GameController implements Initializable {
         // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
     }
 
+    private void updateStatistics(GamePosition gamePosition) {
+        currentPlayerLabel.setText(gamePosition.getCurrPlayer().getName());
+        playerIdLabel.setText(Integer.toString(gamePosition.getCurrPlayer().getId()));
+        totalMovesLabel.setText(String.valueOf(gamePosition.getTotalMoves()));
+        //int prevPlayerIndex = gameEngine.getPreviousPlayerIndex();
+        for (int i = 0; i < playerStatistics.size(); i++) {
+            playerStatistics.set(i, gameEngine.getPlayerInfo(gamePosition.getAllPlayers().get(i)));
+        }
+        // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
+    }
+
     private void updatePrevPossibleCells() {
         List<Point> prevPossibleCells = gameEngine.getPossibleCells();
 
@@ -320,6 +370,8 @@ public class GameController implements Initializable {
         gameBoardUI = null;
         selectedCell = new CellUI();
         playersListView.getItems().clear();
+        gamePositions.clear();
+        gamePositionIndex = 0;
     }
 
 
