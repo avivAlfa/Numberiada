@@ -217,30 +217,6 @@ public class GameController implements Initializable {
             }
 
         }
-//    private void handleTurn() {
-//        if (gameEngine.endGame()) {
-//            handleEndGame();
-//        } else {
-//            skipUnavailableTurns();
-//
-//            if (gameEngine.isCurrentPlayerComputer()) {
-//                while(gameIsRunning.getValue() && gameEngine.isCurrentPlayerComputer()) {
-//                    if (!makingMove)
-//                        makeComputerMove();
-//                }
-//                Thread t1 = new Thread(new Runnable() {
-//                    public void run() {
-//                        while(gameIsRunning.getValue() && gameEngine.isCurrentPlayerComputer()) {
-//                            if(!makingMove)
-//                                makeComputerMove();
-//                        }
-//
-//                    }
-//                });
-//                t1.start();
-//            }
-//        }
-//    }
 
     private void skipUnavailableTurns(){
         while (!gameEngine.endGame() && !possibleCellsUpdate()) {
@@ -255,7 +231,6 @@ public class GameController implements Initializable {
 
 
     private void makeComputerMove() {
-       // makingMove = true;
         CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
         ComputerMoveTask task = new ComputerMoveTask(gameEngine);
         try {
@@ -266,7 +241,6 @@ public class GameController implements Initializable {
             ProgressBar progressBar = new ProgressBar();
             progressBar.progressProperty().bind(task.progressProperty());
             Scene sc = new Scene(progressBar, 500,20);
-           // s.setTitle("making move");
             s.titleProperty().bind(task.messageProperty());
             s.setScene(sc);
             s.initModality(Modality.APPLICATION_MODAL);
@@ -282,24 +256,8 @@ public class GameController implements Initializable {
                 updateStatistics();
                 gameEngine.changeTurn();
                 handleTurn();
-                //skipUnavailableTurns();
-              //  makingMove=false;
 
             });
-//            task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-//                                    @Override
-//                                    public void handle(WorkerStateEvent event) {
-//                                        //s.close();
-//                                        CellUI selectedCellByComputer = null;
-//                                        Point computerChoice = task.getValue();
-//                                        selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
-//                                        cursorCellUI.updateValues();
-//                                        selectedCellByComputer.updateValues();
-//                                        updateStatistics();
-//                                        skipUnavailableTurns();
-//                                        makingMove=false;
-//                                    }
-//            });
         } catch (Exception e) {
             Utils.popupMessage("Error on making computer move", "Error", -1);
         }
@@ -324,16 +282,6 @@ public class GameController implements Initializable {
         }
     }
 
-//    private boolean possibleCellsUpdate() {
-//
-//        List<Point> possibleCells = gameEngine.getPossibleCells();
-//
-//        for (Point p : possibleCells) {
-//            gameBoardUI.getCell((int) p.getX(), (int) p.getY()).disableProperty().setValue(false);
-//        }
-//
-//        return possibleCells.size() != 0;
-//    }
     private boolean possibleCellsUpdate() {
         if(possibleCells != null){
             //disable previous cells
