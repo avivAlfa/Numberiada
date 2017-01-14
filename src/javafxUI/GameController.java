@@ -56,8 +56,6 @@ public class GameController implements Initializable {
     private List<GamePosition> gamePositions;
     private int gamePositionIndex;
 
-
-
     @FXML
     private Pane mainPane;
     @FXML
@@ -126,6 +124,21 @@ public class GameController implements Initializable {
     void loadFileButton_OnClick(ActionEvent event) {
         resetGame();
         GameDescriptor gameDescriptor = getGameDescriptor();
+        loadComponents(gameDescriptor);
+    }
+
+    private void restartGame(){
+        resetGame();
+        try {
+            GameDescriptor gameDescriptor = game.XML_Handler.getGameDescriptorFromXml(pathTxt.getText());
+            loadComponents(gameDescriptor);
+        }catch(Exception e){
+            Utils.popupMessage("Error", "File removed or changed",-1);
+        }
+
+    }
+
+    private void loadComponents(GameDescriptor gameDescriptor){
         if (gameDescriptor != null) {
             loadGameEngine(gameDescriptor);
             loadGameGrid();
@@ -170,7 +183,6 @@ public class GameController implements Initializable {
         //selectedCell.setStyle("-fx-base: #ececec ");
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
         hideNextPlayerOpportunities();
-        updateStatistics();
         gameEngine.changeTurn();
         handleTurn();
 
@@ -178,6 +190,9 @@ public class GameController implements Initializable {
 
     @FXML
     void startButton_OnClick(ActionEvent event) {
+        if(!pathTxt.getText().isEmpty()) {
+            restartGame();
+        }
         gameIsRunning.setValue(true);
         handleTurn();
 
@@ -202,7 +217,7 @@ public class GameController implements Initializable {
         updatePrevPossibleCells();
         removeCurrentPlayerFromBoard();
         gameEngine.removeCurrentPlayerFromGame();
-
+        updateStatistics();
         handleTurn();
     }
 
@@ -242,7 +257,6 @@ public class GameController implements Initializable {
 
     private void showGamePosition() {
         GamePosition position = gamePositions.get(gamePositionIndex);
-
         totalMovesLabel.setText(String.valueOf(position.getTotalMoves()));
         currentPlayerLabel.setText(position.getCurrPlayer().getName());
         playerIdLabel.setText(String.valueOf(position.getCurrPlayer().getId()));
@@ -260,14 +274,14 @@ public class GameController implements Initializable {
         List<Point> allPossibleCells = gameEngine.getAllPossibleCells();
 
         for (Point p : allPossibleCells) {
-//       //     gameBoardUI.getCell((int)p.getX(), (int)p.getY()).setText("");
+        //     gameBoardUI.getCell((int)p.getX(), (int)p.getY()).setText("");
             gameBoardUI.getCell((int) p.getX(), (int) p.getY()).updateValues();
             //  gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(true);
         }
-
     }
 
         private void handleTurn() {
+            updateStatistics();
             if (gameEngine.endGame()) {
                 handleEndGame();
             }
@@ -315,7 +329,6 @@ public class GameController implements Initializable {
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
-                updateStatistics();
                 gameEngine.changeTurn();
                 handleTurn();
 
@@ -401,16 +414,22 @@ public class GameController implements Initializable {
     }
 
     private void resetGame() {
-        gameGrid.getChildren().clear();
-        gameIsRunning.setValue(false);
-        gameUploaded.setValue(false);
-        gameEndView.setValue(false);
         gameEngine = null;
         gameBoardUI = null;
         selectedCell = new CellUI();
-        playersListView.getItems().clear();
-        gamePositions.clear();
+        possibleCells = null;
+        nextPlayerOpportunities = null;
+        gameIsRunning.setValue(false);
+        gameUploaded.setValue(false);
+        gameEndView.setValue(false);
+        playerStatistics.clear();
+        gamePositions = new ArrayList<>();
         gamePositionIndex = 0;
+
+        gameGrid.getChildren().clear();
+        playersListView.getItems().clear();
+
+
     }
 
 
