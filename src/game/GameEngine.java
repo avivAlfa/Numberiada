@@ -235,7 +235,7 @@ public abstract class GameEngine {
         chosenCell.setAsCursor();
         updateCursor(chosenRow, chosenCol);
         movesCnt++;
-        changeTurn();
+        //changeTurn();
     }
 
     public void updateCursor(int row, int col){

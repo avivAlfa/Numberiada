@@ -13,10 +13,11 @@ public class ComputerMoveTask extends Task<Point> {
     }
 
     protected Point call() throws Exception {
-        this.updateMessage("Making computer move");
-        Thread.sleep(1000);
-
         try {
+            this.updateMessage(gameEngine.getCurrentPlayerName() + " Thinking");
+            Thread.sleep(750);
+            this.updateMessage(gameEngine.getCurrentPlayerName() + " Making decision");
+            Thread.sleep(500);
             Point computerChoice = gameEngine.getComputerChosenCellIndexes();
             gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
 
