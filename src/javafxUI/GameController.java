@@ -1,5 +1,6 @@
 package javafxUI;
 
+import com.sun.deploy.panel.TextFieldProperty;
 import game.*;
 import game.Cell;
 import javafx.animation.KeyFrame;
@@ -16,12 +17,16 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -131,11 +136,14 @@ public class GameController implements Initializable {
         gamePositions = new ArrayList<>();
     }
 
+    public void setErrorLabelText(String s){
+        messageLabel.setText(s);
+    }
+
     @FXML
     void loadFileButton_OnClick(ActionEvent event) {
         resetGame();
-        GameDescriptor gameDescriptor = getGameDescriptor();
-        loadComponents(gameDescriptor);
+        loadFile();
     }
 
     private void restartGame(){
@@ -185,6 +193,9 @@ public class GameController implements Initializable {
             hideNextPlayerOpportunities();
             gameEngine.changeTurn();
             handleTurn();
+        }
+        else{
+            Utils.popupMessage("Please choose a cell first", "Error", -1);
         }
     }
 
@@ -353,7 +364,7 @@ public class GameController implements Initializable {
             Stage s = new Stage();
             ProgressBar progressBar = new ProgressBar();
             progressBar.progressProperty().bind(task.progressProperty());
-            Scene sc = new Scene(progressBar, 300,20);
+            Scene sc = new Scene(progressBar, 300,30);
             s.titleProperty().bind(task.messageProperty());
             s.setScene(sc);
             s.initModality(Modality.APPLICATION_MODAL);
@@ -478,105 +489,57 @@ public class GameController implements Initializable {
 
         gameGrid.getChildren().clear();
         playersListView.getItems().clear();
-
-
-    }
-
-
-    private GameDescriptor getGameDescriptor() {
-        boolean xmlPathValid = false;
-        boolean xmlContentValid = false;
-        String xml_path = null;
-        GameDescriptor gameDescriptor = null;
-
-//        do{
-        try {
-            xml_path = getPathFromDialog();
-            pathTxt.setText(xml_path);
-            gameDescriptor = game.XML_Handler.getGameDescriptorFromXml(xml_path);
-            game.XML_Handler.validate(gameDescriptor);
-            xmlPathValid = true;
-            xmlContentValid = true;
-
-        } catch (CellOutOfBoundsException e) {
-            messageLabel.setText(e.getMessage());
-            // JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (CursorCellException e) {
-            messageLabel.setText(e.getMessage());
-            // JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (DuplicateCellException e) {
-            messageLabel.setText(e.getMessage());
-            // JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidBoardSizeException e) {
-            messageLabel.setText(e.getMessage());
-            //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidRangeException e) {
-            messageLabel.setText(e.getMessage());
-            //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidRangeCompareToBoardSizeException e) {
-            messageLabel.setText(e.getMessage());
-            //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidRangeValuesException e) {
-            messageLabel.setText(e.getMessage());
-            //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (InvalidNumberOfColorsException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (InvalidNumberOfIDsException e) {
-            messageLabel.setText(e.getMessage());
-        } catch (InvalidPlayerTypeException e) {
-            messageLabel.setText(e.getMessage());
-            //JOptionPane.showMessageDialog(null, e.getMessage());
-        } catch (FileNotFoundException e) {
-            messageLabel.setText("File not found!");
-            //JOptionPane.showMessageDialog(null, "File not found!");
-        } catch (JAXBException e) {
-            if (!xml_path.endsWith(".xml"))
-                messageLabel.setText("The file you asked for isn't a xml file!");
-                // JOptionPane.showMessageDialog(null, "The file you asked for isn't a xml file!");
-            else
-                messageLabel.setText("Error trying to retrieve data from XML file");
-            //JOptionPane.showMessageDialog(null, "Error trying to retrieve data from XML file");
-        } catch (Exception e) {
-            messageLabel.setText("An unhandled error occured");
-            //JOptionPane.showMessageDialog(null, "An unhandled error occured");
-
-        }
-            /*finally {
-                if(!xmlPathValid){
-                    JOptionPane.showMessageDialog(null, " Please try again:");
-                }
-            }*/
-
-
-        //}while(!xmlPathValid && !xmlContentValid);
-
-        // loadedXmlFilePath = xml_path;
-        if (xmlContentValid)
-            return gameDescriptor;
-        else
-            return null;
     }
 
 
     public String getPathFromDialog() {
         String selectedPath = null;
         FileChooser fc = new FileChooser();
-        int returnVal;
         File file = fc.showOpenDialog(new Stage());
         if (file != null) {
             selectedPath = file.getPath();
         }
-        //   if (returnVal == JFileChooser.APPROVE_OPTION) {
-        //File file = fc.getSelectedFile();
-        //This is where a real application would open the file.
-//            JOptionPane.showMessageDialog(null, "Opening: " + file.getName() + ".");
-//            //log.append("Opening: " + file.getName() + "." + newline);
-//        } else {
-//            JOptionPane.showMessageDialog(null, "Open command cancelled by user.");
-//           // log.append("Open command cancelled by user." + newline);
-//        }
-
         return selectedPath;
+    }
+
+    private void loadFile(){
+        String xml_path = getPathFromDialog();
+        loadXmlFileTask task = new loadXmlFileTask(xml_path);
+        Thread t = new Thread(task);
+        t.start();
+
+        Stage loadStage = new Stage();
+        StackPane loadPane = new StackPane();
+        loadPane.setPadding(new Insets(10,10,10,10));
+        Label status = new Label();
+        status.textProperty().bind(task.messageProperty());
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.setPrefSize(380, 30);
+        progressBar.progressProperty().bind(task.progressProperty());
+        loadPane.getChildren().addAll(status,progressBar);
+        StackPane.setAlignment(status, Pos.TOP_LEFT);
+        StackPane.setAlignment(progressBar, Pos.CENTER_LEFT);
+        Scene loadScene = new Scene(loadPane, 400, 90);
+        loadStage.setTitle("Loading game");
+        loadStage.setScene(loadScene);
+        loadStage.initModality(Modality.APPLICATION_MODAL);
+        loadStage.show();
+
+        task.setOnSucceeded(event -> {
+            if(task.getValue()!=null){
+                loadStage.close();
+                GameDescriptor gameDescriptor = task.getValue();
+                pathTxt.setText(xml_path);
+                loadComponents(gameDescriptor);
+            }
+            else{
+                loadPane.getChildren().remove(progressBar);
+                Button closeButton = new Button("Ok");
+                closeButton.setOnAction(e -> loadStage.close());
+                loadPane.getChildren().add(closeButton);
+                StackPane.setAlignment(closeButton, Pos.BOTTOM_CENTER);
+            }
+        });
     }
 
     private void loadGameEngine(GameDescriptor gameDescriptor) {
