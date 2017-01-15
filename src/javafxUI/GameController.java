@@ -10,6 +10,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -104,6 +106,10 @@ public class GameController implements Initializable {
     private Button prevButton;
     @FXML
     private ListView<String> playersListView;
+    @FXML
+    private CheckBox animationCheckBox;
+    @FXML
+    private CheckBox opportunitiesCheckBox;
 
 
     @Override
@@ -134,10 +140,16 @@ public class GameController implements Initializable {
 
         selectedCell = new CellUI();
         gamePositions = new ArrayList<>();
-    }
 
-    public void setErrorLabelText(String s){
-        messageLabel.setText(s);
+        opportunitiesCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                opportunitiesCheckBox.setSelected(newValue);
+                if(!opportunitiesCheckBox.isSelected())
+                    hideNextPlayerOpportunities();
+            }
+        });
+
     }
 
     @FXML
@@ -183,8 +195,8 @@ public class GameController implements Initializable {
 
             addCurrentPosition(selectedCell);
 
-
-            //playAnimation(cursorCellUI, selectedCell);
+            if(animationCheckBox.isSelected())
+                playAnimation(cursorCellUI, selectedCell);
             gameEngine.playMove(row, col);
 
             cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
@@ -236,13 +248,14 @@ public class GameController implements Initializable {
         if (selectedCell.getContent() == null)
             selectedCell = cell;
 
-
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
-        hideNextPlayerOpportunities();
+        if(opportunitiesCheckBox.isSelected())
+            hideNextPlayerOpportunities();
         selectedCell = cell;
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #add8e6; ");
-        showNextPlayerOppotunities();
 
+        if(opportunitiesCheckBox.isSelected())
+            showNextPlayerOppotunities();
     }
 
     @FXML
@@ -376,6 +389,8 @@ public class GameController implements Initializable {
                 CellUI selectedCellByComputer = null;
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
                 addCurrentPosition(selectedCellByComputer);
+                if(animationCheckBox.isSelected())
+                    playAnimation(cursorCellUI,selectedCellByComputer);
                 gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
@@ -589,17 +604,12 @@ public class GameController implements Initializable {
         int cursorCol = GridPane.getColumnIndex(cursorCell);
 
 
-        //gameGrid.getChildren().add(markerImage);
         markerImage.setLayoutX(cursorCell.getLayoutX() + 12);
         markerImage.setLayoutY(cursorCell.getLayoutY() + topPane.getHeight() + 18);
         mainPane.getChildren().add(markerImage);
 
-
-        //markerImage.relocate(selectedCell.translateXProperty().getValue(), selectedCell.translateYProperty().getValue());
-
-
         Timeline timeline = new Timeline();
-        Duration time = new Duration(1 * 1000);
+        Duration time = new Duration(300);
         KeyValue keyValue;
         if (selectedRow == cursorRow) {
             keyValue = new KeyValue(markerImage.translateXProperty(), selectedCell.getLayoutX() - cursorCell.getLayoutX());
@@ -607,9 +617,11 @@ public class GameController implements Initializable {
             keyValue = new KeyValue(markerImage.translateYProperty(), selectedCell.getLayoutY() - cursorCell.getLayoutY());
         }
 
-        KeyFrame keyFrame = new KeyFrame(time, keyValue);
+        EventHandler onFinished = e->{mainPane.getChildren().remove(markerImage);};
+
+
+        KeyFrame keyFrame = new KeyFrame(time,onFinished, keyValue);
         timeline.getKeyFrames().add(keyFrame);
         timeline.play();
-
     }
 }
