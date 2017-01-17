@@ -21,12 +21,22 @@ public class AdvancedGameEngine extends GameEngine {
                 currCell = gameBoard.getCell(i, j);
                 if ((!currCell.isEmpty()) && ((!currCell.isCursor())) && currCell.getColor() == players.get(playerTurnIndex).getColor()) {
                     possibleCells.add(new Point(i, j));
-                    currCell.setAsEmpty();
+                   // currCell.setAsEmpty();
                 }
             }
         }
 
         return possibleCells;
+    }
+
+    @Override
+    public void setPossibleAsEmpty(List<Point> possibleCells) {
+        Cell currCell;
+        for(int j = 0; j < possibleCells.size(); j++) {
+            currCell = gameBoard.getCell((int)possibleCells.get(j).getX(), (int)possibleCells.get(j).getY());
+            currCell.setAsEmpty();
+
+        }
     }
 
     @Override

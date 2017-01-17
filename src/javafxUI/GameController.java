@@ -334,14 +334,31 @@ public class GameController implements Initializable {
 
         List<Point> allPossibleCells = gameEngine.getAllPossibleCells();
 
+       addCellsPosition(allPossibleCells);
+
+        gameEngine.setPossibleAsEmpty(allPossibleCells);
+
         for (Point p : allPossibleCells) {
-        //     gameBoardUI.getCell((int)p.getX(), (int)p.getY()).setText("");
             gameBoardUI.getCell((int) p.getX(), (int) p.getY()).updateValues();
-            //  gameBoardUI.getCell((int)p.getX(), (int)p.getY()).disableProperty().setValue(true);
         }
     }
 
-        private void handleTurn() {
+    private void addCellsPosition(List<Point> cells) {
+        List<Point> newPoints = new ArrayList<>();
+        List<Cell> newCells = new ArrayList<>();
+
+        for(Point p : cells) {
+            newPoints.add((Point)p.clone());
+            newCells.add(gameEngine.getChosenCell((int)p.getX(), (int)p.getY()).cloneCell());
+        }
+
+        gamePositions.add(new GamePosition(newCells, newPoints));
+
+
+
+    }
+
+    private void handleTurn() {
             updateStatistics();
             if (gameEngine.endGame()) {
                 handleEndGame();
@@ -418,10 +435,10 @@ public class GameController implements Initializable {
         currentPlayerLabel.setText(gamePosition.getCurrPlayer().getName());
         playerIdLabel.setText(Integer.toString(gamePosition.getCurrPlayer().getId()));
         totalMovesLabel.setText(String.valueOf(gamePosition.getTotalMoves()));
-        int resinedSize = gamePosition.getAllPlayers().size() - playerStatistics.size();
+        int retinedSize = gamePosition.getAllPlayers().size() - playerStatistics.size();
 
-        if(resinedSize >= 0)
-            for (int i = 0; i< resinedSize; i++) {
+        if(retinedSize >= 0)
+            for (int i = 0; i< retinedSize; i++) {
                 playerStatistics.add("");
             }
         else {

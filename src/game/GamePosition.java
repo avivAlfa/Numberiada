@@ -11,12 +11,20 @@ public class GamePosition {
     Cell selectedCell;
     int totalMoves;
 
+    List<Cell> resinedCells;
+    List<Point> resinedPoints;
+
     public GamePosition(Player currPlayer, List<Player> allPlayers, Point selectedPoint, Cell selectedCell, int totalMoves) {
         this.currPlayer = currPlayer;
         this.allPlayers = allPlayers;
         this.selectedPoint = selectedPoint;
         this.selectedCell = selectedCell;
         this.totalMoves = totalMoves;
+    }
+
+    public GamePosition(List<Cell> cells, List<Point> points) {
+        this.resinedCells = cells;
+        this.resinedPoints = points;
     }
 
     public Player getCurrPlayer() {

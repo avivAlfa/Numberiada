@@ -29,6 +29,7 @@ public abstract class GameEngine {
     public abstract String getPlayerColor(Player player);
     public abstract List<Point> getNextPlayerOpportunities(int selectedRow, int selectedCol);
     public abstract List<Point> getAllPossibleCells();
+    public abstract void setPossibleAsEmpty(List<Point> possibleCells);
     public abstract Point getComputerChosenCellIndexes();
 
 

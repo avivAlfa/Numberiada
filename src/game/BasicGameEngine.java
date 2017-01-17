@@ -65,6 +65,11 @@ public class BasicGameEngine extends GameEngine {
     }
 
     @Override
+    public void setPossibleAsEmpty(List<Point> possibleCells) {
+
+    }
+
+    @Override
     public boolean endGame(){
         boolean gameEnded = true;
         if (playerTurnIndex % 2 == 0) { //even - row player}

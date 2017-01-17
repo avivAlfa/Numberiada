@@ -3,12 +3,15 @@ package javafxUI; /**
  */
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -18,6 +21,12 @@ public class GameFX extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    private StringProperty styleCssProperty = new SimpleStringProperty("gameStyle1.css");
+    private ObservableList<String> styleList = FXCollections.observableArrayList("2", "nofar");
+
+    @FXML
+    private ChoiceBox skinSelect;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -38,7 +47,23 @@ public class GameFX extends Application {
 
 
         Scene scene = new Scene(root, 730, 612);
+        //styleList = FXCollections.observableArrayList();
+        skinSelect = new ChoiceBox();
+      //  styleList.addAll("2", "nofar");
+        //skinSelect.getItems().addAll("2", "nofar");
 
+        skinSelect.setValue("2");
+        skinSelect.setItems(styleList);
+
+        //skinSelect.setItems(styleList);
+        //styleList.add("2");
+        //styleList.add("nofar");
+        this.styleCssProperty.bind(skinSelect.valueProperty());
+        this.styleCssProperty.addListener((observable, oldValue, newValue) -> {
+            //this.styleChanged(oldValue, newValue);
+            scene.getStylesheets().remove("resources/" + oldValue);
+            scene.getStylesheets().add("resources/" + newValue);
+        });
        // scene.getStylesheets().addAll("resources/nofar.css", "resources/2.css");
 //        Button singInButton = (Button) scene.lookup("#signInButton");
 //        final Text actionTarget = (Text)scene.lookup("#actiontarget");
@@ -49,4 +74,5 @@ public class GameFX extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }
