@@ -145,9 +145,9 @@ public class GameController implements Initializable {
         });
 
 
-        styleCssProperty = new SimpleStringProperty("2");
-        styleList = FXCollections.observableArrayList("2","nofar");
-        skinSelectChoiceBox.setValue("2");
+        styleCssProperty = new SimpleStringProperty("default");
+        styleList = FXCollections.observableArrayList("default","2","nofar");
+        skinSelectChoiceBox.setValue("default");
         skinSelectChoiceBox.setItems(styleList);
         styleCssProperty.bind(skinSelectChoiceBox.getSelectionModel().selectedItemProperty());
     }
@@ -252,6 +252,7 @@ public class GameController implements Initializable {
             selectedCell = cell;
 
         selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
+
         if(opportunitiesCheckBox.isSelected())
             hideNextPlayerOpportunities();
         selectedCell = cell;
