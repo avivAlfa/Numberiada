@@ -447,15 +447,26 @@ public abstract class GameEngine {
 
         endGameMessage.append("\n");
         endGameMessage.append("Players total moves: " + movesCnt + "\n");
-        for(int i = 0 ; i < players.size() ; i++) {
-            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
+        List<Player> sortedPlayers = getSortedByScorePlayers();
+        for(int i = 0 ; i < sortedPlayers.size() ; i++) {
+            endGameMessage.append(sortedPlayers.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
         }
         if(resignedPlayers != null){
+            endGameMessage.append("Resigned players:\n");
             for(int i = 0 ; i < resignedPlayers.size() ; i++) {
                 endGameMessage.append(resignedPlayers.get(i).getName() + " score: " + resignedPlayers.get(i).getScore()+"\n");
             }
         }
         return endGameMessage.toString();
+    }
+
+    private List<Player> getSortedByScorePlayers(){
+        List<Player> sortedByScorePlayers = new ArrayList<Player>();
+        for(int i = 0 ; i < players.size() ; i++){
+            sortedByScorePlayers.add(players.get(i));
+        }
+        //TODO:sort list
+        return sortedByScorePlayers;
     }
 
     public GamePosition getCurrentGamePos() {

@@ -1,38 +1,32 @@
 package javafxUI;
 
-import com.sun.deploy.panel.TextFieldProperty;
 import game.*;
 import game.Cell;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import Exceptions.*;
 import generated.GameDescriptor;
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
@@ -43,9 +37,6 @@ import javafx.util.Duration;
 
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import javax.xml.bind.JAXBException;
-import javax.swing.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +56,8 @@ public class GameController implements Initializable {
     private int gamePositionIndex;
     private SimpleBooleanProperty isNextDisabled;
     private SimpleBooleanProperty isPrevDisabled;
+    private StringProperty styleCssProperty;
+    private ObservableList<String> styleList;
 
     @FXML
     private Pane mainPane;
@@ -110,6 +103,8 @@ public class GameController implements Initializable {
     private CheckBox animationCheckBox;
     @FXML
     private CheckBox opportunitiesCheckBox;
+    @FXML
+    private ChoiceBox<String> skinSelectChoiceBox;
 
 
     @Override
@@ -122,7 +117,6 @@ public class GameController implements Initializable {
         gameEndView = new SimpleBooleanProperty(false);
         isNextDisabled = new SimpleBooleanProperty(true);
         isPrevDisabled = new SimpleBooleanProperty(true);
-
 
         loadFileButton.disableProperty().bind(gameIsRunning);
         startButton.disableProperty().bind(Bindings.or(gameIsRunning, Bindings.not(gameUploaded)));
@@ -150,6 +144,15 @@ public class GameController implements Initializable {
             }
         });
 
+
+        styleCssProperty = new SimpleStringProperty("2");
+        styleList = FXCollections.observableArrayList("2","nofar");
+        skinSelectChoiceBox.setValue("2");
+        skinSelectChoiceBox.setItems(styleList);
+        styleCssProperty.bind(skinSelectChoiceBox.getSelectionModel().selectedItemProperty());
+    }
+    public StringProperty getStyleCssProperty(){
+        return styleCssProperty;
     }
 
     @FXML
