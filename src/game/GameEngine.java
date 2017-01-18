@@ -103,8 +103,9 @@ public abstract class GameEngine {
         String playerInfo;
        // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
         playerInfo = String.format("%1$-12s",player.getName());
+        playerInfo += String.format("%1$-9s",player.getId());
         playerInfo += String.format("%1$-5s",player.getScore());
-        playerInfo += String.format("%1$10s",getPlayerColor(player));
+        playerInfo += String.format("%1$-10s",getPlayerColor(player));
 
         return playerInfo;
     }
@@ -447,9 +448,8 @@ public abstract class GameEngine {
 
         endGameMessage.append("\n");
         endGameMessage.append("Players total moves: " + movesCnt + "\n");
-        List<Player> sortedPlayers = getSortedByScorePlayers();
-        for(int i = 0 ; i < sortedPlayers.size() ; i++) {
-            endGameMessage.append(sortedPlayers.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
+        for(int i = 0 ; i < players.size() ; i++) {
+            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
         }
         if(resignedPlayers != null){
             endGameMessage.append("Resigned players:\n");
@@ -458,15 +458,6 @@ public abstract class GameEngine {
             }
         }
         return endGameMessage.toString();
-    }
-
-    private List<Player> getSortedByScorePlayers(){
-        List<Player> sortedByScorePlayers = new ArrayList<Player>();
-        for(int i = 0 ; i < players.size() ; i++){
-            sortedByScorePlayers.add(players.get(i));
-        }
-        //TODO:sort list
-        return sortedByScorePlayers;
     }
 
     public GamePosition getCurrentGamePos() {
