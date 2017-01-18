@@ -144,7 +144,7 @@ public class GameController implements Initializable {
 
 
         styleCssProperty = new SimpleStringProperty("default");
-        styleList = FXCollections.observableArrayList("default","2","nofar");
+        styleList = FXCollections.observableArrayList("default","Aviv","Nofar");
         skinSelectChoiceBox.setValue("default");
         skinSelectChoiceBox.setItems(styleList);
         styleCssProperty.bind(skinSelectChoiceBox.getSelectionModel().selectedItemProperty());
@@ -281,16 +281,27 @@ public class GameController implements Initializable {
                 isPrevDisabled.setValue(false);
                 isNextDisabled.setValue(false);
             }
-            showGamePosition();
+            //showGamePosition();
 
             GamePosition position = gamePositions.get(gamePositionIndex - 1);
-            gameEngine.setCellValue(position.getSelectedPoint(), new Cell(-999, 0, true, false));
-            gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
 
-            gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
-                    new Cell(999, 0,false,true));
-            gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
-                    (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
+            if(position.getCurrPlayer() == null) {
+                for(Point point : position.getResinedPoints()) {
+                    gameEngine.setCellValue(point, new Cell(-999, 0, true, false));
+                    gameBoardUI.getCell((int) point.getX(), (int) point.getY()).updateValues();
+                }
+
+
+            } else {
+                showGamePosition(position);
+                gameEngine.setCellValue(position.getSelectedPoint(), new Cell(-999, 0, true, false));
+                gameBoardUI.getCell((int) position.getSelectedPoint().getX(), (int) position.getSelectedPoint().getY()).updateValues();
+
+                gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
+                        new Cell(999, 0, false, true));
+                gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
+                        (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
+            }
         }
     }
 
@@ -308,25 +319,41 @@ public class GameController implements Initializable {
                 isNextDisabled.setValue(false);
             }
 
-            showGamePosition();
+
 
             GamePosition position = gamePositions.get(gamePositionIndex + 1);
-            gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
-            gameBoardUI.getCell((int)position.getSelectedPoint().getX(), (int)position.getSelectedPoint().getY()).updateValues();
 
-            gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
-                    new Cell(999, 0, false, true));
-            gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
-                    (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
+            if(position.getCurrPlayer() == null) {
+                int resinedIndex = 0;
+                for(Point point : position.getResinedPoints()) {
+
+                    gameEngine.setCellValue(point, new Cell
+                            (position.getResinedCells().get(resinedIndex).getValue(),
+                                    position.getResinedCells().get(resinedIndex).getColor(), true, false));
+                    gameBoardUI.getCell((int) point.getX(), (int) point.getY()).updateValues();
+                    resinedIndex++;
+                }
+
+
+            } else {
+                showGamePosition(position);
+                gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
+                gameBoardUI.getCell((int) position.getSelectedPoint().getX(), (int) position.getSelectedPoint().getY()).updateValues();
+
+                gameEngine.setCellValue(gamePositions.get(gamePositionIndex).getSelectedPoint(),
+                        new Cell(999, 0, false, true));
+                gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
+                        (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
+            }
         }
     }
 
-    private void showGamePosition() {
-        GamePosition position = gamePositions.get(gamePositionIndex);
-        totalMovesLabel.setText(String.valueOf(position.getTotalMoves()));
-        currentPlayerLabel.setText(position.getCurrPlayer().getName());
-        playerIdLabel.setText(String.valueOf(position.getCurrPlayer().getId()));
-        updateStatistics(position);
+    private void showGamePosition(GamePosition gamePosition) {
+        //GamePosition position = gamePositions.get(gamePositionIndex);
+        totalMovesLabel.setText(String.valueOf(gamePosition.getTotalMoves()));
+        currentPlayerLabel.setText(gamePosition.getCurrPlayer().getName());
+        playerIdLabel.setText(String.valueOf(gamePosition.getCurrPlayer().getId()));
+        updateStatistics(gamePosition);
 
     }
 
@@ -354,7 +381,10 @@ public class GameController implements Initializable {
             newCells.add(gameEngine.getChosenCell((int)p.getX(), (int)p.getY()).cloneCell());
         }
 
-        gamePositions.add(new GamePosition(newCells, newPoints));
+        if(gamePositions.size() != 0)
+            gamePositions.add(new GamePosition(newCells, newPoints,
+                    (Point)gamePositions.get(gamePositions.size() - 1).getSelectedPoint().clone(),
+                    gamePositions.get(gamePositions.size() - 1).getSelectedCell().cloneCell()));
 
 
 

@@ -22,9 +22,11 @@ public class GamePosition {
         this.totalMoves = totalMoves;
     }
 
-    public GamePosition(List<Cell> cells, List<Point> points) {
+    public GamePosition(List<Cell> cells, List<Point> points, Point prevSelectedPoint, Cell prevSelectedCell) {
         this.resinedCells = cells;
         this.resinedPoints = points;
+        this.selectedPoint = prevSelectedPoint;
+        this.selectedCell = prevSelectedCell;
     }
 
     public Player getCurrPlayer() {
@@ -65,6 +67,14 @@ public class GamePosition {
 
     public void setTotalMoves(int totalMoves) {
         this.totalMoves = totalMoves;
+    }
+
+    public List<Point> getResinedPoints() {
+        return resinedPoints;
+    }
+
+    public List<Cell> getResinedCells() {
+        return resinedCells;
     }
 
 }

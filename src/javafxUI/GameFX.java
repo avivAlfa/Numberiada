@@ -62,14 +62,14 @@ public class GameFX extends Application {
 //            scene.getStylesheets().remove("resources/" + oldValue);
 //            scene.getStylesheets().add("resources/" + newValue);
 //        });
-        // scene.getStylesheets().addAll("resources/nofar.css", "resources/2.css");
+        // scene.getStylesheets().addAll("resources/Nofar.css", "resources/Aviv.css");
 //        Button singInButton = (Button) scene.lookup("#signInButton");
 //        final Text actionTarget = (Text)scene.lookup("#actiontarget");
 //        singInButton.setOnAction(e -> {
 //            actionTarget.setText("Sign in button pressed!");
 //        });
 
-        //scene.getStylesheets().addAll("resources/nofar.css","resources/2.css");
+        //scene.getStylesheets().addAll("resources/Nofar.css","resources/Aviv.css");
 
         this.styleCssProperty.bind(gameController.getStyleCssProperty());
         this.styleCssProperty.addListener((observable, oldValue, newValue) -> {
