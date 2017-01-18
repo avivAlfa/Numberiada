@@ -110,8 +110,6 @@ public class GameController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //  mainPane.styleProperty("resources/nofar.css");
-        //    mainPane.getStylesheets().add("resources/nofar.css");
         gameIsRunning = new SimpleBooleanProperty(false);
         gameUploaded = new SimpleBooleanProperty(false);
         gameEndView = new SimpleBooleanProperty(false);
@@ -191,7 +189,7 @@ public class GameController implements Initializable {
     @FXML
     void playMoveButton_OnClick(ActionEvent event) {
 
-        if(selectedCell.getStyle().contains(" #add8e6; ")) {
+        if(selectedCell.getBorder() != null) {
             CellUI cursorCellUI = gameBoardUI.getCell(gameEngine.getCursorRow(), gameEngine.getCursorCol()); //get cursor before gameEngine.playMove
             int row = GridPane.getRowIndex(selectedCell);
             int col = GridPane.getColumnIndex(selectedCell);
@@ -215,9 +213,8 @@ public class GameController implements Initializable {
     }
 
     private void clearSelected(){
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
-        //selectedCell = null;
-        //selectedCell = new CellUI();
+        selectedCell.setBorder(null);
+
     }
 
     private void addCurrentPosition(CellUI cell) {
@@ -251,12 +248,13 @@ public class GameController implements Initializable {
         if (selectedCell.getContent() == null)
             selectedCell = cell;
 
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #ececec; ");
+        clearSelected();
 
         if(opportunitiesCheckBox.isSelected())
             hideNextPlayerOpportunities();
         selectedCell = cell;
-        selectedCell.setStyle("-fx-text-fill: " + Colors.getColor(selectedCell.getContent().getColor()) + ";-fx-font-size: 14;font-weight: bold;-fx-base: #add8e6; ");
+        Border border = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2)));
+        selectedCell.setBorder(border);
 
         if(opportunitiesCheckBox.isSelected())
             showNextPlayerOppotunities();
