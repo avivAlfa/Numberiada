@@ -28,4 +28,12 @@ public class BoardUI {
     public void setCellUI(CellUI cell, int i, int j){
         gameBoardUI[i][j] = cell;
     }
+
+    public void disableAllCells(){
+        for (int i = 0; i < gameBoardUI.length; i++){
+            for(int j = 0; j < gameBoardUI.length; j++) {
+                gameBoardUI[i][j].disableProperty().setValue(true);
+            }
+        }
+    }
 }

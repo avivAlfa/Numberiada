@@ -137,6 +137,7 @@ public class XML_Handler {
         if(gd.getPlayers()!=null) {
             List<GameDescriptor.Players.Player> players = gd.getPlayers().getPlayer();
 
+
             for (GameDescriptor.Players.Player player : players) {
                 if (!player.getType().equals("Human") && !player.getType().equals("Computer")) {
                     throw new InvalidPlayerTypeException();
@@ -152,6 +153,14 @@ public class XML_Handler {
                 }
                 if(playersColors.size() != players.size()) {
                     throw new InvalidNumberOfColorsException();
+                }
+                if(players.size() < 3 || players.size() > 6){
+                    throw new InvalidNumberOfPlayersException();
+                }
+            }
+            else{
+                if(players.size() != 2){
+                    throw new InvalidNumberOfPlayersException();
                 }
             }
 
