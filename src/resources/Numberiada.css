@@ -1,12 +1,16 @@
 .root {
     -fx-font-size: 7pt;
     -fx-font-family: "Arial";
-    -fx-base: rgb(225, 170, 210);
-    -fx-background: rgb(100, 50, 70);
+    -fx-background-image: url("background.png");
     -fx-text-fill: plum;
 
 }
-
+#statisticsPane {
+    -fx-background-image: url("background.png");
+}
+#topPane {
+    -fx-background-image: url("background.png");
+}
 .label {
     -fx-font-size: 9pt;
     -fx-font-family: "Arial";

@@ -144,7 +144,7 @@ public class GameController implements Initializable {
 
 
         styleCssProperty = new SimpleStringProperty("default");
-        styleList = FXCollections.observableArrayList("default","Aviv","Nofar");
+        styleList = FXCollections.observableArrayList("default","Aviv","Nofar","Numberiada");
         skinSelectChoiceBox.setValue("default");
         skinSelectChoiceBox.setItems(styleList);
         styleCssProperty.bind(skinSelectChoiceBox.getSelectionModel().selectedItemProperty());
