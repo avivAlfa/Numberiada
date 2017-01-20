@@ -103,7 +103,7 @@ public abstract class GameEngine {
         String playerInfo;
        // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
         playerInfo = String.format("%1$-12s",player.getName());
-        playerInfo += String.format("%1$-9s",player.getId());
+        playerInfo += String.format("%1$-11s",player.getId());
         playerInfo += String.format("%1$-5s",player.getScore());
         playerInfo += String.format("%1$-10s",getPlayerColor(player));
 

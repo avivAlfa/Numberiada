@@ -49,6 +49,8 @@ public class loadXmlFileTask extends Task<GameDescriptor> {
             this.updateMessage(e.getMessage());
         } catch (Exceptions.InvalidNumberOfColorsException e) {
             this.updateMessage(e.getMessage());
+        } catch (Exceptions.InvalidNumberOfPlayersException e) {
+            this.updateMessage(e.getMessage());
         } catch (Exceptions.InvalidNumberOfIDsException e) {
             this.updateMessage(e.getMessage());
         } catch (Exceptions.InvalidPlayerTypeException e) {

@@ -467,7 +467,6 @@ public class GameController implements Initializable {
         for (int i = 0; i < playerStatistics.size(); i++) {
             playerStatistics.set(i, gameEngine.getPlayerInfo(i));
         }
-        // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
     }
 
     private void updateStatistics(GamePosition gamePosition) {
@@ -538,8 +537,8 @@ public class GameController implements Initializable {
         gameEndView.setValue(true);
         gameIsRunning.setValue(false);
 
-        //selectedCell.disableProperty().setValue(true);//TODO:change to disable where cursor is (error when computer do last move)
         gamePositionIndex = gamePositions.size() - 1;
+        gameBoardUI.disableAllCells();
 
         isNextDisabled.setValue(true);
         isPrevDisabled.setValue(false);
