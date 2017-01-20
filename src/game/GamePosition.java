@@ -22,11 +22,14 @@ public class GamePosition {
         this.totalMoves = totalMoves;
     }
 
-    public GamePosition(List<Cell> cells, List<Point> points, Point prevSelectedPoint, Cell prevSelectedCell) {
+    public GamePosition(Player currPlayer,List<Player> allPlayers, List<Cell> cells, List<Point> points, Point prevSelectedPoint, Cell prevSelectedCell, int totalMoves) {
+        this.currPlayer = currPlayer;
+        this.allPlayers = allPlayers;
         this.resinedCells = cells;
         this.resinedPoints = points;
         this.selectedPoint = prevSelectedPoint;
         this.selectedCell = prevSelectedCell;
+        this.totalMoves = totalMoves;
     }
 
     public Player getCurrPlayer() {

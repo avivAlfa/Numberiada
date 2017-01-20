@@ -178,10 +178,6 @@ public class GameController implements Initializable {
             updateStatistics();
             messageLabel.setText("");
             gameUploaded.setValue(true);
-
-            //the cursor initial place
-            gamePositions.add(gameEngine.getCurrentGamePos());
-           // gamePositionIndex++;
         } else
             gameUploaded.setValue(false);
     }
@@ -194,11 +190,13 @@ public class GameController implements Initializable {
             int row = GridPane.getRowIndex(selectedCell);
             int col = GridPane.getColumnIndex(selectedCell);
 
-            addCurrentPosition(selectedCell);
 
             if(animationCheckBox.isSelected())
                 playAnimation(cursorCellUI, selectedCell);
+
+            Cell savedCell = selectedCell.getContent().cloneCell(); //save Cell content before playMove
             gameEngine.playMove(row, col);
+            addCurrentPosition(selectedCell, savedCell);
 
             cursorCellUI.updateValues();//values are updated due to gameEngine.playMove changes!
             selectedCell.updateValues();//values are updated due to gameEngine.playMove changes!
@@ -217,16 +215,16 @@ public class GameController implements Initializable {
 
     }
 
-    private void addCurrentPosition(CellUI cell) {
+    private void addCurrentPosition(CellUI cell, Cell cellContent) {
         GamePosition gamePosition;
         int row = GridPane.getRowIndex(cell);
         int col = GridPane.getColumnIndex(cell);
 
         if(cell.getContent() != null)
-            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
-                    gameEngine.cloneCurrPlayerList(), new Point(row, col), cell.getContent().cloneCell(), gameEngine.getMovesCnt());
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getNextPlayerIndex()).clonePlayer(),
+                    gameEngine.cloneCurrPlayerList(), new Point(row, col), cellContent, gameEngine.getMovesCnt());
         else
-            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getPlayerTurnIndex()).clonePlayer(),
+            gamePosition = new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getNextPlayerIndex()).clonePlayer(),
                     gameEngine.cloneCurrPlayerList(), new Point(row, col), null, gameEngine.getMovesCnt());
 
 
@@ -239,6 +237,7 @@ public class GameController implements Initializable {
             restartGame();
         }
         gameIsRunning.setValue(true);
+        gamePositions.add(gameEngine.getCurrentGamePos());
         handleTurn();
 
     }
@@ -285,15 +284,16 @@ public class GameController implements Initializable {
 
             GamePosition position = gamePositions.get(gamePositionIndex - 1);
 
-            if(position.getCurrPlayer() == null) {
-                for(Point point : position.getResinedPoints()) {
+            if(gamePositions.get(gamePositionIndex).getResinedPoints() != null) {
+
+                for(Point point : gamePositions.get(gamePositionIndex).getResinedPoints()) {
                     gameEngine.setCellValue(point, new Cell(-999, 0, true, false));
                     gameBoardUI.getCell((int) point.getX(), (int) point.getY()).updateValues();
                 }
 
 
             } else {
-                showGamePosition(position);
+
                 gameEngine.setCellValue(position.getSelectedPoint(), new Cell(-999, 0, true, false));
                 gameBoardUI.getCell((int) position.getSelectedPoint().getX(), (int) position.getSelectedPoint().getY()).updateValues();
 
@@ -302,6 +302,7 @@ public class GameController implements Initializable {
                 gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
                         (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
             }
+            showGamePosition(gamePositions.get(gamePositionIndex));
         }
     }
 
@@ -323,7 +324,8 @@ public class GameController implements Initializable {
 
             GamePosition position = gamePositions.get(gamePositionIndex + 1);
 
-            if(position.getCurrPlayer() == null) {
+            if(position.getResinedPoints() != null) {
+
                 int resinedIndex = 0;
                 for(Point point : position.getResinedPoints()) {
 
@@ -336,7 +338,7 @@ public class GameController implements Initializable {
 
 
             } else {
-                showGamePosition(position);
+
                 gameEngine.setCellValue(position.getSelectedPoint(), position.getSelectedCell());
                 gameBoardUI.getCell((int) position.getSelectedPoint().getX(), (int) position.getSelectedPoint().getY()).updateValues();
 
@@ -345,6 +347,7 @@ public class GameController implements Initializable {
                 gameBoardUI.getCell((int) gamePositions.get(gamePositionIndex).getSelectedPoint().getX(),
                         (int) gamePositions.get(gamePositionIndex).getSelectedPoint().getY()).updateValues();
             }
+            showGamePosition(gamePositions.get(gamePositionIndex));
         }
     }
 
@@ -382,12 +385,13 @@ public class GameController implements Initializable {
         }
 
         if(gamePositions.size() != 0)
-            gamePositions.add(new GamePosition(newCells, newPoints,
-                    (Point)gamePositions.get(gamePositions.size() - 1).getSelectedPoint().clone(),
-                    gamePositions.get(gamePositions.size() - 1).getSelectedCell().cloneCell()));
-
-
-
+            gamePositions.add(new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getNextPlayerIndex()).clonePlayer(),
+                                                gameEngine.cloneCurrPlayerList(),
+                                            newCells,
+                                             newPoints,
+                                            (Point)gamePositions.get(gamePositions.size() - 1).getSelectedPoint().clone(),
+                                            gamePositions.get(gamePositions.size() - 1).getSelectedCell().cloneCell(),
+                                            gameEngine.getMovesCnt()));
     }
 
     private void handleTurn() {
@@ -437,10 +441,13 @@ public class GameController implements Initializable {
                 Point computerChoice = task.getValue();
                 CellUI selectedCellByComputer = null;
                 selectedCellByComputer = gameBoardUI.getCell((int) computerChoice.getX(), (int) computerChoice.getY());
-                addCurrentPosition(selectedCellByComputer);
+
                 if(animationCheckBox.isSelected())
                     playAnimation(cursorCellUI,selectedCellByComputer);
+
+                Cell savedCell = selectedCellByComputer.getContent().cloneCell(); //save Cell content before playMove
                 gameEngine.playMove((int)computerChoice.getX(),(int)computerChoice.getY());
+                addCurrentPosition(selectedCellByComputer,savedCell);
                 cursorCellUI.updateValues();
                 selectedCellByComputer.updateValues();
                 gameEngine.changeTurn();
