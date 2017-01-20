@@ -1,4 +1,5 @@
 .root {
     -fx-font-size: 11px;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Tahoma";
+    -fx-text-alignment: left;
 }
