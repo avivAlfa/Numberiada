@@ -2,7 +2,8 @@
     -fx-font-size: 7pt;
     -fx-font-family: "Arial";
     -fx-background-image: url("background.png");
-    -fx-text-fill: plum;
+    -fx-text-fill: black;
+    -fx-text-alignment: left;
 
 }
 #statisticsPane {
@@ -16,7 +17,7 @@
     -fx-font-family: "Arial";
     -fx-font-style: italic;
     -fx-font-weight: bold;
-    -fx-text-fill: plum;
+    -fx-text-fill: black;
 }
 
 .button {
@@ -40,4 +41,8 @@
 
 .radio-button:hover {
     -fx-background-color: rgb(225, 170, 150);
+}
+.statsVal {
+    -fx-alignment: top-right;
+
 }

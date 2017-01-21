@@ -4,6 +4,7 @@
     -fx-base: rgb(225, 170, 210);
     -fx-background: rgb(100, 50, 70);
     -fx-text-fill: plum;
+    -fx-text-alignment: left;
 
 }
 
@@ -32,8 +33,10 @@
     -fx-background-color: slategrey;
 
 }
-
-
 .radio-button:hover {
     -fx-background-color: rgb(225, 170, 150);
+}
+.statsVal {
+    -fx-alignment: top-right;
+
 }
