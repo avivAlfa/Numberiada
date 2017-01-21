@@ -1,6 +1,6 @@
 package game;
 
-public class Player {
+public class Player implements Comparable<Player>{
     private String name;
     private int id;
     private int score = 0;
@@ -76,5 +76,11 @@ public class Player {
 
     public void setAsComputer() { this.isHuman = false; }
 
+    @Override
+    public int compareTo(Player comparePlayer) {
+        int compareScore=((Player)comparePlayer).getScore();
 
+        return compareScore-this.score;
+    }
 }
+

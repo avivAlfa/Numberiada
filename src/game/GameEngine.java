@@ -448,8 +448,10 @@ public abstract class GameEngine {
 
         endGameMessage.append("\n");
         endGameMessage.append("Players total moves: " + movesCnt + "\n");
-        for(int i = 0 ; i < players.size() ; i++) {
-            endGameMessage.append(players.get(i).getName() + " score: " + players.get(i).getScore()+"\n");
+
+        List<Player> playersSortedByScore = getPlayersSortedByScore();
+        for(int i = 0 ; i < playersSortedByScore.size() ; i++) {
+            endGameMessage.append(playersSortedByScore.get(i).getName() + " score: " + playersSortedByScore.get(i).getScore()+"\n");
         }
         if(resignedPlayers != null){
             endGameMessage.append("Resigned players:\n");
@@ -458,6 +460,14 @@ public abstract class GameEngine {
             }
         }
         return endGameMessage.toString();
+    }
+
+    private List<Player> getPlayersSortedByScore(){
+        List<Player> sortedPlayers = cloneCurrPlayerList();
+
+        Collections.sort(sortedPlayers);
+
+        return sortedPlayers;
     }
 
     public GamePosition getCurrentGamePos() {

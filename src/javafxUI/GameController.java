@@ -410,7 +410,7 @@ public class GameController implements Initializable {
 
     private void skipUnavailableTurns(){
         while (!gameEngine.endGame() && !possibleCellsUpdate()) {
-            Utils.popupMessage("I am sorry " + gameEngine.getCurrentPlayerName() + " Unavailable numbers for you\nMy condolences\nSkip to the next player!", "Stop!", 1);
+            Utils.popupMessage("I am sorry " + gameEngine.getCurrentPlayerName() + " Unavailable numbers for you\nSkipping to the next player!", "Stop", 1);
             gameEngine.changeTurn();
             updateStatistics();
         }

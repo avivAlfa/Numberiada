@@ -10,9 +10,7 @@
 }
 #topPane {
     -fx-background-image: url("background.png");
-} #buttomPane {
-    -fx-background-color: firebrick;
-  }
+}
 .label {
     -fx-font-size: 9pt;
     -fx-font-family: "Arial";
