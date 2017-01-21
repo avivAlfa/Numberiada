@@ -26,7 +26,6 @@ public class GameFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // GameEngine model = new GameEngine();
 
         primaryStage.setTitle("Numberiada");
 
@@ -40,36 +39,7 @@ public class GameFX extends Application {
         Parent root = fxmlLoader.load(url.openStream());
         GameController gameController = fxmlLoader.getController();
 
-        //  gameController.setModel(model);
-
-
         this.scene = new Scene(root, 730, 612);
-        //styleList = FXCollections.observableArrayList();
-        //  skinSelect = new ChoiceBox();
-        //  styleList.addAll("2", "nofar");
-        //skinSelect.getItems().addAll("2", "nofar");
-
-//        skinSelect.setValue("2");
-//        skinSelect.setItems(styleList);
-
-        //skinSelect.setItems(styleList);
-        //styleList.add("2");
-        //styleList.add("nofar");
-        // this.styleCssProperty.bind(skinSelect.valueProperty());
-
-//        this.styleCssProperty.addListener((observable, oldValue, newValue) -> {
-//            //this.styleChanged(oldValue, newValue);
-//            scene.getStylesheets().remove("resources/" + oldValue);
-//            scene.getStylesheets().add("resources/" + newValue);
-//        });
-        // scene.getStylesheets().addAll("resources/Nofar.css", "resources/Aviv.css");
-//        Button singInButton = (Button) scene.lookup("#signInButton");
-//        final Text actionTarget = (Text)scene.lookup("#actiontarget");
-//        singInButton.setOnAction(e -> {
-//            actionTarget.setText("Sign in button pressed!");
-//        });
-
-        //scene.getStylesheets().addAll("resources/Nofar.css","resources/Aviv.css");
 
         this.styleCssProperty.bind(gameController.getStyleCssProperty());
         this.styleCssProperty.addListener((observable, oldValue, newValue) -> {

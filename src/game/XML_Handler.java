@@ -28,7 +28,6 @@ public class XML_Handler {
 
         } catch (JAXBException e) {
             throw e;
-            // e.printStackTrace();
         } catch (FileNotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -166,13 +165,5 @@ public class XML_Handler {
 
         }
     }
-
-    private static void validateAdvancePlayer(GameDescriptor gd) throws Exception {
-
-    }
-
-
-
-
 
 }

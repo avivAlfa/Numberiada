@@ -22,7 +22,6 @@ public class CellUI extends Button {
     SimpleBooleanProperty isCursorProperty;
     ImageView markerImage;
 
-    //private StringProperty value;
 
     public CellUI() {}
 
@@ -35,16 +34,6 @@ public class CellUI extends Button {
 
 
         this.setPrefSize(62,62);
-        //this.disableProperty().bind(Bindings.or(isEmptyProperty,isCursorProperty));
-//        this.textProperty().bind(
-//                Bindings.when(isCursorProperty)
-//                        .then("@")
-//                        .otherwise
-//                                (Bindings.when(isEmptyProperty)
-//                                .then("")
-//                                .otherwise(Bindings.concat(content.getValue()))));
-
-
         if(content.isCursor())
             this.setGraphic(markerImage);
 

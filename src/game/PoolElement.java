@@ -17,13 +17,7 @@ public class PoolElement {
 
     public int getColor() { return color; }
 
-    public void setNumber(int num) { this.number = num; }
-
     public void setColor(int color) { this.color = color; }
-
-    //public void decreaseColor() {
-   //     color--;
-    //}
 
 
     @Override

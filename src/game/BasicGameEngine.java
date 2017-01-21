@@ -90,46 +90,6 @@ public class BasicGameEngine extends GameEngine {
         return gameEnded || players.size() == 1;
     }
 
-//    @Override
-//    protected Board buildRandomBoard(int boardSize, int rangeFrom, int rangeTo) {
-//        Cell[][] boardArray = createEmptyBoard(boardSize);
-//        List<PoolElement> poolOfImpression = createPool(boardSize, rangeFrom, rangeTo);
-//        Random rand = new Random();
-//        int randomNumber;
-//
-//        for(int i = 0; i < boardSize; i++) {
-//            for(int j = 0; j< boardSize; j++) {
-//                randomNumber = rand.nextInt(poolOfImpression.size());
-//                if(poolOfImpression.get(randomNumber).getNumber() == 999) {
-//                    boardArray[i][j].setAsEmpty();
-//                }
-//                else{
-//                    boardArray[i][j].setValue(poolOfImpression.get(randomNumber).getNumber());
-//                }
-//                poolOfImpression.get(randomNumber).decreaseNum2();
-//
-//                if(poolOfImpression.get(randomNumber).getNum2() == 0) {
-//                    poolOfImpression.remove(randomNumber);
-//                }
-//            }
-//
-
-
-
-//    @Override
-//    protected ArrayList<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo){
-//        ArrayList<PoolElement> pool = new ArrayList<PoolElement>();
-//        int rangeSize = rangeTo - rangeFrom + 1;
-//        int numOfImpressions = (int)(Math.pow(boardSize,2) - 1) / rangeSize;
-//
-//        for(int i = rangeFrom; i <= rangeTo; i++){
-//            pool.add(new PoolElement(i, numOfImpressions));
-//        }
-//        pool.add(new PoolElement(999, ((int)(Math.pow(boardSize,2) - 1) % rangeSize) + 1));
-//
-//        return pool;
-//    }
-
     @Override
     protected List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players){
         List<PoolElement> pool = new ArrayList<PoolElement>();

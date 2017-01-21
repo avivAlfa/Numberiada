@@ -21,8 +21,6 @@ public abstract class GameEngine {
     protected int movesCnt = 0;
     protected long startingTime;
 
-    //public GameEngine(){}
-
     public abstract List<Point> getPossibleCells();
     public abstract boolean endGame();
     protected abstract List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players);
@@ -101,7 +99,6 @@ public abstract class GameEngine {
     public String getPlayerInfo(int index){
         Player player = players.get(index);
         String playerInfo;
-       // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
         playerInfo = String.format("%1$-12s",player.getName());
         playerInfo += String.format("%1$-11s",player.getId());
         playerInfo += String.format("%1$-5s",player.getScore());
@@ -111,10 +108,10 @@ public abstract class GameEngine {
     }
 
     public String getPlayerInfo(Player player){
-        //Player player = players.get(index);
         String playerInfo;
-        // playerInfo = player.getName() + " " + player.getScore() + " " + Colors.getColor(player.getColor());
+
         playerInfo = String.format("%1$-12s",player.getName());
+        playerInfo += String.format("%1$-11s",player.getId());
         playerInfo += String.format("%1$-5s",player.getScore());
         playerInfo += String.format("%1$10s",getPlayerColor(player));
 
@@ -131,130 +128,17 @@ public abstract class GameEngine {
         return players.get(playerTurnIndex).isHuman() == false;
     }
 
-
-
-//    public Cell getChosenCellAccordingToIndex(int cellNumber) {
-//       // Cell chosenCell = new Cell();
-//
-//        if (playerTurnIndex % 2 == 0) { //even - row player}
-//           // chosenCell = gameBoard.getCell(cursor, cellNumber);
-//            return gameBoard.getCell(cursorRow, cellNumber);
-//        }
-//        else {
-//            //chosenCell = gameBoard.getCell(cellNumber, cursor);;
-//            return gameBoard.getCell(cellNumber, cursorCol);
-//        }
-//       // return  chosenCell;
-//    }
-
-//    public void updateCursor(int cellNumber){
-//        if (playerTurnIndex % 2 == 0) { //even - row player}
-//            cursorCol = cellNumber;
-//        }
-//        else { //col player
-//            cursorRow = cellNumber;
-//        }
-//    }
-
-
-//    public boolean isValidCell(int cellNumber) throws Exception {
-//        if(!gameBoard.isIndexInBorders(cellNumber)) {
-//            throw new CellNumberOutOfBoundsException();
-//        }
-//        Cell chosenCell = getChosenCellAccordingToIndex((cellNumber));
-//        if(chosenCell.isEmpty()){
-//            throw new EmptyCellException();
-//        } else if(chosenCell.isCursor()) {
-//            throw new CursorCellException();
-//        }
-//
-//        return true;
-//    }
-
-//    public void playMove(int chosenNumber){
-//        Cell chosenCell;
-//
-//        Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
-//        cursorCell.setAsEmpty();
-//
-//        if(!players.get(playerTurnIndex).isHuman()){
-//            chosenNumber = getComputerChosenCellNumber();
-//        }
-//
-//        chosenCell = getChosenCellAccordingToIndex(chosenNumber);
-//        players.get(playerTurnIndex).addScore(chosenCell.getValue());
-//        chosenCell.setAsCursor();
-//        updateCursor(chosenNumber);
-//        changeTurn();
-//    }
-
-//    public void playMove(int chosenRow, int chosenCol){
-//        Cell chosenCell;
-//
-//        Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
-//        cursorCell.setAsEmpty();
-//
-////        if(!players.get(playerTurnIndex).isHuman()){
-////            chosenNumber = getComputerChosenCellNumber();
-////        }
-//
-//      //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
-//        chosenCell = gameBoard.getCell(chosenRow, chosenCol);
-//        players.get(playerTurnIndex).addScore(chosenCell.getValue());
-//        chosenCell.setAsCursor();
-//        updateCursor(chosenRow, chosenCol);
-//        changeTurn();
-//    }
-
-
-
-
-//    public int getComputerChosenCellNumber(){
-//        int maxCellIndex = 0;
-//        int maxValue = -999;
-//
-//        if(playerTurnIndex%2 == 0) {//row Player
-//            for(int i=0; i <gameBoard.getSize(); i++) {
-//                Cell currentCell = gameBoard.getCell(cursorRow, i);
-//                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
-//                    if (currentCell.getValue() > maxValue) {
-//                        maxValue = currentCell.getValue();
-//                        maxCellIndex = i;
-//                    }
-//                }
-//            }
-//        }
-//        else {
-//            for(int i=0; i < gameBoard.getSize(); i++) {
-//                Cell currentCell = gameBoard.getCell(i, cursorCol);
-//                if(!currentCell.isCursor() && !currentCell.isEmpty()) {
-//                    if (currentCell.getValue() > maxValue) {
-//                        maxValue = currentCell.getValue();
-//                        maxCellIndex = i;
-//                    }
-//                }
-//            }
-//        }
-//        return maxCellIndex;
-//    }
-
     public void playMove(int chosenRow, int chosenCol){
         Cell chosenCell;
 
         Cell cursorCell = gameBoard.getCell(cursorRow, cursorCol);
         cursorCell.setAsEmpty();
 
-//        if(!players.get(playerTurnIndex).isHuman()){
-//            chosenNumber = getComputerChosenCellNumber();
-//        }
-
-        //  chosenCell = getChosenCellAccordingToIndex(chosenNumber);
         chosenCell = gameBoard.getCell(chosenRow, chosenCol);
         players.get(playerTurnIndex).addScore(chosenCell.getValue());
         chosenCell.setAsCursor();
         updateCursor(chosenRow, chosenCol);
         movesCnt++;
-        //changeTurn();
     }
 
     public void updateCursor(int row, int col){
@@ -354,9 +238,7 @@ public abstract class GameEngine {
     }
 
     public Cell[][] createEmptyBoard(int boardSize) {
-        //Board board;
 
-        //int boardSize = gd.getBoard().getSize().intValue();
         Cell[][] boardArray = new Cell[boardSize][boardSize];
 
         for(int i = 0; i < boardSize; i++) {

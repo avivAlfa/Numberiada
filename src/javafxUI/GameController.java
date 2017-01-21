@@ -352,7 +352,6 @@ public class GameController implements Initializable {
     }
 
     private void showGamePosition(GamePosition gamePosition) {
-        //GamePosition position = gamePositions.get(gamePositionIndex);
         totalMovesLabel.setText(String.valueOf(gamePosition.getTotalMoves()));
         currentPlayerLabel.setText(gamePosition.getCurrPlayer().getName());
         playerIdLabel.setText(String.valueOf(gamePosition.getCurrPlayer().getId()));
@@ -386,9 +385,7 @@ public class GameController implements Initializable {
 
         if(gamePositions.size() != 0)
             gamePositions.add(new GamePosition(gameEngine.getPlayerByIndex(gameEngine.getNextPlayerIndex()).clonePlayer(),
-                                                gameEngine.cloneCurrPlayerList(),
-                                            newCells,
-                                             newPoints,
+                    gameEngine.cloneCurrPlayerList(), newCells, newPoints,
                                             (Point)gamePositions.get(gamePositions.size() - 1).getSelectedPoint().clone(),
                                             gamePositions.get(gamePositions.size() - 1).getSelectedCell().cloneCell(),
                                             gameEngine.getMovesCnt()));
@@ -486,7 +483,6 @@ public class GameController implements Initializable {
         for (int i = 0; i < gamePosition.getAllPlayers().size(); i++) {
             playerStatistics.set(i, gameEngine.getPlayerInfo(gamePosition.getAllPlayers().get(i)));
         }
-        // playerStatistics.set(prevPlayerIndex, gameEngine.getPlayerInfo(prevPlayerIndex));
     }
 
     private void updatePrevPossibleCells() {

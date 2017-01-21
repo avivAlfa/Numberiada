@@ -105,7 +105,6 @@ public class AdvancedGameEngine extends GameEngine {
 
     @Override
     public List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, List<GameDescriptor.Players.Player> players) {
-    //public List<PoolElement> createPool(int boardSize, int rangeFrom, int rangeTo, int numOfPlayers) {
         List<PoolElement> pool = new ArrayList<PoolElement>();
         int rangeSize = rangeTo - rangeFrom + 1;
         PoolElement tempElem;
